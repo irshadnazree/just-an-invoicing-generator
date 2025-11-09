@@ -1,3 +1,104 @@
+# Quotation Generator
+
+A professional web-based quotation and invoice generator built with React 19, TanStack Start, and Cloudflare Workers.
+
+## Project Overview
+
+This application allows users to create, manage, and export professional quotations/invoices with the following capabilities:
+
+### Key Features
+
+- **Quotation Creation**: Generate detailed quotations with company information, line items, and payment schedules
+- **Line Item Management**: Add, duplicate, and remove items with quantities, rates, and detailed descriptions
+- **Payment Scheduling**: Configure deposit percentages, optional second payments, and automatic final payment calculations
+- **Multi-Currency Support**: Support for MYR (RM) and USD currencies
+- **Data Import/Export**: Import and export quotation data as JSON for backup and sharing
+- **Professional Preview**: Print-ready quotation layout with proper formatting
+- **PDF Export**: Print quotations directly to PDF using browser print functionality
+- **Responsive Design**: Works on desktop, tablet, and mobile devices
+
+### Tech Stack
+
+- **Frontend**: React 19, TypeScript, TanStack Start, Tailwind CSS
+- **State Management**: Zustand
+- **Build Tool**: Vite
+- **Deployment**: Cloudflare Workers
+- **Code Quality**: Ultracite (Biome preset), Vitest
+- **Styling**: Tailwind CSS v4
+
+### Project Structure
+
+```
+src/
+├── components/           # React components
+│   ├── quotation-form.tsx    # Main form for creating quotations
+│   └── quotation-preview.tsx # Print-ready preview component
+├── stores/               # Zustand state management
+│   └── quotation-store.ts    # Quotation data and operations
+├── routes/               # TanStack Router file-based routes
+│   ├── __root.tsx            # Root layout component
+│   └── index.tsx             # Home route
+├── router.tsx            # Router configuration
+└── styles.css            # Global styles
+```
+
+### Main Components
+
+1. **QuotationForm** (`src/components/quotation-form.tsx:4`)
+   - Comprehensive form for inputting all quotation details
+   - Dynamic line item management
+   - Payment configuration
+   - Terms and conditions management
+   - JSON import/export functionality
+
+2. **QuotationPreview** (`src/components/quotation-preview.tsx:3`)
+   - Print-optimized layout
+   - Professional table formatting
+   - Automatic page breaks
+   - Print to PDF functionality
+
+3. **QuotationStore** (`src/stores/quotation-store.ts:96`)
+   - Zustand store managing all quotation state
+   - Automatic calculations for totals, deposits, and payments
+   - JSON import/export methods
+
+### Core Functionality
+
+- **State Management**: The `useQuotationStore` hook manages all application state including form data, current view (input/preview), and calculated values
+- **Calculations**: Automatic calculation of line item amounts, total, deposit, second payment (optional), and final payment
+- **Data Persistence**: Export/import quotations as JSON for saving and sharing
+- **Print Optimization**: CSS print styles ensure proper PDF generation with A4 page size and correct margins
+
+### Development Commands
+
+```bash
+# Install dependencies
+pnpm install
+
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Run tests
+pnpm test
+
+# Deploy to Cloudflare
+pnpm deploy
+
+# Code quality
+npx ultracite fix      # Auto-fix formatting/linting issues
+npx ultracite check    # Check for issues
+npx ultracite doctor   # Diagnose setup
+```
+
+### Deployment
+
+The application is configured for deployment to Cloudflare Workers. Build artifacts are automatically optimized for the platform.
+
+---
+
 # Ultracite Code Standards
 
 This project uses **Ultracite**, a zero-config Biome preset that enforces strict code quality standards through automated formatting and linting.
