@@ -9,6 +9,7 @@ import {
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { AmountDisplay } from "@/components/amount-display";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -80,12 +81,13 @@ function RouteComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-muted p-8">
       <div className="mx-auto max-w-6xl">
-        <div className="bg-white p-8 shadow-lg">
+        <div className="bg-card p-8 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
             <h1 className="font-bold text-3xl">Create Quotation</h1>
             <div className="flex items-center gap-2">
+              <ThemeToggle />
               <Link to="/quotation/preview">
                 <Button icon={<EyeIcon className="h-5 w-5" />}>
                   Preview Quotation

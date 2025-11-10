@@ -24,8 +24,9 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        primary: "bg-teal-600 text-white hover:bg-teal-700",
-        text: "font-semibold text-teal-600 hover:text-teal-700",
+        primary:
+          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
+        text: "font-semibold text-primary hover:text-primary/80",
       },
       size: {
         sm: "px-3 py-1.5 text-sm",

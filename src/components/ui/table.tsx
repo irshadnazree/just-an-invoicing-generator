@@ -16,7 +16,7 @@ export type TableHeaderProps = {
 
 export function TableHeader({ children, className = "" }: TableHeaderProps) {
   return (
-    <thead className={`border-black border-b-2 bg-gray-50 ${className}`}>
+    <thead className={`border-border border-b-2 bg-muted ${className}`}>
       {children}
     </thead>
   );
@@ -28,7 +28,7 @@ export type TableRowProps = {
 };
 
 export function TableRow({ children, className = "" }: TableRowProps) {
-  return <tr className={`border-black border-b ${className}`}>{children}</tr>;
+  return <tr className={`border-border border-b ${className}`}>{children}</tr>;
 }
 
 export type TableCellProps = {
@@ -83,7 +83,7 @@ export function TableHeaderCell({
 
   return (
     <th
-      className={`border-black border-r p-3 font-bold ${alignmentClass} ${className}`}
+      className={`border-border border-r p-3 font-bold ${alignmentClass} ${className}`}
       style={width ? { width } : undefined}
     >
       {children}

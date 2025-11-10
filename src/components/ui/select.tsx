@@ -19,7 +19,7 @@ export type SelectProps = {
 };
 
 const selectVariants = cva(
-  "h-10.5 w-full border border-gray-300 px-4 py-2 disabled:cursor-not-allowed disabled:bg-gray-100",
+  "h-10.5 w-full border border-input bg-background px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {},
   }

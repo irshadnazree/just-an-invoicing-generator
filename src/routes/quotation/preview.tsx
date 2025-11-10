@@ -4,6 +4,7 @@ import {
   FileArrowDownIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { exportJSON, formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
@@ -58,7 +59,7 @@ function RouteComponent() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
+    <div className="min-h-screen bg-muted p-8">
       <div className="mx-auto max-w-8xl">
         <div className="mb-4 flex gap-2 print:hidden">
           <Link to="/quotation">
@@ -66,6 +67,7 @@ function RouteComponent() {
               Back to Edit
             </Button>
           </Link>
+          <ThemeToggle />
           <Button
             icon={<DownloadIcon className="h-5 w-5" />}
             onClick={printQuotation}
@@ -80,13 +82,13 @@ function RouteComponent() {
           </Button>
         </div>
 
-        <div className="bg-white" style={{ border: "2px solid #000" }}>
+        <div className="bg-card" style={{ border: "2px solid #000" }}>
           {/* Header */}
           <div className="border-black border-b-2 p-6">
             <div className="flex items-start justify-between">
               <h1 className="font-bold text-2xl">{formData.projectTitle}</h1>
               <div className="flex gap-2">
-                <span className="self-center text-gray-600 text-sm">
+                <span className="self-center text-muted-foreground text-sm">
                   {formData.paymentType}
                 </span>
               </div>
@@ -146,7 +148,7 @@ function RouteComponent() {
           {/* Items Table */}
           <table className="w-full">
             <thead>
-              <tr className="border-black border-b-2 bg-gray-50">
+              <tr className="border-black border-b-2 bg-muted">
                 <th className="w-10 border-black border-r p-3 text-left" />
                 <th className="border-black border-r p-3 text-left">Item</th>
                 <th className="w-32 border-black border-r p-3 text-center">
@@ -313,6 +315,7 @@ function RouteComponent() {
         }
         
         body {
+          color: black !important;
           font-size: 0.75em;
           margin: 0;
           padding: 0;
@@ -342,15 +345,15 @@ function RouteComponent() {
         .print\\:hidden {
           display: none !important;
         }
-        
-        .bg-gray-50 {
-          background: white !important;
-        }
-        
+
+        /* Ensure print uses white backgrounds */
+        .bg-muted,
+        .bg-card,
+        .bg-gray-50,
         .bg-white {
           background: white !important;
         }
-        
+
         .bg-yellow-400 {
           background-color: #facc15 !important;
           -webkit-print-color-adjust: exact;
