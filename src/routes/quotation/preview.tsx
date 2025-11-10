@@ -3,14 +3,18 @@ import {
   DownloadIcon,
   FileArrowDownIcon,
 } from "@phosphor-icons/react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { exportJSON, formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
-export default function QuotationPreview() {
+export const Route = createFileRoute("/quotation/preview")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const {
     formData,
-    setView,
     calculateTotalByCurrency,
     calculateDepositByCurrency,
     calculateSecondPaymentByCurrency,
@@ -56,13 +60,12 @@ export default function QuotationPreview() {
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto max-w-8xl">
-        <div className="mb-4 flex gap-4 print:hidden">
-          <Button
-            icon={<ArrowLeftIcon className="h-5 w-5" />}
-            onClick={() => setView("input")}
-          >
-            Back to Edit
-          </Button>
+        <div className="mb-4 flex gap-2 print:hidden">
+          <Link to="/quotation">
+            <Button icon={<ArrowLeftIcon className="h-5 w-5" />}>
+              Back to Edit
+            </Button>
+          </Link>
           <Button
             icon={<DownloadIcon className="h-5 w-5" />}
             onClick={printQuotation}

@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuotationIndexRouteImport } from './routes/quotation/index'
+import { Route as QuotationPreviewRouteImport } from './routes/quotation/preview'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const QuotationIndexRoute = QuotationIndexRouteImport.update({
+  id: '/quotation/',
+  path: '/quotation/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const QuotationPreviewRoute = QuotationPreviewRouteImport.update({
+  id: '/quotation/preview',
+  path: '/quotation/preview',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/quotation/preview': typeof QuotationPreviewRoute
+  '/quotation': typeof QuotationIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/quotation/preview': typeof QuotationPreviewRoute
+  '/quotation': typeof QuotationIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/quotation/preview': typeof QuotationPreviewRoute
+  '/quotation/': typeof QuotationIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/quotation/preview' | '/quotation'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/quotation/preview' | '/quotation'
+  id: '__root__' | '/' | '/quotation/preview' | '/quotation/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  QuotationPreviewRoute: typeof QuotationPreviewRoute
+  QuotationIndexRoute: typeof QuotationIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/quotation/': {
+      id: '/quotation/'
+      path: '/quotation'
+      fullPath: '/quotation'
+      preLoaderRoute: typeof QuotationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quotation/preview': {
+      id: '/quotation/preview'
+      path: '/quotation/preview'
+      fullPath: '/quotation/preview'
+      preLoaderRoute: typeof QuotationPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  QuotationPreviewRoute: QuotationPreviewRoute,
+  QuotationIndexRoute: QuotationIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -6,6 +6,7 @@ import {
   TrashIcon,
   UploadIcon,
 } from "@phosphor-icons/react";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
 import { AmountDisplay } from "@/components/amount-display";
 import { Button } from "@/components/ui/button";
@@ -18,12 +19,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { cn, exportJSON, formatDecimal, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
-export default function QuotationForm() {
+export const Route = createFileRoute("/quotation/")({
+  component: RouteComponent,
+});
+
+function RouteComponent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const {
-    view: _view,
     formData,
-    setView,
     updateField,
     updateNestedField,
     addItem,
@@ -83,12 +86,11 @@ export default function QuotationForm() {
           <div className="mb-6 flex items-center justify-between">
             <h1 className="font-bold text-3xl">Create Quotation</h1>
             <div className="flex items-center gap-2">
-              <Button
-                icon={<EyeIcon className="h-5 w-5" />}
-                onClick={() => setView("preview")}
-              >
-                Preview Quotation
-              </Button>
+              <Link to="/quotation/preview">
+                <Button icon={<EyeIcon className="h-5 w-5" />}>
+                  Preview Quotation
+                </Button>
+              </Link>
               <Button
                 icon={<UploadIcon className="h-5 w-5" />}
                 onClick={() => fileInputRef.current?.click()}

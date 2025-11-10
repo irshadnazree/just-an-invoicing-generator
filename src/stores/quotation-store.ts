@@ -30,9 +30,7 @@ type QuotationFormData = {
 };
 
 type QuotationStore = {
-  view: "input" | "preview";
   formData: QuotationFormData;
-  setView: (view: "input" | "preview") => void;
   updateField: <K extends keyof QuotationFormData>(
     field: K,
     value: QuotationFormData[K]
@@ -99,10 +97,7 @@ const initialFormData: QuotationFormData = {
 };
 
 export const useQuotationStore = create<QuotationStore>((set, get) => ({
-  view: "input",
   formData: initialFormData,
-
-  setView: (view) => set({ view }),
 
   updateField: (field, value) =>
     set((state) => {
