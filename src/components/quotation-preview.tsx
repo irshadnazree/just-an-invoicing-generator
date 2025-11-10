@@ -77,10 +77,7 @@ export default function QuotationPreview() {
           </Button>
         </div>
 
-        <div
-          className="bg-white shadow-lg"
-          style={{ border: "2px solid #000" }}
-        >
+        <div className="bg-white" style={{ border: "2px solid #000" }}>
           {/* Header */}
           <div className="border-black border-b-2 p-6">
             <div className="flex items-start justify-between">
@@ -169,7 +166,7 @@ export default function QuotationPreview() {
                     {index + 1}
                   </td>
                   <td className="border-black border-r p-3">
-                    <div className="mb-2 font-semibold">{item.name}</div>
+                    <span className="mb-2 font-semibold">{item.name}</span>
                     {item.details.length > 0 && (
                       <ul className="list-inside list-disc space-y-1 text-sm">
                         {item.details.map((detail, idx) => (
@@ -277,7 +274,7 @@ export default function QuotationPreview() {
         </div>
 
         {/* Terms and Conditions */}
-        <div className="border-black border-t-2 p-3">
+        <div className="border-2 border-black p-3">
           <h3 className="mb-3 font-bold">Terms and Conditions</h3>
           <ol className="space-y-2">
             {formData.terms.map((term, index) => (
@@ -313,7 +310,7 @@ export default function QuotationPreview() {
         }
         
         body {
-          font-size: 11px;
+          font-size: 0.75em;
           margin: 0;
           padding: 0;
           background: white !important;
@@ -355,10 +352,6 @@ export default function QuotationPreview() {
           background-color: #facc15 !important;
           -webkit-print-color-adjust: exact;
           print-color-adjust: exact;
-        }
-        
-        .shadow-lg {
-          box-shadow: none !important;
         }
         
         /* Reduce padding in print */
@@ -425,6 +418,15 @@ export default function QuotationPreview() {
           border-left-style: solid !important;
           border-right-width: 1px !important;
           border-right-style: solid !important;
+        }
+        
+        /* Match font size scale for li elements - use em to maintain relative scale */
+        li {
+          font-size: 0.875em !important;
+        }
+        
+        .text-sm {
+          font-size: 0.875em !important;
         }
       }
     `}</style>
