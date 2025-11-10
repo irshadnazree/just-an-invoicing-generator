@@ -1,7 +1,25 @@
-import { Copy, Eye, FileText, Plus, Trash2, Upload } from "lucide-react";
+import {
+  CopyIcon,
+  EyeIcon,
+  FileTextIcon,
+  PlusIcon,
+  TrashIcon,
+  UploadIcon,
+} from "@phosphor-icons/react";
+import { useRef } from "react";
+import { AmountDisplay } from "@/components/amount-display";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { FormField, FormLabel } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
 export default function QuotationForm() {
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const {
     view: _view,
     formData,
@@ -16,6 +34,7 @@ export default function QuotationForm() {
     removeItemDetail,
     updateItemDetail,
     addTerm,
+    duplicateTerm,
     removeTerm,
     updateTerm,
     calculateTotalByCurrency,
@@ -70,540 +89,376 @@ export default function QuotationForm() {
       <div className="mx-auto max-w-6xl">
         <div className="bg-white p-8 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
-            <h1 className="font-bold text-3xl text-gray-800">
-              Create Quotation
-            </h1>
+            <h1 className="font-bold text-3xl">Create Quotation</h1>
             <div className="flex items-center gap-4">
-              <button
-                className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap bg-blue-600 px-3 py-3 text-white transition hover:bg-blue-700"
+              <Button
+                icon={<EyeIcon className="h-5 w-5" />}
                 onClick={() => setView("preview")}
-                type="button"
               >
-                <Eye className="h-5 w-5" />
                 Preview Quotation
-              </button>
-              <label className="flex flex-1 cursor-pointer items-center justify-center gap-2 whitespace-nowrap bg-purple-600 px-3 py-3 text-white transition hover:bg-purple-700">
-                <Upload className="h-5 w-5" />
+              </Button>
+              <Button
+                icon={<UploadIcon className="h-5 w-5" />}
+                onClick={() => fileInputRef.current?.click()}
+              >
                 Import JSON
                 <input
                   accept=".json"
                   className="hidden"
                   onChange={handleImportJSON}
+                  ref={fileInputRef}
                   type="file"
                 />
-              </label>
-              <button
-                className="flex flex-1 items-center justify-center gap-2 whitespace-nowrap bg-green-600 px-3 py-3 text-white transition hover:bg-green-700"
+              </Button>
+              <Button
+                icon={<FileTextIcon className="h-5 w-5" />}
                 onClick={exportJSON}
-                type="button"
               >
-                <FileText className="h-5 w-5" />
                 Export JSON
-              </button>
+              </Button>
             </div>
           </div>
 
-          <div className="space-y-8">
+          <div className="flex flex-col gap-8">
             {/* Project Details */}
-            <section className="border-b pb-6">
-              <h2 className="mb-4 font-semibold text-gray-700 text-xl">
+            <section className="flex flex-col gap-4">
+              <h2 className="border-b pb-2 font-semibold text-xl">
                 Project Details
               </h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="md:col-span-2">
-                  <label
-                    className="mb-2 block font-medium text-sm"
-                    htmlFor="project-title"
-                  >
-                    Project Title
-                  </label>
-                  <input
-                    className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField className="col-span-2">
+                  <FormLabel id="project-title" label="Project Title" />
+                  <Input
                     id="project-title"
-                    onChange={(e) =>
-                      updateField("projectTitle", e.target.value)
+                    onChange={(value) =>
+                      updateField("projectTitle", value as string)
                     }
-                    type="text"
                     value={formData.projectTitle}
                   />
-                </div>
-                <div className="md:col-span-2">
-                  <label
-                    className="mb-2 block font-medium text-sm"
-                    htmlFor="payment-type"
-                  >
-                    Payment Type
-                  </label>
-                  <select
-                    className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                    id="payment-type"
-                    onChange={(e) => updateField("paymentType", e.target.value)}
-                    value={formData.paymentType}
-                  >
-                    <option value="">Select payment type</option>
-                    <option value="One-time payment">One-time payment</option>
-                    <option value="Recurring payment">Recurring payment</option>
-                  </select>
-                </div>
-              </div>
-            </section>
+                </FormField>
 
-            {/* Basic Information */}
-            <section className="border-b pb-6">
-              <h2 className="mb-4 font-semibold text-gray-700 text-xl">
-                Basic Information
-              </h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label
-                    className="mb-2 block font-medium text-sm"
-                    htmlFor="quotation-number"
-                  >
-                    Quotation Number
-                  </label>
-                  <input
-                    className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                <FormField>
+                  <FormLabel id="quotation-number" label="Quotation Number" />
+                  <Input
                     id="quotation-number"
-                    onChange={(e) =>
-                      updateField("quotationNumber", e.target.value)
+                    onChange={(value) =>
+                      updateField("quotationNumber", value as string)
                     }
                     type="text"
                     value={formData.quotationNumber}
                   />
-                </div>
-                <div>
-                  <label
-                    className="mb-2 block font-medium text-sm"
-                    htmlFor="quotation-date"
-                  >
-                    Quotation Date
-                  </label>
-                  <input
-                    className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                </FormField>
+                <FormField>
+                  <FormLabel id="quotation-date" label="Quotation Date" />
+                  <Input
                     id="quotation-date"
-                    onChange={(e) =>
-                      updateField("quotationDate", e.target.value)
+                    onChange={(value) =>
+                      updateField("quotationDate", value as string)
                     }
                     type="date"
                     value={formData.quotationDate}
                   />
-                </div>
-                <div className="md:col-span-2">
-                  <label
-                    className="mb-2 block font-medium text-sm"
-                    htmlFor="bank-account"
-                  >
-                    Bank Account Number
-                  </label>
-                  <input
-                    className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                </FormField>
+                <FormField>
+                  <FormLabel id="payment-type" label="Payment Type" />
+                  <Select
+                    id="payment-type"
+                    onChange={(value) => updateField("paymentType", value)}
+                    options={[
+                      { value: "One-time payment", label: "One-time payment" },
+                      {
+                        value: "Recurring payment",
+                        label: "Recurring payment",
+                      },
+                    ]}
+                    placeholder="Select payment type"
+                    value={formData.paymentType}
+                  />
+                </FormField>
+                <FormField>
+                  <FormLabel id="bank-account" label="Bank Account Number" />
+                  <Input
                     id="bank-account"
-                    onChange={(e) => updateField("bankAccount", e.target.value)}
-                    type="text"
+                    onChange={(value) =>
+                      updateField("bankAccount", value as string)
+                    }
                     value={formData.bankAccount}
                   />
-                </div>
+                </FormField>
               </div>
             </section>
 
-            {/* From and For */}
-            <section className="border-b pb-6">
-              <h2 className="mb-4 font-semibold text-gray-700 text-xl">
-                Company Information
+            {/* Client Information */}
+            <section className="flex flex-col gap-4">
+              <h2 className="border-b pb-2 font-semibold text-xl">
+                Client Information
               </h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-gray-600">
-                    Quotation From
-                  </h3>
-                  <div>
-                    <label
-                      className="mb-2 block font-medium text-sm"
-                      htmlFor="quotation-from-company"
-                    >
-                      Company Name
-                    </label>
-                    <input
-                      className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <FormField>
+                    <FormLabel
                       id="quotation-from-company"
-                      onChange={(e) =>
+                      label="Quotation From"
+                    />
+                    <Input
+                      id="quotation-from-company"
+                      onChange={(value) =>
                         updateNestedField(
                           "quotationFrom",
                           "company",
-                          e.target.value
+                          value as string
                         )
                       }
-                      type="text"
                       value={formData.quotationFrom.company}
                     />
-                  </div>
-                  <div>
-                    <label
-                      className="mb-2 block font-medium text-sm"
-                      htmlFor="quotation-from-country"
-                    >
-                      Country
-                    </label>
-                    <input
-                      className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                      id="quotation-from-country"
-                      onChange={(e) =>
+                  </FormField>
+                </div>
+                <div>
+                  <FormField>
+                    <FormLabel
+                      id="quotation-from-company"
+                      label="Quotation For"
+                    />
+                    <Input
+                      id="quotation-from-company"
+                      onChange={(value) =>
                         updateNestedField(
                           "quotationFrom",
-                          "country",
-                          e.target.value
-                        )
-                      }
-                      type="text"
-                      value={formData.quotationFrom.country}
-                    />
-                  </div>
-                </div>
-                <div className="space-y-4">
-                  <h3 className="font-semibold text-gray-600">Quotation For</h3>
-                  <div>
-                    <label
-                      className="mb-2 block font-medium text-sm"
-                      htmlFor="quotation-for-company"
-                    >
-                      Company Name
-                    </label>
-                    <input
-                      className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                      id="quotation-for-company"
-                      onChange={(e) =>
-                        updateNestedField(
-                          "quotationFor",
                           "company",
-                          e.target.value
+                          value as string
                         )
                       }
-                      type="text"
-                      value={formData.quotationFor.company}
+                      value={formData.quotationFrom.company}
                     />
-                  </div>
-                  <div>
-                    <label
-                      className="mb-2 block font-medium text-sm"
-                      htmlFor="quotation-for-country"
-                    >
-                      Country
-                    </label>
-                    <input
-                      className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                      id="quotation-for-country"
-                      onChange={(e) =>
-                        updateNestedField(
-                          "quotationFor",
-                          "country",
-                          e.target.value
-                        )
-                      }
-                      type="text"
-                      value={formData.quotationFor.country}
-                    />
-                  </div>
+                  </FormField>
                 </div>
               </div>
             </section>
 
             {/* Line Items */}
-            <section className="border-b pb-6">
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-semibold text-gray-700 text-xl">
-                  Line Items
-                </h2>
-                <button
-                  className="flex items-center gap-2 bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+            <section className="flex flex-col gap-4">
+              <div className="mb-4 flex items-center justify-between border-b">
+                <h2 className="pb-2 font-semibold text-xl">Line Items</h2>
+
+                <Button
+                  icon={<PlusIcon className="size-4" />}
                   onClick={addItem}
+                  size="sm"
                   type="button"
+                  variant="text"
                 >
-                  <Plus className="h-4 w-4" />
                   Add Item
-                </button>
+                </Button>
               </div>
 
-              <div className="space-y-6">
+              <div className="flex flex-col gap-6">
                 {formData.items.map((item, itemIndex) => (
-                  <div
-                    className="border border-gray-300 bg-gray-50 p-6"
-                    // biome-ignore lint/suspicious/noArrayIndexKey: Items are not reordered, stable index prevents focus loss
-                    key={`item-${itemIndex}`}
-                  >
-                    <div className="mb-4 flex items-start justify-between">
+                  <Card key={`item-${itemIndex + 1}`}>
+                    <div className="mb-2 flex items-start justify-between">
                       <h3 className="font-semibold text-lg">
                         Item {itemIndex + 1}
                       </h3>
-                      <div className="flex items-center gap-2">
-                        <button
-                          className="text-blue-600 transition hover:text-blue-700"
+                      <div className="flex items-center">
+                        <Button
+                          icon={<CopyIcon className="h-5 w-5" />}
                           onClick={() => duplicateItem(itemIndex)}
+                          size="icon"
                           title="Duplicate item"
-                          type="button"
-                        >
-                          <Copy className="h-5 w-5" />
-                        </button>
-                        {formData.items.length > 1 && (
-                          <button
-                            className="text-red-600 transition hover:text-red-700"
-                            onClick={() => removeItem(itemIndex)}
-                            title="Remove item"
-                            type="button"
-                          >
-                            <Trash2 className="h-5 w-5" />
-                          </button>
-                        )}
+                          variant="text"
+                        />
+
+                        <Button
+                          icon={<TrashIcon className="h-5 w-5" />}
+                          onClick={() => removeItem(itemIndex)}
+                          size="icon"
+                          title="Remove item"
+                          variant="text"
+                        />
                       </div>
                     </div>
 
                     <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
-                      <div className="md:col-span-4">
-                        <label
-                          className="mb-2 block font-medium text-sm"
-                          htmlFor={`item-name-${itemIndex}`}
-                        >
-                          Item Name
-                        </label>
-                        <input
-                          className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                      <FormField className="col-span-4">
+                        <FormLabel id="item-name" label="Item Name" />
+                        <Input
                           id={`item-name-${itemIndex}`}
-                          onChange={(e) =>
-                            updateItem(itemIndex, "name", e.target.value)
+                          onChange={(value) =>
+                            updateItem(itemIndex, "name", value as string)
                           }
-                          type="text"
                           value={item.name}
                         />
-                      </div>
-                      <div>
-                        <label
-                          className="mb-2 block font-medium text-sm"
-                          htmlFor={`item-quantity-${itemIndex}`}
-                        >
-                          Quantity
-                          {formData.paymentType !== "Recurring payment" &&
-                            " (Work Days)"}
-                        </label>
-                        <input
-                          className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                      </FormField>
+                      <FormField>
+                        <FormLabel id="item-quantity" label="Quantity" />
+                        <Input
                           id={`item-quantity-${itemIndex}`}
-                          onChange={(e) =>
-                            updateItem(
-                              itemIndex,
-                              "quantity",
-                              e.target.value === ""
-                                ? 0
-                                : Number.parseInt(e.target.value, 10) || 0
-                            )
+                          onChange={(value) =>
+                            updateItem(itemIndex, "quantity", value as number)
                           }
                           type="number"
-                          value={item.quantity || ""}
+                          value={item.quantity || 0}
                         />
-                      </div>
-                      <div>
-                        <label
-                          className="mb-2 block font-medium text-sm"
-                          htmlFor={`item-rate-${itemIndex}`}
-                        >
-                          Rate
-                        </label>
-                        <input
-                          className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                      </FormField>
+                      <FormField>
+                        <FormLabel id="item-rate" label="Rate" />
+                        <Input
                           id={`item-rate-${itemIndex}`}
-                          onChange={(e) =>
-                            updateItem(
-                              itemIndex,
-                              "rate",
-                              e.target.value === ""
-                                ? 0
-                                : Number.parseInt(e.target.value, 10) || 0
-                            )
+                          onChange={(value) =>
+                            updateItem(itemIndex, "rate", value as number)
                           }
                           type="number"
-                          value={item.rate || ""}
+                          value={item.rate || 0}
                         />
-                      </div>
-                      <div>
-                        <label
-                          className="mb-2 block font-medium text-sm"
-                          htmlFor={`item-currency-${itemIndex}`}
-                        >
-                          Currency
-                        </label>
-                        <select
-                          className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                      </FormField>
+                      <FormField>
+                        <FormLabel id="item-currency" label="Currency" />
+                        <Select
                           id={`item-currency-${itemIndex}`}
-                          onChange={(e) =>
-                            updateItem(itemIndex, "currency", e.target.value)
+                          onChange={(value) =>
+                            updateItem(itemIndex, "currency", value)
                           }
+                          options={[
+                            { value: "RM", label: "MYR" },
+                            { value: "USD", label: "USD" },
+                          ]}
                           value={item.currency || formData.currency || "RM"}
-                        >
-                          <option value="RM">MYR</option>
-                          <option value="USD">USD</option>
-                        </select>
-                      </div>
-                      <div>
-                        <label
-                          className="mb-2 block font-medium text-sm"
-                          htmlFor={`item-amount-${itemIndex}`}
-                        >
-                          Amount
-                        </label>
-                        <div className="border border-gray-300 bg-gray-100 px-4 py-2 font-semibold text-gray-700">
-                          {item.currency || formData.currency || "RM"}{" "}
-                          {(item.quantity * item.rate).toFixed(2)}
-                        </div>
-                      </div>
+                        />
+                      </FormField>
+                      <AmountDisplay
+                        id={`item-amount-${itemIndex}`}
+                        label="Amount"
+                        prefix={item.currency || formData.currency || "RM"}
+                        value={(item.quantity * item.rate).toFixed(2)}
+                      />
                     </div>
 
                     <div>
                       <div className="mb-2 flex items-center justify-between">
-                        <label
-                          className="block font-medium text-sm"
-                          htmlFor={`item-detail-${itemIndex}-0`}
-                        >
-                          Details
-                        </label>
-                        <button
-                          className="flex items-center gap-1 text-blue-600 text-sm hover:text-blue-700"
+                        <FormLabel id="item-details" label="Details" />
+                        <Button
+                          icon={<PlusIcon className="h-3 w-3" />}
                           onClick={() => addItemDetail(itemIndex)}
+                          size="sm"
                           type="button"
+                          variant="text"
                         >
-                          <Plus className="h-3 w-3" />
                           Add Detail
-                        </button>
+                        </Button>
                       </div>
-                      <div className="space-y-2">
+                      <div className="flex flex-col gap-2">
                         {item.details.map((detail, detailIndex) => (
                           <div
-                            className="flex gap-2"
+                            className="flex items-center gap-2"
                             // biome-ignore lint/suspicious/noArrayIndexKey: Details are not reordered, stable index prevents focus loss
                             key={`detail-${itemIndex}-${detailIndex}`}
                           >
-                            <input
-                              className="flex-1 border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                            <Input
                               id={`item-detail-${itemIndex}-${detailIndex}`}
-                              onChange={(e) =>
+                              onChange={(value) =>
                                 updateItemDetail(
                                   itemIndex,
                                   detailIndex,
-                                  e.target.value
+                                  value as string
                                 )
                               }
                               placeholder="Enter detail"
-                              type="text"
                               value={detail}
                             />
-                            <button
-                              className="text-red-600 hover:text-red-700"
+                            <Button
+                              icon={<TrashIcon className="size-5" />}
                               onClick={() =>
                                 removeItemDetail(itemIndex, detailIndex)
                               }
-                              type="button"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </button>
+                              size="icon"
+                              title="Remove detail"
+                              variant="text"
+                            />
                           </div>
                         ))}
                       </div>
                     </div>
-                  </div>
+                  </Card>
                 ))}
               </div>
             </section>
 
             {/* Payment Settings */}
-            <section className="border-b pb-6">
-              <h2 className="mb-4 font-semibold text-gray-700 text-xl">
+            <section className="flex flex-col gap-4">
+              <h2 className="border-b pb-2 font-semibold text-xl">
                 Payment Settings
               </h2>
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div>
-                  <label
-                    className="mb-2 block font-medium text-sm"
-                    htmlFor="currency"
-                  >
-                    Currency
-                  </label>
-                  <select
-                    className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+              <div className="grid grid-cols-4 gap-4">
+                <FormField
+                  className={cn(
+                    formData.paymentType !== "Recurring payment"
+                      ? "col-span-2"
+                      : "col-span-4"
+                  )}
+                >
+                  <FormLabel id="currency" label="Currency" />
+                  <Select
                     id="currency"
-                    onChange={(e) => updateField("currency", e.target.value)}
+                    onChange={(value) => updateField("currency", value)}
+                    options={[
+                      { value: "RM", label: "MYR" },
+                      { value: "USD", label: "USD" },
+                    ]}
                     value={formData.currency}
-                  >
-                    <option value="RM">MYR</option>
-                    <option value="USD">USD</option>
-                  </select>
-                </div>
+                  />
+                </FormField>
                 {formData.paymentType !== "Recurring payment" && (
-                  <div>
-                    <label
-                      className="mb-2 block font-medium text-sm"
-                      htmlFor="deposit-percent"
+                  <>
+                    <FormField
+                      className={cn(
+                        formData.hasSecondPayment ? "col-span-1" : "col-span-2"
+                      )}
                     >
-                      Deposit Percentage (%)
-                    </label>
-                    <input
-                      className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                      id="deposit-percent"
-                      onChange={(e) =>
-                        updateField(
-                          "depositPercent",
-                          e.target.value === ""
-                            ? 0
-                            : Number.parseInt(e.target.value, 10) || 0
-                        )
-                      }
-                      type="number"
-                      value={formData.depositPercent || ""}
-                    />
-                  </div>
-                )}
-                <div className="md:col-span-2">
-                  <div className="mb-4 flex items-center gap-3">
-                    <input
-                      checked={formData.hasSecondPayment}
-                      className="h-4 w-4 cursor-pointer"
-                      id="has-second-payment"
-                      onChange={(e) =>
-                        updateField("hasSecondPayment", e.target.checked)
-                      }
-                      type="checkbox"
-                    />
-                    <label
-                      className="cursor-pointer font-medium text-sm"
-                      htmlFor="has-second-payment"
-                    >
-                      Enable Second Payment Option
-                    </label>
-                  </div>
-                  {formData.hasSecondPayment && (
-                    <div>
-                      <label
-                        className="mb-2 block font-medium text-sm"
-                        htmlFor="second-payment-percent"
-                      >
-                        Second Payment Percentage (%)
-                      </label>
-                      <input
-                        className="w-full border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
-                        id="second-payment-percent"
-                        onChange={(e) =>
-                          updateField(
-                            "secondPaymentPercent",
-                            e.target.value === ""
-                              ? 0
-                              : Number.parseInt(e.target.value, 10) || 0
-                          )
+                      <FormLabel
+                        id="deposit-percent"
+                        label="Deposit Percentage (%)"
+                      />
+                      <Input
+                        id="deposit-percent"
+                        onChange={(value) =>
+                          updateField("depositPercent", value as number)
                         }
                         type="number"
-                        value={formData.secondPaymentPercent || ""}
+                        value={formData.depositPercent || 0}
                       />
-                    </div>
-                  )}
-                </div>
+                    </FormField>
+
+                    {formData.hasSecondPayment && (
+                      <FormField>
+                        <FormLabel
+                          id="second-payment-percent"
+                          label="Second Payment Percentage (%)"
+                        />
+                        <Input
+                          id="second-payment-percent"
+                          onChange={(value) =>
+                            updateField("secondPaymentPercent", value as number)
+                          }
+                          type="number"
+                          value={formData.secondPaymentPercent || 0}
+                        />
+                      </FormField>
+                    )}
+                    <FormField>
+                      <Checkbox
+                        checked={formData.hasSecondPayment}
+                        id="has-second-payment"
+                        label="Enable Second Payment Option"
+                        onChange={(checked) =>
+                          updateField("hasSecondPayment", checked)
+                        }
+                      />
+                    </FormField>
+                  </>
+                )}
               </div>
 
-              <div className="mt-4 bg-blue-50 p-4">
+              <div className="flex flex-col gap-4">
                 {(() => {
                   const totalsByCurrency = calculateTotalByCurrency();
                   const depositsByCurrency = calculateDepositByCurrency();
@@ -614,96 +469,89 @@ export default function QuotationForm() {
                   const currencies = Object.keys(totalsByCurrency);
 
                   return (
-                    <div className="space-y-4">
-                      {currencies.map((currency) => {
-                        let gridCols = "grid-cols-3";
-                        if (formData.paymentType === "Recurring payment") {
-                          gridCols = formData.hasSecondPayment
-                            ? "grid-cols-2"
-                            : "grid-cols-1";
-                        } else if (formData.hasSecondPayment) {
-                          gridCols = "grid-cols-4";
-                        }
-                        return (
-                          <div className="space-y-2" key={currency}>
-                            <div className="font-semibold text-gray-700 text-sm">
-                              {currency} Totals
+                    <div className="flex flex-col gap-4">
+                      {currencies.map((currency) => (
+                        <div className="flex flex-col gap-2" key={currency}>
+                          <div className="font-semibold text-sm">
+                            {currency} Totals
+                          </div>
+                          <Card
+                            className={cn(
+                              "grid",
+                              formData.paymentType !== "Recurring payment" &&
+                                formData.hasSecondPayment
+                                ? "grid-cols-4"
+                                : "grid-cols-3",
+                              formData.paymentType === "Recurring payment" &&
+                                "grid-cols-2"
+                            )}
+                          >
+                            <div>
+                              <div className="mb-1 text-sm">Total</div>
+                              <div className="font-bold text-xl">
+                                {currency}{" "}
+                                {totalsByCurrency[currency].toFixed(2)}
+                              </div>
                             </div>
-                            <div
-                              className={`grid gap-4 text-center ${gridCols}`}
-                            >
+                            {formData.paymentType !== "Recurring payment" && (
                               <div>
-                                <div className="mb-1 text-gray-600 text-sm">
-                                  Total
+                                <div className="mb-1 text-sm">
+                                  Deposit ({formData.depositPercent}%)
                                 </div>
-                                <div className="font-bold text-gray-800 text-xl">
+                                <div className="font-bold text-teal-600 text-xl">
                                   {currency}{" "}
-                                  {totalsByCurrency[currency].toFixed(2)}
+                                  {depositsByCurrency[currency]?.toFixed(0) ||
+                                    "0.00"}
                                 </div>
                               </div>
-                              {formData.paymentType !== "Recurring payment" && (
-                                <div>
-                                  <div className="mb-1 text-gray-600 text-sm">
-                                    Deposit ({formData.depositPercent}%)
-                                  </div>
-                                  <div className="font-bold text-green-600 text-xl">
-                                    {currency}{" "}
-                                    {depositsByCurrency[currency]?.toFixed(0) ||
-                                      "0.00"}
-                                  </div>
-                                </div>
-                              )}
-                              {formData.hasSecondPayment && (
-                                <div>
-                                  <div className="mb-1 text-gray-600 text-sm">
-                                    Second Payment (
-                                    {formData.secondPaymentPercent}%)
-                                  </div>
-                                  <div className="font-bold text-xl text-yellow-600">
-                                    {currency}{" "}
-                                    {secondPaymentsByCurrency[
-                                      currency
-                                    ]?.toFixed(0) || "0.00"}
-                                  </div>
-                                </div>
-                              )}
+                            )}
+                            {formData.hasSecondPayment && (
                               <div>
-                                <div className="mb-1 text-gray-600 text-sm">
-                                  Final Payment
-                                  {(() => {
-                                    if (
-                                      formData.paymentType ===
-                                      "Recurring payment"
-                                    ) {
-                                      return formData.hasSecondPayment
-                                        ? ` (${
-                                            100 - formData.secondPaymentPercent
-                                          }%)`
-                                        : "";
-                                    }
-                                    if (formData.hasSecondPayment) {
-                                      return ` (${
-                                        100 -
-                                        formData.depositPercent -
-                                        formData.secondPaymentPercent
-                                      }%)`;
-                                    }
-                                    return ` (${
-                                      100 - formData.depositPercent
-                                    }%)`;
-                                  })()}
+                                <div className="mb-1 text-sm">
+                                  Second Payment (
+                                  {formData.secondPaymentPercent}%)
                                 </div>
-                                <div className="font-bold text-blue-600 text-xl">
+                                <div className="font-bold text-teal-600 text-xl">
                                   {currency}{" "}
-                                  {finalPaymentsByCurrency[currency]?.toFixed(
+                                  {secondPaymentsByCurrency[currency]?.toFixed(
                                     0
                                   ) || "0.00"}
                                 </div>
                               </div>
+                            )}
+                            <div>
+                              <div className="mb-1 text-sm">
+                                Final Payment
+                                {(() => {
+                                  if (
+                                    formData.paymentType === "Recurring payment"
+                                  ) {
+                                    return formData.hasSecondPayment
+                                      ? ` (${
+                                          100 - formData.secondPaymentPercent
+                                        }%)`
+                                      : "";
+                                  }
+                                  if (formData.hasSecondPayment) {
+                                    return ` (${
+                                      100 -
+                                      formData.depositPercent -
+                                      formData.secondPaymentPercent
+                                    }%)`;
+                                  }
+                                  return ` (${100 - formData.depositPercent}%)`;
+                                })()}
+                              </div>
+                              <div className="font-bold text-teal-600 text-xl">
+                                {currency}{" "}
+                                {finalPaymentsByCurrency[currency]?.toFixed(
+                                  0
+                                ) || "0.00"}
+                              </div>
                             </div>
-                          </div>
-                        );
-                      })}
+                          </Card>
+                        </div>
+                      ))}
                     </div>
                   );
                 })()}
@@ -712,48 +560,54 @@ export default function QuotationForm() {
 
             {/* Terms and Conditions */}
             <section>
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="font-semibold text-gray-700 text-xl">
+              <div className="mb-4 flex items-center justify-between border-b">
+                <h2 className="pb-2 font-semibold text-xl">
                   Terms and Conditions
                 </h2>
-                <button
-                  className="flex items-center gap-2 bg-green-600 px-4 py-2 text-white transition hover:bg-green-700"
+
+                <Button
+                  icon={<PlusIcon className="size-4" />}
                   onClick={addTerm}
+                  size="sm"
                   type="button"
+                  variant="text"
                 >
-                  <Plus className="h-4 w-4" />
                   Add Term
-                </button>
+                </Button>
               </div>
 
               <div className="space-y-3">
                 {formData.terms.map((term, index) => (
-                  <div
-                    className="flex gap-2"
-                    // biome-ignore lint/suspicious/noArrayIndexKey: Terms are not reordered, stable index prevents focus loss
-                    key={`term-${index}`}
-                  >
-                    <div className="w-8 shrink-0 pt-2 text-center font-medium text-gray-600">
-                      {index + 1}.
+                  <Card key={`term-${index + 1}`}>
+                    <div className="mb-2 flex items-start justify-between">
+                      <h3 className="font-semibold text-lg">
+                        Term {index + 1}
+                      </h3>
+                      <div className="flex items-center">
+                        <Button
+                          icon={<CopyIcon className="h-5 w-5" />}
+                          onClick={() => duplicateTerm(index)}
+                          size="icon"
+                          title="Duplicate term"
+                          variant="text"
+                        />
+
+                        <Button
+                          icon={<TrashIcon className="h-5 w-5" />}
+                          onClick={() => removeTerm(index)}
+                          size="icon"
+                          title="Remove term"
+                          variant="text"
+                        />
+                      </div>
                     </div>
-                    <textarea
-                      className="flex-1 border border-gray-300 px-4 py-2 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                    <Textarea
                       id={`term-${index}`}
-                      onChange={(e) => updateTerm(index, e.target.value)}
+                      onChange={(value) => updateTerm(index, value as string)}
                       placeholder="Enter term"
-                      rows={2}
                       value={term}
                     />
-                    {formData.terms.length > 1 && (
-                      <button
-                        className="shrink-0 text-red-600 hover:text-red-700"
-                        onClick={() => removeTerm(index)}
-                        type="button"
-                      >
-                        <Trash2 className="h-5 w-5" />
-                      </button>
-                    )}
-                  </div>
+                  </Card>
                 ))}
               </div>
             </section>

@@ -1,4 +1,10 @@
-import { useQuotationStore } from "../stores/quotation-store";
+import {
+  ArrowLeftIcon,
+  DownloadIcon,
+  FileArrowDownIcon,
+} from "@phosphor-icons/react";
+import { Button } from "@/components/ui/button";
+import { useQuotationStore } from "@/stores/quotation-store";
 
 export default function QuotationPreview() {
   const {
@@ -65,27 +71,24 @@ export default function QuotationPreview() {
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="mx-auto max-w-8xl">
         <div className="mb-4 flex gap-4 print:hidden">
-          <button
-            className="bg-gray-600 px-6 py-2 text-white transition hover:bg-gray-700"
+          <Button
+            icon={<ArrowLeftIcon className="h-5 w-5" />}
             onClick={() => setView("input")}
-            type="button"
           >
             Back to Edit
-          </button>
-          <button
-            className="bg-blue-600 px-6 py-2 text-white transition hover:bg-blue-700"
+          </Button>
+          <Button
+            icon={<DownloadIcon className="h-5 w-5" />}
             onClick={printQuotation}
-            type="button"
           >
             Print / Save PDF
-          </button>
-          <button
-            className="bg-green-600 px-6 py-2 text-white transition hover:bg-green-700"
+          </Button>
+          <Button
+            icon={<FileArrowDownIcon className="h-5 w-5" />}
             onClick={exportJSON}
-            type="button"
           >
             Export JSON
-          </button>
+          </Button>
         </div>
 
         <div

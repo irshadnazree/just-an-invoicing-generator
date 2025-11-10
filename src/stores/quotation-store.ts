@@ -58,6 +58,7 @@ type QuotationStore = {
     value: string
   ) => void;
   addTerm: () => void;
+  duplicateTerm: (index: number) => void;
   removeTerm: (index: number) => void;
   updateTerm: (index: number, value: string) => void;
   calculateTotal: () => number;
@@ -139,7 +140,7 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
           ...state.formData.items,
           {
             name: "",
-            details: [""],
+            details: [],
             quantity: 1,
             rate: 550,
             currency: state.formData.currency || "RM",
@@ -222,6 +223,19 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
       },
     })),
 
+  duplicateTerm: (index) =>
+    set((state) => {
+      const termToDuplicate = state.formData.terms[index];
+      const newTerms = [...state.formData.terms];
+      newTerms.splice(index + 1, 0, termToDuplicate);
+      return {
+        formData: {
+          ...state.formData,
+          terms: newTerms,
+        },
+      };
+    }),
+
   removeTerm: (index) =>
     set((state) => ({
       formData: {
@@ -250,11 +264,11 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
   calculateTotalByCurrency: () => {
     const state = get();
     const totals: Record<string, number> = {};
-    state.formData.items.forEach((item) => {
+    for (const item of state.formData.items) {
       const currency = item.currency || state.formData.currency || "RM";
       const amount = item.quantity * item.rate;
       totals[currency] = (totals[currency] || 0) + amount;
-    });
+    }
     return totals;
   },
 
@@ -274,10 +288,10 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
     }
     const totalsByCurrency = state.calculateTotalByCurrency();
     const deposits: Record<string, number> = {};
-    Object.keys(totalsByCurrency).forEach((currency) => {
+    for (const currency of Object.keys(totalsByCurrency)) {
       deposits[currency] =
         (totalsByCurrency[currency] * state.formData.depositPercent) / 100;
-    });
+    }
     return deposits;
   },
 
@@ -297,10 +311,11 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
     }
     const totalsByCurrency = state.calculateTotalByCurrency();
     const secondPayments: Record<string, number> = {};
-    Object.keys(totalsByCurrency).forEach((currency) => {
+    for (const currency of Object.keys(totalsByCurrency)) {
       secondPayments[currency] =
-        (totalsByCurrency[currency] * state.formData.secondPaymentPercent) / 100;
-    });
+        (totalsByCurrency[currency] * state.formData.secondPaymentPercent) /
+        100;
+    }
     return secondPayments;
   },
 
@@ -318,12 +333,12 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
     const depositsByCurrency = state.calculateDepositByCurrency();
     const secondPaymentsByCurrency = state.calculateSecondPaymentByCurrency();
     const finalPayments: Record<string, number> = {};
-    Object.keys(totalsByCurrency).forEach((currency) => {
+    for (const currency of Object.keys(totalsByCurrency)) {
       const total = totalsByCurrency[currency];
       const deposit = depositsByCurrency[currency] || 0;
       const secondPayment = secondPaymentsByCurrency[currency] || 0;
       finalPayments[currency] = total - deposit - secondPayment;
-    });
+    }
     return finalPayments;
   },
 
@@ -332,14 +347,19 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
       // Clean items by removing the 'amount' field if present (it's calculated)
       // Also ensure currency is set for each item (default to global currency if missing)
       const cleanedItems =
-        jsonData.items?.map(({ amount: _amount, ...item }) => ({
-          ...item,
-          currency:
-            item.currency ??
-            jsonData.currency ??
-            state.formData.currency ??
-            "RM",
-        })) ?? state.formData.items;
+        jsonData.items?.map(
+          (itemWithAmount: QuotationItem & { amount?: number }) => {
+            const { amount: _amount, ...item } = itemWithAmount;
+            return {
+              ...item,
+              currency:
+                item.currency ??
+                jsonData.currency ??
+                state.formData.currency ??
+                "RM",
+            };
+          }
+        ) ?? state.formData.items;
 
       return {
         formData: {
