@@ -15,7 +15,7 @@ import { FormField, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { cn } from "@/lib/utils";
+import { cn, exportJSON, formatDecimal, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
 export default function QuotationForm() {
@@ -44,7 +44,7 @@ export default function QuotationForm() {
     importJSON,
   } = useQuotationStore();
 
-  const exportJSON = () => {
+  const handleExportJSON = () => {
     const exportData = {
       ...formData,
       items: formData.items.map((item) => ({
@@ -52,36 +52,28 @@ export default function QuotationForm() {
         amount: item.quantity * item.rate,
       })),
     };
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `quotation-${formData.quotationNumber}.json`;
-    link.click();
+    exportJSON(exportData, `quotation-${formData.quotationNumber}.json`);
   };
 
-  const handleImportJSON = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportJSON = async (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const file = event.target.files?.[0];
     if (!file) {
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const jsonData = JSON.parse(e.target?.result as string);
-        importJSON(jsonData);
-        // Reset the input so the same file can be imported again
-        event.target.value = "";
-      } catch (error) {
-        console.error(
-          "Failed to import JSON file. Please check the file format.",
-          error
-        );
-      }
-    };
-    reader.readAsText(file);
+    try {
+      const jsonData = await readJsonFile(file);
+      importJSON(jsonData as Parameters<typeof importJSON>[0]);
+      // Reset the input so the same file can be imported again
+      event.target.value = "";
+    } catch (error) {
+      console.error(
+        "Failed to import JSON file. Please check the file format.",
+        error
+      );
+    }
   };
 
   return (
@@ -90,7 +82,7 @@ export default function QuotationForm() {
         <div className="bg-white p-8 shadow-lg">
           <div className="mb-6 flex items-center justify-between">
             <h1 className="font-bold text-3xl">Create Quotation</h1>
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2">
               <Button
                 icon={<EyeIcon className="h-5 w-5" />}
                 onClick={() => setView("preview")}
@@ -112,7 +104,7 @@ export default function QuotationForm() {
               </Button>
               <Button
                 icon={<FileTextIcon className="h-5 w-5" />}
-                onClick={exportJSON}
+                onClick={handleExportJSON}
               >
                 Export JSON
               </Button>
@@ -329,7 +321,7 @@ export default function QuotationForm() {
                         id={`item-amount-${itemIndex}`}
                         label="Amount"
                         prefix={item.currency || formData.currency || "RM"}
-                        value={(item.quantity * item.rate).toFixed(2)}
+                        value={formatDecimal(item.quantity * item.rate, 2)}
                       />
                     </div>
 
@@ -490,7 +482,7 @@ export default function QuotationForm() {
                               <div className="mb-1 text-sm">Total</div>
                               <div className="font-bold text-xl">
                                 {currency}{" "}
-                                {totalsByCurrency[currency].toFixed(2)}
+                                {formatDecimal(totalsByCurrency[currency], 2)}
                               </div>
                             </div>
                             {formData.paymentType !== "Recurring payment" && (
@@ -500,8 +492,10 @@ export default function QuotationForm() {
                                 </div>
                                 <div className="font-bold text-teal-600 text-xl">
                                   {currency}{" "}
-                                  {depositsByCurrency[currency]?.toFixed(0) ||
-                                    "0.00"}
+                                  {formatDecimal(
+                                    depositsByCurrency[currency] ?? 0,
+                                    0
+                                  )}
                                 </div>
                               </div>
                             )}
@@ -513,9 +507,10 @@ export default function QuotationForm() {
                                 </div>
                                 <div className="font-bold text-teal-600 text-xl">
                                   {currency}{" "}
-                                  {secondPaymentsByCurrency[currency]?.toFixed(
+                                  {formatDecimal(
+                                    secondPaymentsByCurrency[currency] ?? 0,
                                     0
-                                  ) || "0.00"}
+                                  )}
                                 </div>
                               </div>
                             )}
@@ -544,9 +539,10 @@ export default function QuotationForm() {
                               </div>
                               <div className="font-bold text-teal-600 text-xl">
                                 {currency}{" "}
-                                {finalPaymentsByCurrency[currency]?.toFixed(
+                                {formatDecimal(
+                                  finalPaymentsByCurrency[currency] ?? 0,
                                   0
-                                ) || "0.00"}
+                                )}
                               </div>
                             </div>
                           </Card>

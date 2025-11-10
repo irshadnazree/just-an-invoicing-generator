@@ -4,6 +4,7 @@ import {
   FileArrowDownIcon,
 } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
+import { exportJSON, formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
 export default function QuotationPreview() {
@@ -26,20 +27,11 @@ export default function QuotationPreview() {
     // Save original title
     const originalTitle = document.title;
     // Create filename from quotation details
-    const sanitizeFilename = (str: string) =>
-      str
-        .replace(/[^a-z0-9]/gi, "-")
-        .replace(/-+/g, "-")
-        .replace(/^-|-$/g, "")
-        .toUpperCase();
-    const fromCompany = sanitizeFilename(
-      (formData.quotationFrom.company || "").split(" ")[0]
+    const printTitle = generatePrintFilename(
+      formData.quotationFrom.company || "",
+      formData.quotationFor.company || "",
+      formData.quotationNumber || ""
     );
-    const toCompany = sanitizeFilename(
-      (formData.quotationFor.company || "").split(" ")[0]
-    );
-    const quotationNo = sanitizeFilename(formData.quotationNumber || "");
-    const printTitle = `${quotationNo}-${fromCompany}-${toCompany}`;
     // Set title for print filename
     document.title = printTitle;
     // Print
@@ -50,7 +42,7 @@ export default function QuotationPreview() {
     }, 100);
   };
 
-  const exportJSON = () => {
+  const handleExportJSON = () => {
     const exportData = {
       ...formData,
       items: formData.items.map((item) => ({
@@ -58,13 +50,7 @@ export default function QuotationPreview() {
         amount: item.quantity * item.rate,
       })),
     };
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataBlob = new Blob([dataStr], { type: "application/json" });
-    const url = URL.createObjectURL(dataBlob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `quotation-${formData.quotationNumber}.json`;
-    link.click();
+    exportJSON(exportData, `quotation-${formData.quotationNumber}.json`);
   };
 
   return (
@@ -85,7 +71,7 @@ export default function QuotationPreview() {
           </Button>
           <Button
             icon={<FileArrowDownIcon className="h-5 w-5" />}
-            onClick={exportJSON}
+            onClick={handleExportJSON}
           >
             Export JSON
           </Button>
@@ -202,7 +188,7 @@ export default function QuotationPreview() {
                   </td>
                   <td className="whitespace-nowrap p-3 text-left">
                     {item.currency || formData.currency}{" "}
-                    {(item.quantity * item.rate).toFixed(2)}
+                    {formatDecimal(item.quantity * item.rate, 2)}
                   </td>
                 </tr>
               ))}
@@ -217,7 +203,7 @@ export default function QuotationPreview() {
                     Total ({currency})
                   </td>
                   <td className="whitespace-nowrap p-3 text-left font-bold">
-                    {currency} {totalsByCurrency[currency].toFixed(2)}
+                    {currency} {formatDecimal(totalsByCurrency[currency], 2)}
                   </td>
                 </tr>,
                 formData.paymentType !== "Recurring payment" && (
@@ -233,7 +219,7 @@ export default function QuotationPreview() {
                     </td>
                     <td className="whitespace-nowrap p-3 text-left">
                       {currency}{" "}
-                      {depositsByCurrency[currency]?.toFixed(2) || "0.00"}
+                      {formatDecimal(depositsByCurrency[currency] ?? 0, 2)}
                     </td>
                   </tr>
                 ),
@@ -251,7 +237,10 @@ export default function QuotationPreview() {
                     </td>
                     <td className="p-3 text-left">
                       {currency}{" "}
-                      {secondPaymentsByCurrency[currency]?.toFixed(2) || "0.00"}
+                      {formatDecimal(
+                        secondPaymentsByCurrency[currency] ?? 0,
+                        2
+                      )}
                     </td>
                   </tr>
                 ),
@@ -279,7 +268,7 @@ export default function QuotationPreview() {
                   </td>
                   <td className="whitespace-nowrap p-3 text-left">
                     {currency}{" "}
-                    {finalPaymentsByCurrency[currency]?.toFixed(2) || "0.00"}
+                    {formatDecimal(finalPaymentsByCurrency[currency] ?? 0, 2)}
                   </td>
                 </tr>,
               ])}
