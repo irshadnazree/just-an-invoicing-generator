@@ -1,5 +1,5 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
-import { ThemeProvider } from "@/components/theme-provider";
+import { ThemeProvider } from "@/lib/provider/theme-provider";
 import { getThemeServerFn } from "@/lib/theme";
 
 import "@fontsource-variable/public-sans";

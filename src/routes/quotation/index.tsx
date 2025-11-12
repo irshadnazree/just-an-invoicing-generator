@@ -8,8 +8,8 @@ import {
 } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
-import { AmountDisplay } from "@/components/amount-display";
-import { ThemeToggle } from "@/components/theme-toggle";
+import { AmountDisplay } from "@/components/page/quotation/amount-display";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
