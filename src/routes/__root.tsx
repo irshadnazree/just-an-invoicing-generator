@@ -1,6 +1,10 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import { ThemeProvider } from "@/components/theme-provider";
 import { getThemeServerFn } from "@/lib/theme";
+
+import "@fontsource-variable/public-sans";
+import "@fontsource-variable/jetbrains-mono";
+
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({
