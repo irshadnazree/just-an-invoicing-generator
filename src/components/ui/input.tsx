@@ -17,7 +17,7 @@ export type InputProps = {
 };
 
 const inputVariants = cva(
-  "w-full flex-1 border border-input bg-background px-4 py-2 focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+  "w-full flex-1 border border-input bg-background px-3 py-2 leading-tight focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {},
   }

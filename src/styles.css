@@ -1,106 +1,48 @@
 @import "tailwindcss";
-
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 /* Design Tokens (OKLCH Color Space) */
 @layer base {
   :root {
     /* Light theme */
-    --background: oklch(100% 0 0);
-    --foreground: oklch(15% 0.02 260);
-    --card: oklch(98% 0.01 260);
-    --card-foreground: oklch(15% 0.02 260);
-    --border: oklch(85% 0.01 260);
-    --input: oklch(85% 0.01 260);
-    --primary: oklch(60% 0.16 195);
-    --primary-foreground: oklch(100% 0 0);
-    --secondary: oklch(90% 0.01 260);
-    --secondary-foreground: oklch(15% 0.02 260);
-    --muted: oklch(90% 0.01 260);
-    --muted-foreground: oklch(45% 0.01 260);
-    --accent: oklch(70% 0.12 195);
-    --accent-foreground: oklch(15% 0.02 260);
-    --destructive: oklch(60% 0.17 30);
-    --destructive-foreground: oklch(100% 0 0);
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.9702 0 0);
+    --text: oklch(0.235 0 0);
+    --primary: oklch(0.75 0.1 190);
   }
 
   [data-theme="dark"] {
     /* Dark theme */
-    --background: oklch(12% 0.02 260);
-    --foreground: oklch(95% 0.01 260);
-    --card: oklch(18% 0.02 260);
-    --card-foreground: oklch(90% 0.01 260);
-    --border: oklch(25% 0.02 260);
-    --input: oklch(25% 0.02 260);
-    --primary: oklch(50% 0.16 195);
-    --primary-foreground: oklch(12% 0.02 260);
-    --secondary: oklch(25% 0.02 260);
-    --secondary-foreground: oklch(90% 0.01 260);
-    --muted: oklch(25% 0.02 260);
-    --muted-foreground: oklch(70% 0.01 260);
-    --accent: oklch(60% 0.12 195);
-    --accent-foreground: oklch(90% 0.01 260);
-    --destructive: oklch(65% 0.17 30);
-    --destructive-foreground: oklch(100% 0 0);
+    --background: oklch(0.1776 0 0);
+    --foreground: oklch(0.235 0 0);
+    --text: oklch(0.9702 0 0);
+    --primary: oklch(0.75 0.1 190);
   }
 
-  /* Define theme using @theme directive */
+  /* Tailwind Theme Mappings */
   @theme {
-    /* Extend default colors */
     --color-background: var(--background);
     --color-foreground: var(--foreground);
-    --color-card: var(--card);
-    --color-card-foreground: var(--card-foreground);
-    --color-border: var(--border);
-    --color-input: var(--input);
+    --color-text: var(--text);
     --color-primary: var(--primary);
-    --color-primary-foreground: var(--primary-foreground);
-    --color-secondary: var(--secondary);
-    --color-secondary-foreground: var(--secondary-foreground);
-    --color-muted: var(--muted);
-    --color-muted-foreground: var(--muted-foreground);
-    --color-accent: var(--accent);
-    --color-accent-foreground: var(--accent-foreground);
-    --color-destructive: var(--destructive);
-    --color-destructive-foreground: var(--destructive-foreground);
-  }
-
-  * {
-    border-color: var(--border);
-  }
-
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
+    --font-sans: "Public Sans Variable", sans-serif;
+    --font-mono: "JetBrains Mono Variable", monospace;
   }
 }
 
-/* Define theme using @theme directive */
-@theme {
-  /* Extend default colors */
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
-  --font-sans: "Public Sans Variable", sans-serif;
-  --font-mono: "JetBrains Mono Variable", monospace;
-}
-
+/* Base element styles */
 body {
-  @apply m-0;
-  font-family: var(--font-sans, "sans-serif");
+  @apply m-0 tracking-tight;
+  font-family: var(--font-mono);
+  color: var(--text);
+  background-color: var(--background);
+
+  transition:
+    background-color 150ms ease-in-out,
+    color 150ms ease-in-out;
+
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Hide number input spinners */
@@ -112,4 +54,17 @@ input[type="number"]::-webkit-outer-spin-button {
 
 input[type="number"] {
   -moz-appearance: textfield;
+}
+
+.h-scrollbar::-webkit-scrollbar {
+  scrollbar-width: thin;
+  height: 4px;
+}
+
+.h-scrollbar::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+.h-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--primary);
 }

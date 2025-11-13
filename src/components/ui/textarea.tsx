@@ -12,7 +12,7 @@ export type TextareaProps = {
 };
 
 const baseTextareaClasses =
-  "border border-input bg-background px-4 py-2 w-full flex-1 focus:border-primary focus:outline-none disabled:cursor-not-allowed disabled:opacity-50";
+  "w-full flex-1 h-24 border border-input bg-background px-3 py-2 focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50 resize-none";
 
 export function Textarea({
   id,

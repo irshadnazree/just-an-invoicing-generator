@@ -2,7 +2,7 @@ import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "@/lib/provider/theme-provider";
 
-export function ThemeToggle() {
+export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
 
   function toggleTheme() {
@@ -11,11 +11,14 @@ export function ThemeToggle() {
 
   return (
     <Button
-      icon={theme === "dark" ? <MoonIcon size={20} /> : <SunIcon size={20} />}
+      icon={
+        theme === "dark" ? (
+          <MoonIcon size={20} weight="bold" />
+        ) : (
+          <SunIcon size={20} weight="bold" />
+        )
+      }
       onClick={toggleTheme}
-      size="sm"
-      title={`Switch to ${theme === "light" ? "dark" : "light"} mode`}
-      variant="text"
     />
   );
 }

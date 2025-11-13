@@ -1,64 +1,62 @@
 import { cva } from "class-variance-authority";
-import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 
-export type ButtonVariant = "primary" | "text";
-
-export type ButtonSize = "sm" | "md" | "lg" | "icon";
-
 export type ButtonProps = {
-  children?: ReactNode;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
+  children?: React.ReactNode;
   onClick?: () => void;
-  type?: "button" | "submit" | "reset";
-  className?: string;
-  disabled?: boolean;
-  title?: string;
-  icon?: ReactNode;
-  fullWidth?: boolean;
+  variant?: "primary" | "text";
+  size?: "sm" | "default";
+  icon?: React.ReactNode;
 };
 
 const buttonVariants = cva(
-  "flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap rounded font-medium transition focus:outline-none disabled:cursor-not-allowed disabled:opacity-50",
+  "flex cursor-pointer items-center rounded-md transition-all duration-300 ease-out-cubic hover:duration-100 focus:ring-none",
   {
     variants: {
       variant: {
         primary:
-          "bg-primary text-primary-foreground shadow-sm hover:bg-primary/90",
-        text: "font-semibold text-primary hover:text-primary/80",
+          "bg-primary text-foreground hover:ring-1 hover:ring-primary/50 dark:bg-foreground dark:text-primary",
+        text: "bg-transparent text-primary hover:bg-foreground/50",
       },
       size: {
-        sm: "px-3 py-1.5 text-sm",
-        md: "px-4 py-2",
-        lg: "px-6 py-3 text-lg",
-        icon: "p-2",
+        sm: "gap-2 px-3 py-1 font-semibold text-sm",
+        default: "gap-3 px-7 py-3 text-base",
       },
+      iconSize: {
+        sm: "size-fit p-1.5",
+        default: "size-fit p-3",
+        none: "",
+      },
+    },
+    defaultVariants: {
+      variant: "primary",
+      size: "default",
+      iconSize: "none",
     },
   }
 );
 
 export function Button({
   children,
-  variant = "primary",
-  size = "md",
   onClick,
-  type = "button",
-  className = "",
-  disabled = false,
-  title,
+  variant = "primary",
+  size = "default",
   icon,
-  fullWidth = false,
 }: ButtonProps) {
-  const widthClass = fullWidth ? "flex-1" : "";
+  let iconSize: "none" | "sm" | "default" = "default";
+  if (children) {
+    iconSize = "none";
+  } else if (size === "sm") {
+    iconSize = "sm";
+  } else {
+    iconSize = "default";
+  }
 
   return (
     <button
-      className={cn(buttonVariants({ variant, size, className }), widthClass)}
-      disabled={disabled}
+      className={cn(buttonVariants({ size, iconSize, variant }))}
       onClick={onClick}
-      title={title}
-      type={type}
+      type="button"
     >
       {icon && <span className="shrink-0">{icon}</span>}
       {children}

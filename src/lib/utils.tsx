@@ -87,12 +87,12 @@ export function readJsonFile(file: File): Promise<unknown> {
 export function generatePrintFilename(
   quotationFromCompany: string,
   quotationForCompany: string,
-  quotationNumber: string
+  quotationId: string
 ) {
   const fromCompany = sanitizeFilename(
     quotationFromCompany.split(" ")[0] || ""
   );
   const toCompany = sanitizeFilename(quotationForCompany.split(" ")[0] || "");
-  const quotationNo = sanitizeFilename(quotationNumber);
+  const quotationNo = sanitizeFilename(quotationId);
   return `${quotationNo}-${fromCompany}-${toCompany}`;
 }

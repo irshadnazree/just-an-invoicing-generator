@@ -22,7 +22,7 @@ type FormLabelProps = {
 
 function FormLabel({ id, label }: FormLabelProps) {
   return (
-    <label className="block font-medium text-base" htmlFor={id}>
+    <label className="block text-base" htmlFor={id}>
       {label}
     </label>
   );
