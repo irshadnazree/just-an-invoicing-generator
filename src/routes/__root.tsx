@@ -1,4 +1,5 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+import Navbar from "@/components/shared/navbar";
 import { ThemeProvider } from "@/lib/provider/theme-provider";
 import { getThemeServerFn } from "@/lib/theme";
 
@@ -46,8 +47,13 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body>
-        <ThemeProvider theme={theme}>{children}</ThemeProvider>
+      <body className="flex min-h-screen flex-col items-center">
+        <ThemeProvider theme={theme}>
+          <Navbar />
+          <main className="mx-auto my-10 w-full max-w-400 grow px-25">
+            {children}
+          </main>
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>
