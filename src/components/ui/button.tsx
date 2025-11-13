@@ -10,7 +10,7 @@ export type ButtonProps = {
 };
 
 const buttonVariants = cva(
-  "flex cursor-pointer items-center rounded-md transition-all duration-300 ease-out-cubic hover:duration-100 focus:ring-none",
+  "flex cursor-pointer items-center rounded-md transition-all duration-300 ease-out-cubic hover:duration-100 focus:outline-none focus:ring-0",
   {
     variants: {
       variant: {

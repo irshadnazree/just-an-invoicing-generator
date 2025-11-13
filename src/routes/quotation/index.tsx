@@ -30,6 +30,7 @@ export const Route = createFileRoute("/quotation/")({
 
 function RouteComponent() {
   const fileInputRef = useRef<HTMLInputElement>(null);
+
   const {
     formData,
     updateField,
@@ -98,6 +99,7 @@ function RouteComponent() {
           <Link to="/quotation/preview">
             <Button icon={<EyeIcon size={22} weight="bold" />}>Preview</Button>
           </Link>
+
           <Button
             icon={<UploadIcon size={22} weight="bold" />}
             onClick={() => fileInputRef.current?.click()}
@@ -118,6 +120,7 @@ function RouteComponent() {
           </Button>
         </div>
       </div>
+
       <div className="flex flex-col gap-3">
         <h3 className="border-text border-b-2 pb-2 font-semibold">
           Project Details

@@ -12,7 +12,7 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="mx-auto w-full max-w-400 px-25 pt-10">
+    <nav className="mx-auto w-full max-w-400 px-25 pt-10 print:hidden">
       <div className="flex items-center justify-between">
         <span className="text-3xl">Just an Accounting Generator</span>
         <ThemeToggle />

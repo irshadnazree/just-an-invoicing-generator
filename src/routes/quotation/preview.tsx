@@ -1,12 +1,7 @@
-import {
-  ArrowLeftIcon,
-  DownloadIcon,
-  FileArrowDownIcon,
-} from "@phosphor-icons/react";
+import { ArrowUUpLeftIcon, DownloadIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ThemeToggle } from "@/components/shared/theme-toggle";
 import { Button } from "@/components/ui/button";
-import { exportJSON, formatDecimal, generatePrintFilename } from "@/lib/utils";
+import { formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
 export const Route = createFileRoute("/quotation/preview")({
@@ -28,14 +23,14 @@ function RouteComponent() {
   const finalPaymentsByCurrency = calculateFinalPaymentByCurrency();
   const currencies = Object.keys(totalsByCurrency);
 
-  const printQuotation = () => {
+  function printQuotation() {
     // Save original title
     const originalTitle = document.title;
     // Create filename from quotation details
     const printTitle = generatePrintFilename(
       formData.quotationFrom.company || "",
       formData.quotationFor.company || "",
-      formData.quotationNumber || ""
+      formData.quotationId || ""
     );
     // Set title for print filename
     document.title = printTitle;
@@ -45,50 +40,122 @@ function RouteComponent() {
     setTimeout(() => {
       document.title = originalTitle;
     }, 100);
-  };
+  }
 
-  const handleExportJSON = () => {
-    const exportData = {
-      ...formData,
-      items: formData.items.map((item) => ({
-        ...item,
-        amount: item.quantity * item.rate,
-      })),
-    };
-    exportJSON(exportData, `quotation-${formData.quotationNumber}.json`);
-  };
+  function calculateFinalPaymentPercent() {
+    if (formData.paymentType === "Recurring payment") {
+      return formData.hasSecondPayment
+        ? 100 - formData.secondPaymentPercent
+        : 100;
+    }
+    if (formData.hasSecondPayment) {
+      return 100 - formData.depositPercent - formData.secondPaymentPercent;
+    }
+    return 100 - formData.depositPercent;
+  }
+
+  function renderPaymentRow(params: {
+    label: string;
+    value: number;
+    currency: string;
+    percent?: number;
+    isBold?: boolean;
+    key: string;
+  }) {
+    return (
+      <tr className="border-black border-b" key={params.key}>
+        <td />
+        <td />
+        <td />
+        <td
+          className={`whitespace-nowrap border-black border-x p-3 text-left ${params.isBold ? "font-bold" : ""}`}
+        >
+          {params.label}
+          {params.percent !== undefined && <span> ({params.percent}%)</span>}
+        </td>
+        <td
+          className={`whitespace-nowrap p-3 text-left ${params.isBold ? "font-bold" : ""}`}
+        >
+          {params.currency} {formatDecimal(params.value, 2)}
+        </td>
+      </tr>
+    );
+  }
+
+  function renderCurrencyFooter(currency: string) {
+    const finalPaymentPercent = calculateFinalPaymentPercent();
+    const rows = [
+      renderPaymentRow({
+        label: "Total",
+        value: totalsByCurrency[currency],
+        currency,
+        isBold: true,
+        key: `total-${currency}`,
+      }),
+    ];
+
+    if (formData.paymentType !== "Recurring payment") {
+      rows.push(
+        renderPaymentRow({
+          label: "Deposit",
+          value: depositsByCurrency[currency] ?? 0,
+          currency,
+          percent: formData.depositPercent,
+          key: `deposit-${currency}`,
+        })
+      );
+    }
+
+    if (formData.hasSecondPayment) {
+      rows.push(
+        renderPaymentRow({
+          label: "Second Payment",
+          value: secondPaymentsByCurrency[currency] ?? 0,
+          currency,
+          percent: formData.secondPaymentPercent,
+          key: `second-${currency}`,
+        })
+      );
+    }
+
+    rows.push(
+      renderPaymentRow({
+        label: "Final Payment",
+        value: finalPaymentsByCurrency[currency] ?? 0,
+        currency,
+        percent: finalPaymentPercent,
+        key: `final-${currency}`,
+      })
+    );
+
+    return rows;
+  }
 
   return (
-    <div className="min-h-screen bg-muted p-8">
-      <div className="mx-auto max-w-8xl">
-        <div className="mb-4 flex gap-2 print:hidden">
+    <section className="flex flex-col gap-5">
+      <div className="flex items-center justify-between print:hidden">
+        <h2 className="text-3xl">Quotation Preview</h2>
+        <div className="flex items-center gap-2">
           <Link to="/quotation">
-            <Button icon={<ArrowLeftIcon className="h-5 w-5" />}>
-              Back to Edit
-            </Button>
+            <Button icon={<ArrowUUpLeftIcon size={22} weight="bold" />} />
           </Link>
-          <ThemeToggle />
           <Button
-            icon={<DownloadIcon className="h-5 w-5" />}
+            icon={<DownloadIcon size={22} weight="bold" />}
             onClick={printQuotation}
           >
-            Print / Save PDF
-          </Button>
-          <Button
-            icon={<FileArrowDownIcon className="h-5 w-5" />}
-            onClick={handleExportJSON}
-          >
-            Export JSON
+            Print
           </Button>
         </div>
+      </div>
 
+      <div className="font-sans">
         <div className="bg-card" style={{ border: "2px solid #000" }}>
           {/* Header */}
-          <div className="border-black border-b-2 p-6">
-            <div className="flex items-start justify-between">
+          <div className="border-black border-b-2 p-4">
+            <div className="flex items-center justify-between">
               <h1 className="font-bold text-2xl">{formData.projectTitle}</h1>
               <div className="flex gap-2">
-                <span className="self-center text-muted-foreground text-sm">
+                <span className="self-center text-muted-foreground">
                   {formData.paymentType}
                 </span>
               </div>
@@ -100,41 +167,35 @@ function RouteComponent() {
             <table className="w-full">
               <tbody>
                 <tr className="border-black border-b">
-                  <td className="w-1/3 border-black border-r p-3">
+                  <td className="border-black border-r p-3">
                     <div className="text-sm">
                       <strong>Quotation No #</strong>
                     </div>
-                    <div>{formData.quotationNumber}</div>
+                    <div>{formData.quotationId}</div>
                   </td>
-                  <td className="w-1/3 border-black border-r p-3">
+                  <td className="border-black p-3">
+                    <div className="text-sm">
+                      <strong>Quotation Date</strong>
+                    </div>
+                    <div>{formData.quotationDate}</div>
+                  </td>
+                </tr>
+                <tr>
+                  <td className="border-black border-r p-3">
                     <div className="text-sm">
                       <strong>Quotation From</strong>
                     </div>
                     <div>{formData.quotationFrom.company}</div>
                   </td>
-                  <td className="w-1/3 p-3">
+                  <td className="p-3">
                     <div className="text-sm">
                       <strong>Quotation For</strong>
                     </div>
                     <div>{formData.quotationFor.company}</div>
                   </td>
                 </tr>
-                <tr>
-                  <td className="border-black border-r p-3">
-                    <div className="text-sm">
-                      <strong>Quotation Date</strong>
-                    </div>
-                    <div>{formData.quotationDate}</div>
-                  </td>
-                  <td className="border-black border-r p-3">
-                    <div>{formData.quotationFrom.country}</div>
-                  </td>
-                  <td className="p-3">
-                    <div>{formData.quotationFor.country}</div>
-                  </td>
-                </tr>
                 <tr className="border-black border-t">
-                  <td className="p-3" colSpan={3}>
+                  <td className="p-3" colSpan={2}>
                     <div className="text-sm">
                       <strong>Bank Account Number</strong>
                     </div>
@@ -196,109 +257,31 @@ function RouteComponent() {
               ))}
             </tbody>
             <tfoot>
-              {currencies.map((currency) => [
-                <tr className="border-black border-b" key={`total-${currency}`}>
-                  <td />
-                  <td />
-                  <td />
-                  <td className="border-black border-x p-3 text-left font-bold">
-                    Total ({currency})
-                  </td>
-                  <td className="whitespace-nowrap p-3 text-left font-bold">
-                    {currency} {formatDecimal(totalsByCurrency[currency], 2)}
-                  </td>
-                </tr>,
-                formData.paymentType !== "Recurring payment" && (
-                  <tr
-                    className="border-black border-b"
-                    key={`deposit-${currency}`}
-                  >
-                    <td />
-                    <td />
-                    <td />
-                    <td className="border-black border-x p-3 text-left">
-                      Deposit ({currency}) <br />({formData.depositPercent}%)
-                    </td>
-                    <td className="whitespace-nowrap p-3 text-left">
-                      {currency}{" "}
-                      {formatDecimal(depositsByCurrency[currency] ?? 0, 2)}
-                    </td>
-                  </tr>
-                ),
-                formData.hasSecondPayment && (
-                  <tr
-                    className="border-black border-b"
-                    key={`second-${currency}`}
-                  >
-                    <td />
-                    <td />
-                    <td />
-                    <td className="border-black border-x p-3 text-left">
-                      Second Payment ({currency}) <br />(
-                      {formData.secondPaymentPercent}%)
-                    </td>
-                    <td className="p-3 text-left">
-                      {currency}{" "}
-                      {formatDecimal(
-                        secondPaymentsByCurrency[currency] ?? 0,
-                        2
-                      )}
-                    </td>
-                  </tr>
-                ),
-                <tr className="border-black border-b" key={`final-${currency}`}>
-                  <td />
-                  <td />
-                  <td />
-                  <td className="whitespace-nowrap border-black border-x p-3 text-left">
-                    Final Payment ({currency}) <br />({(() => {
-                      if (formData.paymentType === "Recurring payment") {
-                        return formData.hasSecondPayment
-                          ? 100 - formData.secondPaymentPercent
-                          : 100;
-                      }
-                      if (formData.hasSecondPayment) {
-                        return (
-                          100 -
-                          formData.depositPercent -
-                          formData.secondPaymentPercent
-                        );
-                      }
-                      return 100 - formData.depositPercent;
-                    })()}
-                    %)
-                  </td>
-                  <td className="whitespace-nowrap p-3 text-left">
-                    {currency}{" "}
-                    {formatDecimal(finalPaymentsByCurrency[currency] ?? 0, 2)}
-                  </td>
-                </tr>,
-              ])}
+              {currencies.flatMap((currency) => renderCurrencyFooter(currency))}
             </tfoot>
           </table>
-        </div>
 
-        {/* Terms and Conditions */}
-        <div className="border-2 border-black p-3">
-          <h3 className="mb-3 font-bold">Terms and Conditions</h3>
-          <ol className="space-y-2">
-            {formData.terms.map((term, index) => (
-              <li className="text-sm" key={`term-${term}`}>
-                {index + 1}. {term}
-              </li>
-            ))}
-          </ol>
+          {/* Terms and Conditions */}
+          <div className="p-3">
+            <h3 className="mb-2 font-bold">Terms and Conditions</h3>
+            <ol className="space-y-1">
+              {formData.terms.map((term, index) => (
+                <li className="text-sm" key={`term-${term}`}>
+                  {index + 1}. {term}
+                </li>
+              ))}
+            </ol>
+          </div>
         </div>
       </div>
-
       <style>{`
       @media print {
         @page {
           size: A4;
           margin-top: 1cm;
           margin-bottom: 1cm;
-          margin-left: 0.25cm;
-          margin-right: 0.25cm;
+          margin-left: 1cm;
+          margin-right: 1cm;
           /* Remove browser print headers and footers */
           @top-left { content: ""; }
           @top-center { content: ""; }
@@ -317,6 +300,12 @@ function RouteComponent() {
         body {
           color: black !important;
           font-size: 0.75em;
+          margin: 0;
+          padding: 0;
+          background: white !important;
+        }
+
+        main {
           margin: 0;
           padding: 0;
           background: white !important;
@@ -436,6 +425,6 @@ function RouteComponent() {
         }
       }
     `}</style>
-    </div>
+    </section>
   );
 }
