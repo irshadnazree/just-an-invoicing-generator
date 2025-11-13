@@ -4,7 +4,12 @@ import { cn } from "@/lib/utils";
 
 export default function Navbar() {
   const location = useLocation();
-  const isActive = (to: string) => location.pathname === to;
+  const isActive = (to: string) => {
+    if (to === "/") {
+      return location.pathname === "/";
+    }
+    return location.pathname === to || location.pathname.startsWith(`${to}/`);
+  };
 
   return (
     <nav className="mx-auto w-full max-w-400 px-25 pt-10">
