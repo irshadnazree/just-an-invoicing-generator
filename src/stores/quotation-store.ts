@@ -14,7 +14,7 @@ type CompanyInfo = {
 };
 
 type QuotationFormData = {
-  quotationNumber: string;
+  quotationId: string;
   quotationDate: string;
   bankAccount: string;
   quotationFrom: CompanyInfo;
@@ -75,7 +75,7 @@ type QuotationStore = {
 };
 
 const initialFormData: QuotationFormData = {
-  quotationNumber: "",
+  quotationId: "",
   quotationDate: "",
   bankAccount: "",
   quotationFrom: {

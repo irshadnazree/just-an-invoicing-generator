@@ -5,9 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/**
- * Sanitizes a string for use in filenames by removing special characters
- */
 export function sanitizeFilename(str: string) {
   return str
     .replace(/[^a-z0-9]/gi, "-")
@@ -16,9 +13,6 @@ export function sanitizeFilename(str: string) {
     .toUpperCase();
 }
 
-/**
- * Formats a number as currency with optional decimal places
- */
 export function formatCurrency(
   amount: number,
   currencySymbol: string,
@@ -27,16 +21,10 @@ export function formatCurrency(
   return `${currencySymbol} ${amount.toFixed(decimals)}`;
 }
 
-/**
- * Formats a number with specific decimal precision
- */
 export function formatDecimal(amount: number, decimals = 2) {
   return amount.toFixed(decimals);
 }
 
-/**
- * Downloads content to a file
- */
 export function downloadFile(
   content: string | Blob,
   filename: string,
@@ -52,9 +40,6 @@ export function downloadFile(
   URL.revokeObjectURL(url);
 }
 
-/**
- * Exports quotation data to a JSON file
- */
 export function exportJSON(data: unknown, filename: string) {
   const dataStr = JSON.stringify(data, null, 2);
   downloadFile(dataStr, filename, "application/json");

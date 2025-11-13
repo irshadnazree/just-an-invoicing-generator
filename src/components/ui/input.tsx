@@ -7,7 +7,7 @@ export type InputProps = {
   id: string;
   type?: InputType;
   value: string | number;
-  onChange: (value: string | number) => void;
+  onChange?: (value: string | number) => void;
   placeholder?: string;
   required?: boolean;
   className?: string;
@@ -17,7 +17,7 @@ export type InputProps = {
 };
 
 const inputVariants = cva(
-  "w-full flex-1 border border-input bg-background px-3 py-2 leading-tight focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50",
+  "max-h-9.5 w-full flex-1 border border-input bg-foreground px-3 py-2 leading-tight focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {},
   }
@@ -39,9 +39,9 @@ export function Input({
     if (type === "number") {
       const newValue =
         e.target.value === "" ? 0 : Number.parseInt(e.target.value, 10) || 0;
-      onChange(newValue);
+      onChange?.(newValue);
     } else {
-      onChange(e.target.value);
+      onChange?.(e.target.value);
     }
   };
 
