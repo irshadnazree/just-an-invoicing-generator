@@ -14,18 +14,20 @@ export default function Navbar() {
   return (
     <nav className="mx-auto w-full max-w-400 px-25 pt-10 print:hidden">
       <div className="flex items-center justify-between">
-        <span className="text-3xl">Just an Accounting Generator</span>
+        <Link to="/">
+          <span className="text-3xl">Just an Accounting Generator</span>
+        </Link>
         <ThemeToggle />
       </div>
       <div className="flex gap-6 border-text border-b-2">
-        <NavbarLink isActive={isActive("/")} to="/">
-          Overview
-        </NavbarLink>
         <NavbarLink isActive={isActive("/quotation")} to="/quotation">
           Quotation
         </NavbarLink>
         <NavbarLink isActive={isActive("/invoice")} to="/invoice">
           Invoice
+        </NavbarLink>
+        <NavbarLink isActive={isActive("/history")} to="/history">
+          History
         </NavbarLink>
       </div>
     </nav>
