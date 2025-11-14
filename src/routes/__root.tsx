@@ -50,7 +50,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
       <body className="flex min-h-screen flex-col items-center">
         <ThemeProvider theme={theme}>
           <Navbar />
-          <main className="mx-auto my-10 w-full max-w-400 grow px-25">
+          <main className="mx-auto my-6 w-full max-w-400 grow px-4 xl:my-10 xl:px-25">
             {children}
           </main>
         </ThemeProvider>

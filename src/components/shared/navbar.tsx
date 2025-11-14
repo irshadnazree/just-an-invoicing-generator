@@ -12,8 +12,8 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="mx-auto w-full max-w-400 px-25 pt-10 print:hidden">
-      <div className="flex items-center justify-between">
+    <nav className="mx-auto w-full max-w-400 px-4 pt-6 xl:px-25 xl:pt-10 print:hidden">
+      <div className="item-start flex justify-between xl:items-center">
         <Link to="/">
           <span className="text-3xl">Just an Accounting Generator</span>
         </Link>

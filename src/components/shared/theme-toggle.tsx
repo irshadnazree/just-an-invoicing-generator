@@ -13,9 +13,9 @@ export default function ThemeToggle() {
     <Button
       icon={
         theme === "dark" ? (
-          <MoonIcon size={20} weight="bold" />
+          <MoonIcon className="size-4.5 xl:size-5.5" size={22} weight="bold" />
         ) : (
-          <SunIcon size={20} weight="bold" />
+          <SunIcon className="size-4.5 xl:size-5.5" size={22} weight="bold" />
         )
       }
       onClick={toggleTheme}

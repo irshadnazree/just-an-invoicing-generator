@@ -107,15 +107,31 @@ function RouteComponent() {
 
   return (
     <section className="flex flex-col gap-5">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
         <h2 className="text-3xl">Create Quotation</h2>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1 xl:gap-2">
           <Link to="/quotation/preview">
-            <Button icon={<EyeIcon size={22} weight="bold" />}>Preview</Button>
+            <Button
+              icon={
+                <EyeIcon
+                  className="size-4.5 xl:size-5.5"
+                  size={22}
+                  weight="bold"
+                />
+              }
+            >
+              Preview
+            </Button>
           </Link>
 
           <Button
-            icon={<UploadIcon size={22} weight="bold" />}
+            icon={
+              <UploadIcon
+                className="size-4.5 xl:size-5.5"
+                size={22}
+                weight="bold"
+              />
+            }
             onClick={() => fileInputRef.current?.click()}
           >
             Import
@@ -127,7 +143,13 @@ function RouteComponent() {
             type="file"
           />
           <Button
-            icon={<FileTextIcon size={22} weight="bold" />}
+            icon={
+              <FileTextIcon
+                className="size-4.5 xl:size-5.5"
+                size={22}
+                weight="bold"
+              />
+            }
             onClick={handleExportJSON}
           >
             Export
@@ -139,8 +161,8 @@ function RouteComponent() {
         <h3 className="border-text border-b-2 pb-2 font-semibold">
           Project Details
         </h3>
-        <div className="grid grid-cols-2 gap-4">
-          <FormField className="col-span-2">
+        <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
+          <FormField className="col-span-1 xl:col-span-2">
             <FormLabel id="project-title" label="Project Title" />
             <Input
               id="project-title"
@@ -195,7 +217,7 @@ function RouteComponent() {
         <h3 className="border-text border-b-2 pb-2 font-semibold">
           Client Information
         </h3>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
           <FormField>
             <FormLabel id="quotation-from-company" label="Quotation From" />
             <Input
@@ -254,8 +276,8 @@ function RouteComponent() {
                 </div>
               </div>
 
-              <div className="mb-4 grid grid-cols-1 gap-4 md:grid-cols-4">
-                <FormField className="col-span-4">
+              <div className="mb-4 grid grid-cols-2 gap-4 md:grid-cols-4">
+                <FormField className="col-span-2 xl:col-span-4">
                   <FormLabel id="item-name" label="Item Name" />
                   <Input
                     id={`item-name-${itemIndex}`}
@@ -364,7 +386,7 @@ function RouteComponent() {
         <h3 className="border-text border-b-2 pb-2 font-semibold">
           Payment Details
         </h3>
-        <div className="grid grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-2 xl:grid-cols-4 xl:gap-4">
           <FormField className="col-span-2">
             <FormLabel id="currency" label="Currency" />
             <Select
@@ -420,14 +442,14 @@ function RouteComponent() {
           <div className="flex flex-col gap-4">
             {currencies.map((currency) => (
               <div className="flex flex-col gap-2" key={currency}>
-                <div className="font-semibold text-sm">{currency} Totals</div>
+                <div className="font-semibold">{currency} Totals</div>
                 <Card
                   className={cn(
-                    "grid",
+                    "grid gap-2 xl:gap-0",
                     formData.paymentType !== "Recurring payment" &&
                       formData.hasSecondPayment
-                      ? "grid-cols-4"
-                      : "grid-cols-3",
+                      ? "grid-cols-2 xl:grid-cols-4"
+                      : "grid-cols-2 xl:grid-cols-3",
                     formData.paymentType === "Recurring payment" &&
                       "grid-cols-2"
                   )}

@@ -20,11 +20,11 @@ const buttonVariants = cva(
       },
       size: {
         sm: "gap-2 px-3 py-1 font-semibold text-sm",
-        default: "gap-3 px-7 py-3 text-base",
+        default: "gap-3 px-4 py-2 text-base text-sm xl:px-7 xl:py-3",
       },
       iconSize: {
         sm: "size-fit p-1.5",
-        default: "size-fit p-3",
+        default: "size-fit px-2 xl:p-3",
         none: "",
       },
     },
