@@ -8,6 +8,12 @@ import {
 } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useRef } from "react";
+import {
+  getDepositByCurrency,
+  getFinalPaymentByCurrency,
+  getSecondPaymentByCurrency,
+  getTotalByCurrency,
+} from "@/components/hooks/use-calculate";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -46,17 +52,25 @@ function RouteComponent() {
     duplicateTerm,
     removeTerm,
     updateTerm,
-    calculateTotalByCurrency,
-    calculateDepositByCurrency,
-    calculateSecondPaymentByCurrency,
-    calculateFinalPaymentByCurrency,
     importJSON,
   } = useQuotationStore();
 
-  const totalsByCurrency = calculateTotalByCurrency();
-  const depositsByCurrency = calculateDepositByCurrency();
-  const secondPaymentsByCurrency = calculateSecondPaymentByCurrency();
-  const finalPaymentsByCurrency = calculateFinalPaymentByCurrency();
+  const totalsByCurrency = getTotalByCurrency(formData.items);
+  const depositsByCurrency = getDepositByCurrency(
+    formData.paymentType,
+    formData.depositPercent,
+    totalsByCurrency
+  );
+  const secondPaymentsByCurrency = getSecondPaymentByCurrency(
+    formData.hasSecondPayment,
+    formData.secondPaymentPercent,
+    totalsByCurrency
+  );
+  const finalPaymentsByCurrency = getFinalPaymentByCurrency(
+    totalsByCurrency,
+    depositsByCurrency,
+    secondPaymentsByCurrency
+  );
   const currencies = Object.keys(totalsByCurrency);
 
   const handleExportJSON = () => {
@@ -156,9 +170,13 @@ function RouteComponent() {
           </FormField>
           <FormField>
             <FormLabel id="payment-type" label="Payment Type" />
-            <Input
+            <Select
               id="payment-type"
               onChange={(value) => updateField("paymentType", value as string)}
+              options={[
+                { value: "One-time payment", label: "One-time payment" },
+                { value: "Recurring payment", label: "Recurring payment" },
+              ]}
               value={formData.paymentType}
             />
           </FormField>
@@ -349,10 +367,13 @@ function RouteComponent() {
         <div className="grid grid-cols-4 gap-4">
           <FormField className="col-span-2">
             <FormLabel id="currency" label="Currency" />
-            <Input
+            <Select
               id="currency"
               onChange={(value) => updateField("currency", value as string)}
-              type="text"
+              options={[
+                { value: "RM", label: "MYR" },
+                { value: "USD", label: "USD" },
+              ]}
               value={formData.currency}
             />
           </FormField>

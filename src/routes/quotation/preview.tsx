@@ -1,5 +1,11 @@
 import { ArrowUUpLeftIcon, DownloadIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  getDepositByCurrency,
+  getFinalPaymentByCurrency,
+  getSecondPaymentByCurrency,
+  getTotalByCurrency,
+} from "@/components/hooks/use-calculate";
 import { Button } from "@/components/ui/button";
 import { formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
@@ -9,18 +15,24 @@ export const Route = createFileRoute("/quotation/preview")({
 });
 
 function RouteComponent() {
-  const {
-    formData,
-    calculateTotalByCurrency,
-    calculateDepositByCurrency,
-    calculateSecondPaymentByCurrency,
-    calculateFinalPaymentByCurrency,
-  } = useQuotationStore();
+  const { formData } = useQuotationStore();
 
-  const totalsByCurrency = calculateTotalByCurrency();
-  const depositsByCurrency = calculateDepositByCurrency();
-  const secondPaymentsByCurrency = calculateSecondPaymentByCurrency();
-  const finalPaymentsByCurrency = calculateFinalPaymentByCurrency();
+  const totalsByCurrency = getTotalByCurrency(formData.items);
+  const depositsByCurrency = getDepositByCurrency(
+    formData.paymentType,
+    formData.depositPercent,
+    totalsByCurrency
+  );
+  const secondPaymentsByCurrency = getSecondPaymentByCurrency(
+    formData.hasSecondPayment,
+    formData.secondPaymentPercent,
+    totalsByCurrency
+  );
+  const finalPaymentsByCurrency = getFinalPaymentByCurrency(
+    totalsByCurrency,
+    depositsByCurrency,
+    secondPaymentsByCurrency
+  );
   const currencies = Object.keys(totalsByCurrency);
 
   function printQuotation() {
