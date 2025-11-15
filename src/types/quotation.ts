@@ -13,6 +13,8 @@ type CompanyInfo = {
 
 type QuotationFormData = {
   id: string;
+  createdAt: string;
+  updatedAt: string;
   quotationId: string;
   quotationDate: string;
   bankAccount: string;
@@ -63,6 +65,14 @@ type QuotationStore = {
       items?: Array<QuotationLineItem & { amount?: number }>;
     }
   ) => void;
+  // localStorage array operations
+  saveQuotation: () => void;
+  loadQuotation: (id: string) => boolean;
+  getAllQuotations: () => QuotationFormData[];
+  deleteQuotation: (id: string) => void;
+  duplicateQuotation: (id: string) => void;
+  initializeQuotation: () => void;
+  isValidQuotation: () => boolean;
   resetForm: () => void;
 };
 

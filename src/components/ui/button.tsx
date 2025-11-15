@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 export type ButtonProps = {
   children?: React.ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "text";
+  variant?: "primary" | "ghost";
   size?: "sm" | "default";
   icon?: React.ReactNode;
 };
@@ -16,7 +16,7 @@ const buttonVariants = cva(
       variant: {
         primary:
           "bg-primary text-foreground hover:ring-1 hover:ring-primary/50 dark:bg-foreground dark:text-primary",
-        text: "bg-transparent text-primary hover:bg-foreground/50",
+        ghost: "bg-transparent text-primary hover:bg-foreground/50",
       },
       size: {
         sm: "gap-2 px-3 py-1 font-semibold text-sm",

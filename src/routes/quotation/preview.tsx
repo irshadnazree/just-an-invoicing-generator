@@ -1,4 +1,4 @@
-import { ArrowUUpLeftIcon, DownloadIcon } from "@phosphor-icons/react";
+import { ArrowUUpLeftIcon, PrinterIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   getDepositByCurrency,
@@ -34,6 +34,7 @@ function RouteComponent() {
     secondPaymentsByCurrency
   );
   const currencies = Object.keys(totalsByCurrency);
+  const backUrl = `/quotation/${formData.id}`;
 
   function printQuotation() {
     // Save original title
@@ -148,15 +149,13 @@ function RouteComponent() {
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0 print:hidden">
         <h2 className="text-3xl">Quotation Preview</h2>
         <div className="flex items-center gap-2">
-          <Link to="/quotation">
+          <Link to={backUrl}>
             <Button icon={<ArrowUUpLeftIcon size={22} weight="bold" />} />
           </Link>
           <Button
-            icon={<DownloadIcon size={22} weight="bold" />}
+            icon={<PrinterIcon size={22} weight="bold" />}
             onClick={printQuotation}
-          >
-            Print
-          </Button>
+          />
         </div>
       </div>
 

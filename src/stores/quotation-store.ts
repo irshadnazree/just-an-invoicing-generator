@@ -1,12 +1,23 @@
 import { create } from "zustand";
+import { generateRandomString, incrementCodeFlexible } from "@/lib/utils";
 import type {
   QuotationFormData,
   QuotationLineItem,
   QuotationStore,
 } from "@/types/quotation";
+import {
+  findQuotationById,
+  generateId,
+  isQuotationValid,
+  loadQuotationsFromStorage,
+  saveQuotationsToStorage,
+  saveQuotationToArray,
+} from "@/utils/quotation";
 
-const initialFormData: QuotationFormData = {
+export const initialFormData: QuotationFormData = {
   id: "",
+  createdAt: "",
+  updatedAt: "",
   quotationId: "",
   quotationDate: "",
   bankAccount: "",
@@ -28,40 +39,44 @@ const initialFormData: QuotationFormData = {
   terms: [],
 };
 
-export const useQuotationStore = create<QuotationStore>((set, _get) => ({
+export const useQuotationStore = create<QuotationStore>((set, get) => ({
   formData: initialFormData,
 
   updateField: (field, value) =>
     set((state) => {
+      let updatedFormData = { ...state.formData, [field]: value };
+
       // If currency is being updated, reset all item currencies to match
       if (field === "currency" && typeof value === "string") {
-        return {
-          formData: {
-            ...state.formData,
-            [field]: value,
-            items: state.formData.items.map((item) => ({
-              ...item,
-              currency: value,
-            })),
-          },
+        updatedFormData = {
+          ...updatedFormData,
+          items: state.formData.items.map((item) => ({
+            ...item,
+            currency: value,
+          })),
         };
       }
+
       return {
-        formData: { ...state.formData, [field]: value },
+        formData: updatedFormData,
       };
     }),
 
   updateNestedField: (parent, field, value) =>
-    set((state) => ({
-      formData: {
+    set((state) => {
+      const updatedFormData = {
         ...state.formData,
         [parent]: { ...state.formData[parent], [field]: value },
-      },
-    })),
+      };
+
+      return {
+        formData: updatedFormData,
+      };
+    }),
 
   addItem: () =>
-    set((state) => ({
-      formData: {
+    set((state) => {
+      const updatedFormData = {
         ...state.formData,
         items: [
           ...state.formData.items,
@@ -73,8 +88,12 @@ export const useQuotationStore = create<QuotationStore>((set, _get) => ({
             currency: state.formData.currency || "RM",
           },
         ],
-      },
-    })),
+      };
+
+      return {
+        formData: updatedFormData,
+      };
+    }),
 
   duplicateItem: (index) =>
     set((state) => {
@@ -88,28 +107,36 @@ export const useQuotationStore = create<QuotationStore>((set, _get) => ({
       };
       const newItems = [...state.formData.items];
       newItems.splice(index + 1, 0, duplicatedItem);
+      const updatedFormData = {
+        ...state.formData,
+        items: newItems,
+      };
+
       return {
-        formData: {
-          ...state.formData,
-          items: newItems,
-        },
+        formData: updatedFormData,
       };
     }),
 
   removeItem: (index) =>
-    set((state) => ({
-      formData: {
+    set((state) => {
+      const updatedFormData = {
         ...state.formData,
         items: state.formData.items.filter((_, i) => i !== index),
-      },
-    })),
+      };
+
+      return {
+        formData: updatedFormData,
+      };
+    }),
 
   updateItem: (index, field, value) =>
     set((state) => {
       const newItems = [...state.formData.items];
       newItems[index] = { ...newItems[index], [field]: value };
+      const updatedFormData = { ...state.formData, items: newItems };
+
       return {
-        formData: { ...state.formData, items: newItems },
+        formData: updatedFormData,
       };
     }),
 
@@ -117,8 +144,10 @@ export const useQuotationStore = create<QuotationStore>((set, _get) => ({
     set((state) => {
       const newItems = [...state.formData.items];
       newItems[itemIndex].details.push("");
+      const updatedFormData = { ...state.formData, items: newItems };
+
       return {
-        formData: { ...state.formData, items: newItems },
+        formData: updatedFormData,
       };
     }),
 
@@ -128,8 +157,10 @@ export const useQuotationStore = create<QuotationStore>((set, _get) => ({
       newItems[itemIndex].details = newItems[itemIndex].details.filter(
         (_, i) => i !== detailIndex
       );
+      const updatedFormData = { ...state.formData, items: newItems };
+
       return {
-        formData: { ...state.formData, items: newItems },
+        formData: updatedFormData,
       };
     }),
 
@@ -137,45 +168,59 @@ export const useQuotationStore = create<QuotationStore>((set, _get) => ({
     set((state) => {
       const newItems = [...state.formData.items];
       newItems[itemIndex].details[detailIndex] = value;
+      const updatedFormData = { ...state.formData, items: newItems };
+
       return {
-        formData: { ...state.formData, items: newItems },
+        formData: updatedFormData,
       };
     }),
 
   addTerm: () =>
-    set((state) => ({
-      formData: {
+    set((state) => {
+      const updatedFormData = {
         ...state.formData,
         terms: [...state.formData.terms, ""],
-      },
-    })),
+      };
+
+      return {
+        formData: updatedFormData,
+      };
+    }),
 
   duplicateTerm: (index) =>
     set((state) => {
       const termToDuplicate = state.formData.terms[index];
       const newTerms = [...state.formData.terms];
       newTerms.splice(index + 1, 0, termToDuplicate);
+      const updatedFormData = {
+        ...state.formData,
+        terms: newTerms,
+      };
+
       return {
-        formData: {
-          ...state.formData,
-          terms: newTerms,
-        },
+        formData: updatedFormData,
       };
     }),
 
   removeTerm: (index) =>
-    set((state) => ({
-      formData: {
+    set((state) => {
+      const updatedFormData = {
         ...state.formData,
         terms: state.formData.terms.filter((_, i) => i !== index),
-      },
-    })),
+      };
+
+      return {
+        formData: updatedFormData,
+      };
+    }),
   updateTerm: (index, value) =>
     set((state) => {
       const newTerms = [...state.formData.terms];
       newTerms[index] = value;
+      const updatedFormData = { ...state.formData, terms: newTerms };
+
       return {
-        formData: { ...state.formData, terms: newTerms },
+        formData: updatedFormData,
       };
     }),
   importJSON: (jsonData) => {
@@ -197,16 +242,68 @@ export const useQuotationStore = create<QuotationStore>((set, _get) => ({
           }
         ) ?? state.formData.items;
 
+      const updatedFormData = {
+        ...state.formData,
+        ...jsonData,
+        items: cleanedItems,
+        quotationFrom: jsonData.quotationFrom ?? state.formData.quotationFrom,
+        quotationFor: jsonData.quotationFor ?? state.formData.quotationFor,
+      };
+
       return {
-        formData: {
-          ...state.formData,
-          ...jsonData,
-          items: cleanedItems,
-          quotationFrom: jsonData.quotationFrom ?? state.formData.quotationFrom,
-          quotationFor: jsonData.quotationFor ?? state.formData.quotationFor,
-        },
+        formData: updatedFormData,
       };
     });
   },
+
+  initializeQuotation: () => {
+    const newQuotation = generateId(initialFormData);
+    set({ formData: newQuotation });
+  },
+
+  getAllQuotations: () => loadQuotationsFromStorage(),
+
+  isValidQuotation: () => {
+    const formData = get().formData;
+    return isQuotationValid(formData);
+  },
+
+  saveQuotation: () => {
+    const formData = get().formData;
+    if (formData.id) {
+      saveQuotationToArray(formData);
+    }
+  },
+
+  loadQuotation: (id: string) => {
+    const quotation = findQuotationById(id);
+    if (quotation) {
+      set({ formData: quotation });
+      return true;
+    }
+    return false;
+  },
+
+  deleteQuotation: (id: string) => {
+    const quotations = loadQuotationsFromStorage();
+    const filteredQuotations = quotations.filter((q) => q.id !== id);
+    saveQuotationsToStorage(filteredQuotations);
+  },
+
+  duplicateQuotation: (id: string) => {
+    const quotation = findQuotationById(id);
+
+    if (quotation) {
+      const duplicatedQuotation = {
+        ...quotation,
+        id: generateRandomString(10),
+        quotationId: incrementCodeFlexible(quotation.quotationId),
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      set({ formData: duplicatedQuotation });
+    }
+  },
+
   resetForm: () => set({ formData: initialFormData }),
 }));

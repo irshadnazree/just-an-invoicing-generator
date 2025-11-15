@@ -23,9 +23,9 @@ export default function Navbar() {
         <NavbarLink isActive={isActive("/quotation")} to="/quotation">
           Quotation
         </NavbarLink>
-        <NavbarLink isActive={isActive("/invoice")} to="/invoice">
+        {/* <NavbarLink isActive={isActive("/invoice")} to="/invoice">
           Invoice
-        </NavbarLink>
+        </NavbarLink> */}
         <NavbarLink isActive={isActive("/history")} to="/history">
           History
         </NavbarLink>
