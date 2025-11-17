@@ -225,27 +225,11 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
     }),
   importJSON: (jsonData) => {
     set((state) => {
-      // Clean items by removing the 'amount' field if present (it's calculated)
-      // Also ensure currency is set for each item (default to global currency if missing)
-      const cleanedItems =
-        jsonData.items?.map(
-          (itemWithAmount: QuotationLineItem & { amount?: number }) => {
-            const { amount: _amount, ...item } = itemWithAmount;
-            return {
-              ...item,
-              currency:
-                item.currency ??
-                jsonData.currency ??
-                state.formData.currency ??
-                "RM",
-            };
-          }
-        ) ?? state.formData.items;
-
       const updatedFormData = {
         ...state.formData,
         ...jsonData,
-        items: cleanedItems,
+        id: generateRandomString(10),
+        items: jsonData.items ?? state.formData.items,
         quotationFrom: jsonData.quotationFrom ?? state.formData.quotationFrom,
         quotationFor: jsonData.quotationFor ?? state.formData.quotationFor,
       };
@@ -262,6 +246,17 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
   },
 
   getAllQuotations: () => loadQuotationsFromStorage(),
+
+  getAllQuotationsAsync: async () => {
+    try {
+      // Simulate a small delay to ensure consistent loading state
+      await new Promise((resolve) => setTimeout(resolve, 50));
+      return loadQuotationsFromStorage();
+    } catch (error) {
+      console.warn("Failed to load quotations from storage:", error);
+      return [];
+    }
+  },
 
   isValidQuotation: () => {
     const formData = get().formData;
@@ -301,8 +296,18 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       };
-      set({ formData: duplicatedQuotation });
+
+      try {
+        // Save the duplicated quotation to localStorage array
+        saveQuotationToArray(duplicatedQuotation);
+        set({ formData: duplicatedQuotation });
+        return duplicatedQuotation.id; // Return the new ID for navigation
+      } catch (error) {
+        console.error("Failed to duplicate quotation:", error);
+        throw new Error("Failed to duplicate quotation");
+      }
     }
+    return null;
   },
 
   resetForm: () => set({ formData: initialFormData }),

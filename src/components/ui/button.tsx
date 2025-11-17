@@ -7,6 +7,7 @@ export type ButtonProps = {
   variant?: "primary" | "ghost";
   size?: "sm" | "default";
   icon?: React.ReactNode;
+  disabled?: boolean;
 };
 
 const buttonVariants = cva(
@@ -42,6 +43,7 @@ export function Button({
   variant = "primary",
   size = "default",
   icon,
+  disabled = false,
 }: ButtonProps) {
   let iconSize: "none" | "sm" | "default" = "default";
   if (children) {
@@ -54,7 +56,11 @@ export function Button({
 
   return (
     <button
-      className={cn(buttonVariants({ size, iconSize, variant }))}
+      className={cn(
+        buttonVariants({ size, iconSize, variant }),
+        disabled && "cursor-not-allowed opacity-50"
+      )}
+      disabled={disabled}
       onClick={onClick}
       type="button"
     >

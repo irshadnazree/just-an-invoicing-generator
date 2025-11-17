@@ -76,7 +76,7 @@ function RouteComponent() {
     try {
       const jsonData = await readJsonFile(file);
       importJSON(jsonData as Parameters<typeof importJSON>[0]);
-      // Reset the input so the same file can be imported again
+
       event.target.value = "";
     } catch (error) {
       console.error(

@@ -1,14 +1,17 @@
 import {
+  CheckSquareIcon,
   CopyIcon,
   FileTextIcon,
   PencilSimpleIcon,
+  SquareIcon,
   TrashIcon,
 } from "@phosphor-icons/react";
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { formatCurrency } from "@/lib/utils";
+import { Loader } from "@/components/ui/loader";
+import { cn, formatCurrency } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 import type { QuotationFormData } from "@/types/quotation";
 
@@ -30,24 +33,48 @@ export const Route = createFileRoute("/history/")({
 });
 
 function RouteComponent() {
-  const { getAllQuotations, deleteQuotation, duplicateQuotation } =
-    useQuotationStore();
+  const {
+    getAllQuotations,
+    getAllQuotationsAsync,
+    deleteQuotation,
+    duplicateQuotation,
+  } = useQuotationStore();
+  const router = useRouter();
 
-  const loadedQuotations = getAllQuotations();
-
-  const tableHeaders = [
-    { label: "Id", key: "id" },
-    { label: "Project", key: "projectTitle" },
-    { label: "Payment Type", key: "paymentType" },
-    { label: "Client", key: "quotationFor" },
-    { label: "Total", key: "total" },
-    { label: "Actions", key: "actions" },
-  ];
-
-  const [quotations, setQuotations] =
-    useState<QuotationFormData[]>(loadedQuotations);
+  const [quotations, setQuotations] = useState<QuotationFormData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
+  const [selectedQuotations, setSelectedQuotations] = useState<Set<string>>(
+    new Set()
+  );
+  const [pendingBulkDelete, setPendingBulkDelete] = useState(false);
+
+  const tableHeaders = [
+    { label: "Id", key: "id", width: "w-[6%]" },
+    { label: "Project", key: "projectTitle", width: "w-[38%]" },
+    { label: "Payment Type", key: "paymentType", width: "w-[12%]" },
+    { label: "Client", key: "quotationFor", width: "w-[18%]" },
+    { label: "Total", key: "total", width: "w-[10%]" },
+    { label: "Actions", key: "actions", width: "w-[12%]" },
+  ];
+
+  // Load quotations on mount
+  useEffect(() => {
+    const loadQuotations = async () => {
+      try {
+        const loadedQuotations = await getAllQuotationsAsync();
+        setQuotations(loadedQuotations);
+      } catch (error) {
+        console.error("Failed to load quotations:", error);
+        setQuotations([]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadQuotations();
+  }, [getAllQuotationsAsync]);
 
   const formattedQuotations = useMemo(
     () =>
@@ -62,8 +89,11 @@ function RouteComponent() {
           projectTitle: q.projectTitle || "Untitled Project",
           paymentType: q.paymentType.replace(" payment", ""),
           quotationFor: q.quotationFor?.company || "Unknown Company",
+          quotationDate: q.quotationDate,
           total,
           currency: q.currency || "RM",
+          createdAt: q.createdAt,
+          updatedAt: q.updatedAt,
         } as QuotationListItem;
       }),
     [quotations]
@@ -93,7 +123,16 @@ function RouteComponent() {
   );
 
   function handleDuplicateQuotation(id: string) {
-    duplicateQuotation(id);
+    const newId = duplicateQuotation(id);
+    if (newId) {
+      // Refresh the quotations list
+      getAllQuotationsAsync().then(setQuotations);
+      // Navigate to the new quotation
+      router.navigate({
+        to: "/quotation/$quotation",
+        params: { quotation: newId },
+      });
+    }
   }
 
   function handleDeleteQuotation(id: string) {
@@ -112,6 +151,56 @@ function RouteComponent() {
     setPendingDeleteId(null);
   }
 
+  function toggleQuotationSelection(id: string) {
+    const newSelection = new Set(selectedQuotations);
+    if (newSelection.has(id)) {
+      newSelection.delete(id);
+    } else {
+      newSelection.add(id);
+    }
+    setSelectedQuotations(newSelection);
+  }
+
+  function toggleSelectAll() {
+    if (selectedQuotations.size === sortedQuotations.length) {
+      setSelectedQuotations(new Set());
+    } else {
+      setSelectedQuotations(new Set(sortedQuotations.map((q) => q.id)));
+    }
+  }
+
+  function handleBulkDelete() {
+    if (selectedQuotations.size > 0) {
+      setPendingBulkDelete(true);
+    }
+  }
+
+  function confirmBulkDelete() {
+    for (const id of selectedQuotations) {
+      deleteQuotation(id);
+    }
+    setQuotations(getAllQuotations());
+    setSelectedQuotations(new Set());
+    setPendingBulkDelete(false);
+  }
+
+  function cancelBulkDelete() {
+    setPendingBulkDelete(false);
+  }
+
+  if (isLoading) {
+    return (
+      <section className="flex flex-col gap-6">
+        <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
+          <h2 className="text-3xl/11.5">Quotation History</h2>
+        </div>
+        <div className="flex min-h-96 items-center justify-center">
+          <Loader size="lg" text="Loading quotations..." />
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section className="flex flex-col gap-6">
       {pendingDeleteId && (
@@ -125,16 +214,43 @@ function RouteComponent() {
               <Button onClick={cancelDelete} variant="ghost">
                 Cancel
               </Button>
-              <Button onClick={confirmDelete} variant="primary">
-                Delete
+              <Button onClick={confirmDelete}>Delete</Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {pendingBulkDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50">
+          <div className="rounded-lg bg-foreground p-6 shadow-lg">
+            <h3 className="mb-4 font-semibold text-lg">Confirm Bulk Delete</h3>
+            <p className="mb-6 text-text">
+              Are you sure you want to delete {selectedQuotations.size}{" "}
+              quotation(s)?
+            </p>
+            <div className="flex justify-end gap-3">
+              <Button onClick={cancelBulkDelete} variant="ghost">
+                Cancel
+              </Button>
+              <Button onClick={confirmBulkDelete}>
+                Delete {selectedQuotations.size} Item(s)
               </Button>
             </div>
           </div>
         </div>
       )}
+
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-        <h1 className="text-3xl">Quotation History</h1>
+        <h2 className="text-3xl/11.5">Quotation History</h2>
         <div className="flex items-center gap-4">
+          {selectedQuotations.size > 0 && (
+            <Button
+              icon={<TrashIcon size={18} />}
+              onClick={handleBulkDelete}
+              size="sm"
+              variant="ghost"
+            />
+          )}
           <Input
             id="search"
             onChange={(value) => setSearchTerm(value as string)}
@@ -159,75 +275,114 @@ function RouteComponent() {
           )}
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-text/50 bg-foreground/80">
-            <thead>
-              <tr>
-                {tableHeaders.map((header) => (
-                  <th
-                    className="px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider"
-                    key={header.key}
+        <table className="w-full table-fixed divide-y divide-text/50 bg-foreground/80">
+          <thead>
+            <tr>
+              <th className="w-[4%] px-2 py-2 text-left">
+                <Button
+                  icon={
+                    selectedQuotations.size === sortedQuotations.length ? (
+                      <CheckSquareIcon size={18} />
+                    ) : (
+                      <SquareIcon size={18} />
+                    )
+                  }
+                  onClick={toggleSelectAll}
+                  size="sm"
+                  variant="ghost"
+                />
+              </th>
+
+              {tableHeaders.map((header) => (
+                <th
+                  className={cn(
+                    "px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider",
+                    header.width
+                  )}
+                  key={header.key}
+                >
+                  {header.label}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {sortedQuotations.map((quotation) => (
+              <tr className="hover:bg-foreground" key={quotation.id}>
+                <td className="w-[4%] whitespace-nowrap px-2 py-2">
+                  <Button
+                    icon={
+                      selectedQuotations.has(quotation.id) ? (
+                        <CheckSquareIcon size={18} />
+                      ) : (
+                        <SquareIcon size={18} />
+                      )
+                    }
+                    onClick={() => toggleQuotationSelection(quotation.id)}
+                    size="sm"
+                    variant="ghost"
+                  />
+                </td>
+
+                <td className="w-[6%] whitespace-nowrap px-4 py-2 font-medium text-sm">
+                  <Link
+                    className="text-primary"
+                    params={{ quotation: quotation.id }}
+                    to="/quotation/$quotation"
                   >
-                    {header.label}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {sortedQuotations.map((quotation) => (
-                <tr className="hover:bg-foreground" key={quotation.id}>
-                  <td className="whitespace-nowrap px-4 py-2 font-medium text-sm">
+                    {quotation.quotationId || "No ID"}
+                  </Link>
+                </td>
+                <td className="w-[38%] min-w-0 truncate px-4 py-2 text-sm">
+                  {quotation.projectTitle}
+                </td>
+                <td className="w-[12%] whitespace-nowrap px-4 py-2 text-sm">
+                  {quotation.paymentType}
+                </td>
+                <td className="w-[18%] min-w-0 truncate px-4 py-2 text-sm">
+                  {quotation.quotationFor}
+                </td>
+                <td className="w-[10%] whitespace-nowrap px-4 py-2 text-sm">
+                  {formatCurrency(quotation.total, quotation.currency)}
+                </td>
+
+                <td className="w-[12%] whitespace-nowrap px-4 py-2 text-right font-medium text-sm">
+                  <div
+                    className={cn(
+                      "flex justify-start gap-1",
+                      selectedQuotations.size > 0 &&
+                        "pointer-events-none cursor-not-allowed opacity-50"
+                    )}
+                  >
                     <Link
-                      className="text-primary"
                       params={{ quotation: quotation.id }}
                       to="/quotation/$quotation"
                     >
-                      {quotation.quotationId || "No ID"}
+                      <Button
+                        icon={<PencilSimpleIcon size={22} />}
+                        size="sm"
+                        variant="ghost"
+                      />
                     </Link>
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-sm">
-                    {quotation.projectTitle}
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-sm">
-                    {quotation.paymentType}
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-sm">
-                    {quotation.quotationFor}
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-sm">
-                    {formatCurrency(quotation.total, quotation.currency)}
-                  </td>
-                  <td className="whitespace-nowrap px-4 py-2 text-right font-medium text-sm">
-                    <div className="flex">
-                      <Link
-                        params={{ quotation: quotation.id }}
-                        to="/quotation/$quotation"
-                      >
-                        <Button
-                          icon={<PencilSimpleIcon size={22} />}
-                          size="sm"
-                          variant="ghost"
-                        />
-                      </Link>
-                      <Button
-                        icon={<CopyIcon size={22} />}
-                        onClick={() => handleDuplicateQuotation(quotation.id)}
-                        size="sm"
-                        variant="ghost"
-                      />
-                      <Button
-                        icon={<TrashIcon size={22} />}
-                        onClick={() => handleDeleteQuotation(quotation.id)}
-                        size="sm"
-                        variant="ghost"
-                      />
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+                    <Button
+                      icon={<CopyIcon size={22} />}
+                      onClick={() => handleDuplicateQuotation(quotation.id)}
+                      size="sm"
+                      variant="ghost"
+                    />
+
+                    <Button
+                      icon={<TrashIcon size={22} />}
+                      onClick={() => handleDeleteQuotation(quotation.id)}
+                      size="sm"
+                      variant="ghost"
+                    />
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       )}
 
       {sortedQuotations.length > 0 && (
