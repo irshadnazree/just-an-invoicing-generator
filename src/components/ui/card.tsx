@@ -1,24 +1,41 @@
+import { cva } from "class-variance-authority";
 import type { ReactNode } from "react";
-
-export type CardPadding = "sm" | "md" | "lg";
+import { cn } from "@/lib/utils";
 
 export type CardProps = {
   children: ReactNode;
   className?: string;
-  padding?: CardPadding;
+  variant?: "default" | "placeholder";
+  size?: "sm" | "md" | "lg";
 };
 
-const paddingClasses = {
-  sm: "p-2",
-  md: "p-3",
-  lg: "p-4",
-};
+const cardVariants = cva("border border-text", {
+  variants: {
+    variant: {
+      default: "bg-foreground/50",
+      placeholder: "border-dashed bg-foreground/50 text-text/50",
+    },
+    size: {
+      sm: "p-2",
+      md: "p-3",
+      lg: "p-4",
+    },
+  },
 
-export function Card({ children, className = "", padding = "lg" }: CardProps) {
+  defaultVariants: {
+    variant: "default",
+    size: "lg",
+  },
+});
+
+export function Card({
+  children,
+  className = "",
+  size = "lg",
+  variant = "default",
+}: CardProps) {
   return (
-    <div
-      className={`border border-text bg-foreground/50 ${paddingClasses[padding]} ${className}`}
-    >
+    <div className={cn(cardVariants({ size, variant, className }))}>
       {children}
     </div>
   );

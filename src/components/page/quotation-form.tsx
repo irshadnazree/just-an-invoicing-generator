@@ -52,9 +52,9 @@ export default function QuotationForm() {
   const currencies = Object.keys(totalsByCurrency);
 
   return (
-    <div className="flex flex-col gap-5">
+    <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-semibold">
+        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
           Project Details
         </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
@@ -110,7 +110,7 @@ export default function QuotationForm() {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-semibold">
+        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
           Client Information
         </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
@@ -140,7 +140,7 @@ export default function QuotationForm() {
       </div>
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between border-b-2 pb-1">
-          <h3 className="border-text font-semibold">Line Items</h3>
+          <h3 className="border-text font-bold text-xl">Line Items</h3>
           <Button
             icon={<PlusIcon size={18} weight="bold" />}
             onClick={addItem}
@@ -151,6 +151,21 @@ export default function QuotationForm() {
           </Button>
         </div>
         <div className="flex flex-col gap-6">
+          {formData.items.length === 0 && (
+            <Card
+              className="flex flex-col items-center justify-center gap-2"
+              variant="placeholder"
+            >
+              <Button
+                icon={<PlusIcon size={18} />}
+                onClick={addItem}
+                size="sm"
+                variant="ghost"
+              >
+                Add New Line Item
+              </Button>
+            </Card>
+          )}
           {formData.items.map((item, itemIndex) => (
             <Card key={`item-${itemIndex + 1}`}>
               <div className="mb-2 flex items-start justify-between">
@@ -279,7 +294,7 @@ export default function QuotationForm() {
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-semibold">
+        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
           Payment Details
         </h3>
         <div className="grid grid-cols-2 gap-2 xl:grid-cols-4 xl:gap-4">
@@ -413,7 +428,7 @@ export default function QuotationForm() {
       </div>
       <div className="flex flex-col gap-3">
         <div className="flex items-center justify-between border-b-2 pb-1">
-          <h3 className="border-text font-semibold">
+          <h3 className="border-text font-bold text-xl">
             Terms and Conditions Details
           </h3>
           <Button
@@ -426,6 +441,21 @@ export default function QuotationForm() {
           </Button>
         </div>
         <div className="flex flex-col gap-2">
+          {formData.terms.length === 0 && (
+            <Card
+              className="flex flex-col items-center justify-center gap-2"
+              variant="placeholder"
+            >
+              <Button
+                icon={<PlusIcon size={18} />}
+                onClick={addTerm}
+                size="sm"
+                variant="ghost"
+              >
+                Add New Term
+              </Button>
+            </Card>
+          )}
           {formData.terms.map((term, index) => (
             <Card key={`term-${index + 1}`}>
               <div className="mb-2 flex items-start justify-between">
