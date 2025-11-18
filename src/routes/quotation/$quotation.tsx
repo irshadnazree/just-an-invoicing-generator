@@ -100,7 +100,13 @@ function RouteComponent() {
           </h2>
           <Link to="/quotation">
             <Button
-              icon={<ArrowUUpLeftIcon size={18} weight="bold" />}
+              icon={
+                <ArrowUUpLeftIcon
+                  className="size-4 xl:size-5"
+                  size={20}
+                  weight="bold"
+                />
+              }
               size="sm"
             />
           </Link>
@@ -114,8 +120,8 @@ function RouteComponent() {
               <Button
                 icon={
                   <EyeIcon
-                    className="size-4 xl:size-4.5"
-                    size={18}
+                    className="size-4 xl:size-5"
+                    size={20}
                     weight="bold"
                   />
                 }
@@ -127,8 +133,8 @@ function RouteComponent() {
           <Button
             icon={
               <UploadIcon
-                className="size-4 xl:size-4.5"
-                size={18}
+                className="size-4 xl:size-5"
+                size={20}
                 weight="bold"
               />
             }
@@ -144,8 +150,8 @@ function RouteComponent() {
           <Button
             icon={
               <DownloadIcon
-                className="size-4 xl:size-4.5"
-                size={18}
+                className="size-4 xl:size-5"
+                size={20}
                 weight="bold"
               />
             }

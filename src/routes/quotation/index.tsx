@@ -173,7 +173,9 @@ function RouteComponent() {
         <div className="flex items-center gap-4">
           <h2 className="text-2xl">Quotations</h2>
           <Button
-            icon={<PlusIcon size={18} weight="bold" />}
+            icon={
+              <PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />
+            }
             onClick={handleCreateQuotation}
             size="sm"
           />
@@ -181,7 +183,7 @@ function RouteComponent() {
         <div className="flex items-center gap-4">
           {selectedQuotations.size > 0 && (
             <Button
-              icon={<TrashIcon size={18} />}
+              icon={<TrashIcon className="size-4 xl:size-5" size={20} />}
               onClick={handleBulkDelete}
               size="sm"
               variant="ghost"
