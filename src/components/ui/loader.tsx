@@ -24,7 +24,7 @@ export function Loader({ size = "default", className, text }: LoaderProps) {
       aria-label={text || "Loading"}
       aria-live="polite"
       className={cn(
-        "flex flex-col items-center justify-center gap-2",
+        "flex flex-col items-center justify-center gap-4",
         className
       )}
     >

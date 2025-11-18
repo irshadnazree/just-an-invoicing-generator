@@ -11,6 +11,19 @@ type CompanyInfo = {
   country: string;
 };
 
+type QuotationListItem = {
+  id: string;
+  quotationId: string;
+  projectTitle: string;
+  quotationFor: string;
+  quotationDate: string;
+  paymentType: string;
+  total: number;
+  currency: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
 type QuotationFormData = {
   id: string;
   createdAt: string;
@@ -77,4 +90,9 @@ type QuotationStore = {
   resetForm: () => void;
 };
 
-export type { QuotationFormData, QuotationLineItem, QuotationStore };
+export type {
+  QuotationFormData,
+  QuotationLineItem,
+  QuotationStore,
+  QuotationListItem,
+};

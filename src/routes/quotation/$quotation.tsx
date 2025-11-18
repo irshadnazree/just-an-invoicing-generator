@@ -1,4 +1,9 @@
-import { DownloadIcon, EyeIcon, UploadIcon } from "@phosphor-icons/react";
+import {
+  ArrowUUpLeftIcon,
+  DownloadIcon,
+  EyeIcon,
+  UploadIcon,
+} from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import FormWrapper from "@/components/page/quotation/form-wrapper";
@@ -89,9 +94,17 @@ function RouteComponent() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-        <h2 className="text-2xl">
-          {quotationId === "new" ? "Create Quotation" : "Edit Quotation"}
-        </h2>
+        <div className="flex items-center gap-2">
+          <h2 className="text-2xl">
+            {quotationId === "new" ? "Create Quotation" : "Edit Quotation"}
+          </h2>
+          <Link to="/quotation">
+            <Button
+              icon={<ArrowUUpLeftIcon size={18} weight="bold" />}
+              size="sm"
+            />
+          </Link>
+        </div>
         <div className="flex items-center gap-1 xl:gap-2">
           {formData.id && formData.id !== "" && (
             <Link

@@ -23,14 +23,11 @@ export default function Navbar() {
       </div>
       <div className="mt-2 flex gap-6 border-text border-b">
         <NavbarLink isActive={isActive("/quotation")} to="/quotation">
-          Quotation
+          Quotations
         </NavbarLink>
         {/* <NavbarLink isActive={isActive("/invoice")} to="/invoice">
           Invoice
         </NavbarLink> */}
-        <NavbarLink isActive={isActive("/history")} to="/history">
-          History
-        </NavbarLink>
       </div>
     </nav>
   );

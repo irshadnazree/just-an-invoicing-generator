@@ -150,11 +150,15 @@ function RouteComponent() {
         <h2 className="text-2xl">Quotation Preview</h2>
         <div className="flex items-center gap-2">
           <Link to={backUrl}>
-            <Button icon={<ArrowUUpLeftIcon size={22} weight="bold" />} />
+            <Button
+              icon={<ArrowUUpLeftIcon size={18} weight="bold" />}
+              size="sm"
+            />
           </Link>
           <Button
-            icon={<PrinterIcon size={22} weight="bold" />}
+            icon={<PrinterIcon size={18} weight="bold" />}
             onClick={printQuotation}
+            size="sm"
           />
         </div>
       </div>

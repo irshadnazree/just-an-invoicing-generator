@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as QuotationIndexRouteImport } from './routes/quotation/index'
 import { Route as InvoiceIndexRouteImport } from './routes/invoice/index'
-import { Route as HistoryIndexRouteImport } from './routes/history/index'
 import { Route as QuotationPreviewRouteImport } from './routes/quotation/preview'
 import { Route as QuotationQuotationRouteImport } from './routes/quotation/$quotation'
 
@@ -31,11 +30,6 @@ const InvoiceIndexRoute = InvoiceIndexRouteImport.update({
   path: '/invoice/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HistoryIndexRoute = HistoryIndexRouteImport.update({
-  id: '/history/',
-  path: '/history/',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const QuotationPreviewRoute = QuotationPreviewRouteImport.update({
   id: '/quotation/preview',
   path: '/quotation/preview',
@@ -51,7 +45,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/quotation/$quotation': typeof QuotationQuotationRoute
   '/quotation/preview': typeof QuotationPreviewRoute
-  '/history': typeof HistoryIndexRoute
   '/invoice': typeof InvoiceIndexRoute
   '/quotation': typeof QuotationIndexRoute
 }
@@ -59,7 +52,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/quotation/$quotation': typeof QuotationQuotationRoute
   '/quotation/preview': typeof QuotationPreviewRoute
-  '/history': typeof HistoryIndexRoute
   '/invoice': typeof InvoiceIndexRoute
   '/quotation': typeof QuotationIndexRoute
 }
@@ -68,7 +60,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/quotation/$quotation': typeof QuotationQuotationRoute
   '/quotation/preview': typeof QuotationPreviewRoute
-  '/history/': typeof HistoryIndexRoute
   '/invoice/': typeof InvoiceIndexRoute
   '/quotation/': typeof QuotationIndexRoute
 }
@@ -78,7 +69,6 @@ export interface FileRouteTypes {
     | '/'
     | '/quotation/$quotation'
     | '/quotation/preview'
-    | '/history'
     | '/invoice'
     | '/quotation'
   fileRoutesByTo: FileRoutesByTo
@@ -86,7 +76,6 @@ export interface FileRouteTypes {
     | '/'
     | '/quotation/$quotation'
     | '/quotation/preview'
-    | '/history'
     | '/invoice'
     | '/quotation'
   id:
@@ -94,7 +83,6 @@ export interface FileRouteTypes {
     | '/'
     | '/quotation/$quotation'
     | '/quotation/preview'
-    | '/history/'
     | '/invoice/'
     | '/quotation/'
   fileRoutesById: FileRoutesById
@@ -103,7 +91,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   QuotationQuotationRoute: typeof QuotationQuotationRoute
   QuotationPreviewRoute: typeof QuotationPreviewRoute
-  HistoryIndexRoute: typeof HistoryIndexRoute
   InvoiceIndexRoute: typeof InvoiceIndexRoute
   QuotationIndexRoute: typeof QuotationIndexRoute
 }
@@ -131,13 +118,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InvoiceIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/history/': {
-      id: '/history/'
-      path: '/history'
-      fullPath: '/history'
-      preLoaderRoute: typeof HistoryIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/quotation/preview': {
       id: '/quotation/preview'
       path: '/quotation/preview'
@@ -159,7 +139,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   QuotationQuotationRoute: QuotationQuotationRoute,
   QuotationPreviewRoute: QuotationPreviewRoute,
-  HistoryIndexRoute: HistoryIndexRoute,
   InvoiceIndexRoute: InvoiceIndexRoute,
   QuotationIndexRoute: QuotationIndexRoute,
 }
