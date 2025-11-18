@@ -312,3 +312,89 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
 
   resetForm: () => set({ formData: initialFormData }),
 }));
+
+export const useQuotationData = () =>
+  useQuotationStore((state) => state.formData);
+
+export const useQuotationItems = () =>
+  useQuotationStore((state) => state.formData.items);
+
+export const useQuotationTerms = () =>
+  useQuotationStore((state) => state.formData.terms);
+
+export const useProjectTitle = () =>
+  useQuotationStore((state) => state.formData.projectTitle);
+
+export const useQuotationId = () =>
+  useQuotationStore((state) => state.formData.quotationId);
+
+export const useQuotationDate = () =>
+  useQuotationStore((state) => state.formData.quotationDate);
+
+export const useBankAccount = () =>
+  useQuotationStore((state) => state.formData.bankAccount);
+
+export const useQuotationFrom = () =>
+  useQuotationStore((state) => state.formData.quotationFrom);
+
+export const useQuotationFor = () =>
+  useQuotationStore((state) => state.formData.quotationFor);
+
+export const useQuotationPaymentConfig = () => {
+  const paymentType = useQuotationStore((state) => state.formData.paymentType);
+  const depositPercent = useQuotationStore(
+    (state) => state.formData.depositPercent
+  );
+  const hasSecondPayment = useQuotationStore(
+    (state) => state.formData.hasSecondPayment
+  );
+  const secondPaymentPercent = useQuotationStore(
+    (state) => state.formData.secondPaymentPercent
+  );
+  const currency = useQuotationStore((state) => state.formData.currency);
+
+  return {
+    paymentType,
+    depositPercent,
+    hasSecondPayment,
+    secondPaymentPercent,
+    currency,
+  };
+};
+
+export const useUpdateField = () =>
+  useQuotationStore((state) => state.updateField);
+
+export const useUpdateNestedField = () =>
+  useQuotationStore((state) => state.updateNestedField);
+
+export const useAddItem = () => useQuotationStore((state) => state.addItem);
+
+export const useDuplicateItem = () =>
+  useQuotationStore((state) => state.duplicateItem);
+
+export const useRemoveItem = () =>
+  useQuotationStore((state) => state.removeItem);
+
+export const useUpdateItem = () =>
+  useQuotationStore((state) => state.updateItem);
+
+export const useAddItemDetail = () =>
+  useQuotationStore((state) => state.addItemDetail);
+
+export const useRemoveItemDetail = () =>
+  useQuotationStore((state) => state.removeItemDetail);
+
+export const useUpdateItemDetail = () =>
+  useQuotationStore((state) => state.updateItemDetail);
+
+export const useAddTerm = () => useQuotationStore((state) => state.addTerm);
+
+export const useDuplicateTerm = () =>
+  useQuotationStore((state) => state.duplicateTerm);
+
+export const useRemoveTerm = () =>
+  useQuotationStore((state) => state.removeTerm);
+
+export const useUpdateTerm = () =>
+  useQuotationStore((state) => state.updateTerm);

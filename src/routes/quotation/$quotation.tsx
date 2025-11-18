@@ -1,7 +1,7 @@
 import { DownloadIcon, EyeIcon, UploadIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import QuotationForm from "@/components/page/quotation-form";
+import QuotationForm from "@/components/page/quotation-form/form-wrapper";
 import { Button } from "@/components/ui/button";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
