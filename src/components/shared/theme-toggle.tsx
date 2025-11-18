@@ -13,12 +13,13 @@ export default function ThemeToggle() {
     <Button
       icon={
         theme === "dark" ? (
-          <MoonIcon className="size-4.5 xl:size-5.5" size={22} weight="bold" />
+          <MoonIcon className="size-4 xl:size-4.5" size={18} weight="bold" />
         ) : (
-          <SunIcon className="size-4.5 xl:size-5.5" size={22} weight="bold" />
+          <SunIcon className="size-4 xl:size-4.5" size={18} weight="bold" />
         )
       }
       onClick={toggleTheme}
+      size="sm"
     />
   );
 }

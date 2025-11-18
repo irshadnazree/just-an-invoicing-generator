@@ -1,7 +1,7 @@
-import LineItemSection from "@/components/page/quotation-form/line-item-section";
-import PaymentSection from "@/components/page/quotation-form/payment-section";
-import ProjectDetailsSection from "@/components/page/quotation-form/project-details-section";
-import TermsSection from "@/components/page/quotation-form/terms-section";
+import LineItemSection from "@/components/page/quotation/line-item-section";
+import PaymentSection from "@/components/page/quotation/payment-section";
+import ProjectDetailsSection from "@/components/page/quotation/project-details-section";
+import TermsSection from "@/components/page/quotation/terms-section";
 import { useUpdateField, useUpdateNestedField } from "@/stores/quotation-store";
 import type { QuotationFormData } from "@/types/quotation";
 
@@ -31,11 +31,8 @@ export default function FormWrapper() {
         onUpdateField={handleUpdateField}
         onUpdateNestedField={handleUpdateNestedField}
       />
-
       <LineItemSection />
-
       <PaymentSection onUpdateField={handleUpdateField} />
-
       <TermsSection />
     </div>
   );

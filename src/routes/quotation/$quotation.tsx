@@ -1,7 +1,7 @@
 import { DownloadIcon, EyeIcon, UploadIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
-import QuotationForm from "@/components/page/quotation-form/form-wrapper";
+import FormWrapper from "@/components/page/quotation/form-wrapper";
 import { Button } from "@/components/ui/button";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
@@ -89,7 +89,7 @@ function RouteComponent() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-        <h2 className="text-3xl">
+        <h2 className="text-2xl">
           {quotationId === "new" ? "Create Quotation" : "Edit Quotation"}
         </h2>
         <div className="flex items-center gap-1 xl:gap-2">
@@ -101,11 +101,12 @@ function RouteComponent() {
               <Button
                 icon={
                   <EyeIcon
-                    className="size-4.5 xl:size-5.5"
-                    size={22}
+                    className="size-4 xl:size-4.5"
+                    size={18}
                     weight="bold"
                   />
                 }
+                size="sm"
               />
             </Link>
           )}
@@ -113,12 +114,13 @@ function RouteComponent() {
           <Button
             icon={
               <UploadIcon
-                className="size-4.5 xl:size-5.5"
-                size={22}
+                className="size-4 xl:size-4.5"
+                size={18}
                 weight="bold"
               />
             }
             onClick={() => fileInputRef.current?.click()}
+            size="sm"
           />
           <input
             onChange={(event) => handleImportJSON(event)}
@@ -129,16 +131,17 @@ function RouteComponent() {
           <Button
             icon={
               <DownloadIcon
-                className="size-4.5 xl:size-5.5"
-                size={22}
+                className="size-4 xl:size-4.5"
+                size={18}
                 weight="bold"
               />
             }
             onClick={handleExportJSON}
+            size="sm"
           />
         </div>
       </div>
-      <QuotationForm />
+      <FormWrapper />
     </section>
   );
 }

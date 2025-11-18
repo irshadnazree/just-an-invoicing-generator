@@ -192,7 +192,7 @@ function RouteComponent() {
     return (
       <section className="flex flex-col gap-6">
         <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-          <h2 className="text-3xl/11.5">Quotation History</h2>
+          <h2 className="text-2xl/11.5">Quotation History</h2>
         </div>
         <div className="flex min-h-96 items-center justify-center">
           <Loader size="lg" text="Loading quotations..." />
@@ -241,7 +241,7 @@ function RouteComponent() {
       )}
 
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-        <h2 className="text-3xl/11.5">Quotation History</h2>
+        <h2 className="text-2xl/11.5">Quotation History</h2>
         <div className="flex items-center gap-4">
           {selectedQuotations.size > 0 && (
             <Button

@@ -15,13 +15,13 @@ export default function Navbar() {
     <nav className="sticky top-0 z-10 mx-auto w-full max-w-400 bg-background/25 px-4 pt-4 backdrop-blur-sm xl:px-25 xl:pt-6 print:hidden">
       <div className="item-start flex justify-between xl:items-center">
         <Link to="/">
-          <span className="text-2xl xl:text-3xl">
+          <span className="text-xl xl:text-2xl">
             Just an Accounting Generator
           </span>
         </Link>
         <ThemeToggle />
       </div>
-      <div className="flex gap-6 border-text border-b-2">
+      <div className="mt-2 flex gap-6 border-text border-b">
         <NavbarLink isActive={isActive("/quotation")} to="/quotation">
           Quotation
         </NavbarLink>
@@ -48,7 +48,7 @@ function NavbarLink({
   return (
     <Link
       className={cn(
-        "py-1 text-xl underline-offset-11 transition-all duration-150 ease-in-out hover:text-primary hover:underline",
+        "text-lg/9 underline-offset-11 transition-all duration-150 ease-in-out hover:text-primary hover:underline",
         isActive && "text-primary underline"
       )}
       to={to}

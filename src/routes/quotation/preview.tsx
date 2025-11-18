@@ -147,7 +147,7 @@ function RouteComponent() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0 print:hidden">
-        <h2 className="text-3xl">Quotation Preview</h2>
+        <h2 className="text-2xl">Quotation Preview</h2>
         <div className="flex items-center gap-2">
           <Link to={backUrl}>
             <Button icon={<ArrowUUpLeftIcon size={22} weight="bold" />} />
