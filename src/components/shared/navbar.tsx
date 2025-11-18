@@ -12,10 +12,12 @@ export default function Navbar() {
   };
 
   return (
-    <nav className="mx-auto w-full max-w-400 px-4 pt-6 xl:px-25 xl:pt-10 print:hidden">
+    <nav className="sticky top-0 z-10 mx-auto w-full max-w-400 bg-background/25 px-4 pt-4 backdrop-blur-sm xl:px-25 xl:pt-6 print:hidden">
       <div className="item-start flex justify-between xl:items-center">
         <Link to="/">
-          <span className="text-3xl">Just an Accounting Generator</span>
+          <span className="text-2xl xl:text-3xl">
+            Just an Accounting Generator
+          </span>
         </Link>
         <ThemeToggle />
       </div>
@@ -46,7 +48,7 @@ function NavbarLink({
   return (
     <Link
       className={cn(
-        "py-2 text-xl underline-offset-15 transition-all duration-150 ease-in-out hover:text-primary hover:underline",
+        "py-1 text-xl underline-offset-11 transition-all duration-150 ease-in-out hover:text-primary hover:underline",
         isActive && "text-primary underline"
       )}
       to={to}
