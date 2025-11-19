@@ -1,5 +1,11 @@
-import { generateRandomString } from "@/lib/utils";
 import type { QuotationFormData } from "@/types/quotation";
+import { generateRandomString } from "@/utils/id-helpers";
+import {
+  findItemById,
+  loadFromStorage,
+  saveItemToArray,
+  saveToStorage,
+} from "@/utils/storage-helpers";
 
 const STORAGE_KEY = "quotations";
 
@@ -12,26 +18,15 @@ export function generateId(formData: QuotationFormData): QuotationFormData {
 }
 
 export function loadQuotationsFromStorage(): QuotationFormData[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
+  return loadFromStorage<QuotationFormData>(STORAGE_KEY);
 }
 
 export function saveQuotationsToStorage(quotations: QuotationFormData[]): void {
-  try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(quotations));
-  } catch {
-    // Handle storage quota exceeded or other errors
-    console.warn("Failed to save quotations to localStorage");
-  }
+  saveToStorage(STORAGE_KEY, quotations);
 }
 
 export function findQuotationById(id: string): QuotationFormData | null {
-  const quotations = loadQuotationsFromStorage();
-  return quotations.find((q) => q.id === id) || null;
+  return findItemById<QuotationFormData>(STORAGE_KEY, id);
 }
 
 // Validate that quotation has required fields filled
@@ -44,32 +39,5 @@ export function isQuotationValid(quotationData: QuotationFormData): boolean {
 }
 
 export function saveQuotationToArray(quotationData: QuotationFormData): void {
-  // Only save if quotation has required data
-  if (!isQuotationValid(quotationData)) {
-    return;
-  }
-
-  const quotations = loadQuotationsFromStorage();
-  const existingIndex = quotations.findIndex((q) => q.id === quotationData.id);
-
-  const quotationWithTimestamps = {
-    ...quotationData,
-    createdAt: quotationData.createdAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
-
-  if (existingIndex >= 0) {
-    // Update existing quotation
-    quotations[existingIndex] = quotationWithTimestamps;
-  } else {
-    // Add new quotation at the beginning (newest first)
-    quotations.unshift(quotationWithTimestamps);
-  }
-
-  // Limit to prevent localStorage overflow (keep last 100 quotations)
-  if (quotations.length > 100) {
-    quotations.splice(100);
-  }
-
-  saveQuotationsToStorage(quotations);
+  saveItemToArray(STORAGE_KEY, quotationData, isQuotationValid);
 }

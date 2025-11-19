@@ -8,7 +8,6 @@ type QuotationLineItem = {
 
 type CompanyInfo = {
   company: string;
-  country: string;
 };
 
 type QuotationListItem = {

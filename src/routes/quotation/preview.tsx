@@ -177,7 +177,7 @@ function RouteComponent() {
 
       <div className="w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
         <div
-          className="min-w-[600px] bg-card"
+          className="min-w-[600px] bg-card bg-white text-black"
           style={{ border: "2px solid #000" }}
         >
           {/* Header */}

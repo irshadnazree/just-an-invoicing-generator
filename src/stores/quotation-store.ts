@@ -1,10 +1,13 @@
 import { create } from "zustand";
-import { generateRandomString, incrementCodeFlexible } from "@/lib/utils";
 import type {
   QuotationFormData,
   QuotationLineItem,
   QuotationStore,
 } from "@/types/quotation";
+import {
+  generateRandomString,
+  incrementCodeFlexible,
+} from "@/utils/id-helpers";
 import {
   findQuotationById,
   generateId,
@@ -23,11 +26,9 @@ export const initialFormData: QuotationFormData = {
   bankAccount: "",
   quotationFrom: {
     company: "",
-    country: "",
   },
   quotationFor: {
     company: "",
-    country: "",
   },
   projectTitle: "",
   paymentType: "",
