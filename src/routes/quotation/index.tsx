@@ -1,9 +1,9 @@
 import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import EmptyQuotationsView from "@/components/page/history/empty-quotations-view";
-import NoResultSection from "@/components/page/history/no-result-view";
-import TableView from "@/components/page/history/table-view";
+import EmptyQuotationsView from "@/components/shared/history/empty-quotations-view";
+import NoResultSection from "@/components/shared/history/no-result-view";
+import TableView from "@/components/shared/history/table-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/ui/loader";
@@ -201,12 +201,14 @@ function RouteComponent() {
       </div>
 
       {sortedQuotations.length === 0 && searchTerm !== "" && (
-        <NoResultSection
-          searchTerm={searchTerm}
-          setSearchTerm={setSearchTerm}
+        <NoResultSection setSearchTerm={setSearchTerm} title="quotations" />
+      )}
+      {quotations.length === 0 && searchTerm === "" && (
+        <EmptyQuotationsView
+          handleCreateQuotation={handleCreateQuotation}
+          title="quotations"
         />
       )}
-      {quotations.length === 0 && searchTerm === "" && <EmptyQuotationsView />}
 
       {sortedQuotations.length > 0 && (
         <TableView
