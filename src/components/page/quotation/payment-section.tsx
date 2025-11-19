@@ -109,7 +109,7 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
                     <div className="mb-1 text-sm">
                       Deposit ({depositPercent}%)
                     </div>
-                    <div className="font-bold text-teal-600 text-xl">
+                    <div className="font-bold text-primary text-xl">
                       {currencyKey}{" "}
                       {formatDecimal(depositsByCurrency[currencyKey] ?? 0, 2)}
                     </div>
@@ -120,7 +120,7 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
                     <div className="mb-1 text-sm">
                       Second Payment ({secondPaymentPercent}%)
                     </div>
-                    <div className="font-bold text-teal-600 text-xl">
+                    <div className="font-bold text-primary text-xl">
                       {currencyKey}{" "}
                       {formatDecimal(
                         secondPaymentsByCurrency[currencyKey] ?? 0,
@@ -146,7 +146,7 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
                       return ` (${100 - depositPercent}%)`;
                     })()}
                   </div>
-                  <div className="font-bold text-teal-600 text-xl">
+                  <div className="font-bold text-primary text-xl">
                     {currencyKey}{" "}
                     {formatDecimal(
                       finalPaymentsByCurrency[currencyKey] ?? 0,
