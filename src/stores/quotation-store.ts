@@ -250,8 +250,8 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
   getAllQuotationsAsync: async () => {
     try {
       // Simulate a small delay to ensure consistent loading state
-      await new Promise((resolve) => setTimeout(resolve, 50));
-      return loadQuotationsFromStorage();
+      // await new Promise((resolve) => setTimeout(resolve, 50));
+      return await loadQuotationsFromStorage();
     } catch (error) {
       console.warn("Failed to load quotations from storage:", error);
       return [];
