@@ -1,3 +1,5 @@
+import type * as React from "react";
+
 import { cn } from "@/lib/utils";
 
 export type InputType = "text" | "number" | "date" | "email";
@@ -13,6 +15,8 @@ export type InputProps = {
   disabled?: boolean;
   min?: number;
   max?: number;
+  invalid?: boolean;
+  error?: string;
 };
 
 const baseInputClasses =
@@ -29,6 +33,8 @@ export function Input({
   disabled = false,
   min,
   max,
+  invalid = false,
+  error,
 }: InputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (type === "number") {
@@ -41,6 +47,8 @@ export function Input({
 
   return (
     <input
+      aria-describedby={error ? `${id}-error` : undefined}
+      aria-invalid={invalid}
       className={cn(baseInputClasses, className)}
       disabled={disabled}
       id={id}

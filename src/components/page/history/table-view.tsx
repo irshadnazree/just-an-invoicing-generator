@@ -7,7 +7,7 @@ import {
 } from "@phosphor-icons/react";
 import { Link, useRouter } from "@tanstack/react-router";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { cn, formatCurrency } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 import type { QuotationFormData, QuotationListItem } from "@/types/quotation";

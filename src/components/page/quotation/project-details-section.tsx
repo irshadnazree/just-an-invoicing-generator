@@ -1,8 +1,8 @@
 import { memo } from "react";
 
-import { FormField, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { FormField, FormLabel } from "@/components/ui/Form";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { useQuotationData } from "@/stores/quotation-store";
 import type { QuotationStore } from "@/types/quotation";
 

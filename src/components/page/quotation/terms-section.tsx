@@ -1,8 +1,8 @@
 import { CopyIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/Button";
+import { Card } from "@/components/ui/Card";
+import { Textarea } from "@/components/ui/Textarea";
 import {
   useAddTerm,
   useDuplicateTerm,

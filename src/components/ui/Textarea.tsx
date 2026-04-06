@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { cn } from "@/lib/utils";
 
 export type TextareaProps = {
@@ -9,6 +11,8 @@ export type TextareaProps = {
   required?: boolean;
   className?: string;
   disabled?: boolean;
+  invalid?: boolean;
+  error?: string;
 };
 
 const baseTextareaClasses =
@@ -23,9 +27,13 @@ export function Textarea({
   required = false,
   className = "",
   disabled = false,
+  invalid = false,
+  error,
 }: TextareaProps) {
   return (
     <textarea
+      aria-describedby={error ? `${id}-error` : undefined}
+      aria-invalid={invalid}
       className={cn(baseTextareaClasses, className)}
       disabled={disabled}
       id={id}

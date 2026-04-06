@@ -1,6 +1,6 @@
 import { FileTextIcon } from "@phosphor-icons/react";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 export default function NoResultSection({
   searchTerm,

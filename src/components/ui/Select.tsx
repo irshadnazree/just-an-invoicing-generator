@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import { cn } from "@/lib/utils";
 
 export type SelectOption = {
@@ -15,6 +17,8 @@ export type SelectProps = {
   disabled?: boolean;
   fullWidth?: boolean;
   placeholder?: string;
+  invalid?: boolean;
+  error?: string;
 };
 
 const baseSelectClasses =
@@ -29,9 +33,13 @@ export function Select({
   className = "",
   disabled = false,
   placeholder,
+  invalid = false,
+  error,
 }: SelectProps) {
   return (
     <select
+      aria-describedby={error ? `${id}-error` : undefined}
+      aria-invalid={invalid}
       className={cn(baseSelectClasses, className)}
       disabled={disabled}
       id={id}

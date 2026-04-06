@@ -1,7 +1,7 @@
 import { FileTextIcon, PlusIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 
 export default function EmptyQuotationsView() {
   const router = useRouter();

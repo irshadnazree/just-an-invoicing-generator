@@ -1,9 +1,9 @@
 import { useQuotationCalculations } from "@/components/hooks/use-quotation-calculations";
-import { Card } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
-import { FormField, FormLabel } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Select } from "@/components/ui/select";
+import { Card } from "@/components/ui/Card";
+import { Checkbox } from "@/components/ui/Checkbox";
+import { FormField, FormLabel } from "@/components/ui/Form";
+import { Input } from "@/components/ui/Input";
+import { Select } from "@/components/ui/Select";
 import { cn, formatDecimal } from "@/lib/utils";
 import { useQuotationPaymentConfig } from "@/stores/quotation-store";
 import type { QuotationStore } from "@/types/quotation";

@@ -5,9 +5,9 @@ import { useEffect, useMemo, useState } from "react";
 import EmptyQuotationsView from "@/components/page/history/empty-quotations-view";
 import NoResultSection from "@/components/page/history/no-result-view";
 import TableView from "@/components/page/history/table-view";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Loader } from "@/components/ui/loader";
+import { Button } from "@/components/ui/Button";
+import { Input } from "@/components/ui/Input";
+import { Loader } from "@/components/ui/Loader";
 import { useQuotationStore } from "@/stores/quotation-store";
 import type { QuotationFormData, QuotationListItem } from "@/types/quotation";
 

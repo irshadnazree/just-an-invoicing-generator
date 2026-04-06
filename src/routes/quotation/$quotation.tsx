@@ -9,7 +9,7 @@ import { useEffect, useRef } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import FormWrapper from "@/components/page/quotation/form-wrapper";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 

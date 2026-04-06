@@ -1,4 +1,6 @@
+import { Button as BaseButton } from "@base-ui/react/button";
 import { cva } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -56,17 +58,18 @@ export function Button({
   }
 
   return (
-    <button
+    <BaseButton
       className={cn(
         buttonVariants({ size, iconSize, variant }),
         disabled && "cursor-not-allowed opacity-50"
       )}
       disabled={disabled}
+      focusableWhenDisabled
       onClick={onClick}
       type="button"
     >
       {icon && <span className="shrink-0">{icon}</span>}
       {children}
-    </button>
+    </BaseButton>
   );
 }

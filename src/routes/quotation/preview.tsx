@@ -1,7 +1,7 @@
 import { ArrowUUpLeftIcon, PrinterIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
-import { Button } from "@/components/ui/button";
+import { Button } from "@/components/ui/Button";
 import { formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationData } from "@/stores/quotation-store";
 import {
