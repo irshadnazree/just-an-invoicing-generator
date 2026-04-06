@@ -96,7 +96,7 @@ export default function TableView({
             <th
               className={cn(
                 "px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider",
-                header.width
+                header.width,
               )}
               key={header.key}
             >
@@ -132,15 +132,9 @@ export default function TableView({
                 {quotation.quotationId || "No ID"}
               </Link>
             </td>
-            <td className="w-[38%] min-w-0 truncate px-4 py-2 text-sm">
-              {quotation.projectTitle}
-            </td>
-            <td className="w-[12%] whitespace-nowrap px-4 py-2 text-sm">
-              {quotation.paymentType}
-            </td>
-            <td className="w-[18%] min-w-0 truncate px-4 py-2 text-sm">
-              {quotation.quotationFor}
-            </td>
+            <td className="w-[38%] min-w-0 truncate px-4 py-2 text-sm">{quotation.projectTitle}</td>
+            <td className="w-[12%] whitespace-nowrap px-4 py-2 text-sm">{quotation.paymentType}</td>
+            <td className="w-[18%] min-w-0 truncate px-4 py-2 text-sm">{quotation.quotationFor}</td>
             <td className="w-[10%] whitespace-nowrap px-4 py-2 text-sm">
               {formatCurrency(quotation.total, quotation.currency)}
             </td>
@@ -150,18 +144,11 @@ export default function TableView({
                 className={cn(
                   "flex justify-start gap-1",
                   selectedQuotations.size > 0 &&
-                    "pointer-events-none cursor-not-allowed opacity-50"
+                    "pointer-events-none cursor-not-allowed opacity-50",
                 )}
               >
-                <Link
-                  params={{ quotation: quotation.id }}
-                  to="/quotation/$quotation"
-                >
-                  <Button
-                    icon={<PencilSimpleIcon size={22} />}
-                    size="sm"
-                    variant="ghost"
-                  />
+                <Link params={{ quotation: quotation.id }} to="/quotation/$quotation">
+                  <Button icon={<PencilSimpleIcon size={22} />} size="sm" variant="ghost" />
                 </Link>
                 <Button
                   icon={<CopyIcon size={22} />}

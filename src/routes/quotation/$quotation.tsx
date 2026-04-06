@@ -1,9 +1,4 @@
-import {
-  ArrowUUpLeftIcon,
-  DownloadIcon,
-  EyeIcon,
-  UploadIcon,
-} from "@phosphor-icons/react";
+import { ArrowUUpLeftIcon, DownloadIcon, EyeIcon, UploadIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import FormWrapper from "@/components/page/quotation/form-wrapper";
@@ -21,13 +16,8 @@ function RouteComponent() {
   const router = useRouter();
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const {
-    formData,
-    importJSON,
-    loadQuotation,
-    initializeQuotation,
-    saveQuotation,
-  } = useQuotationStore();
+  const { formData, importJSON, loadQuotation, initializeQuotation, saveQuotation } =
+    useQuotationStore();
 
   // Load quotation on component mount
   useEffect(() => {
@@ -70,9 +60,7 @@ function RouteComponent() {
     exportJSON(exportData, `quotation-${formData.quotationId}.json`);
   };
 
-  const handleImportJSON = async (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
+  const handleImportJSON = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) {
       return;
@@ -84,10 +72,7 @@ function RouteComponent() {
 
       event.target.value = "";
     } catch (error) {
-      console.error(
-        "Failed to import JSON file. Please check the file format.",
-        error
-      );
+      console.error("Failed to import JSON file. Please check the file format.", error);
     }
   };
 
@@ -100,44 +85,23 @@ function RouteComponent() {
           </h2>
           <Link to="/quotation">
             <Button
-              icon={
-                <ArrowUUpLeftIcon
-                  className="size-4 xl:size-5"
-                  size={20}
-                  weight="bold"
-                />
-              }
+              icon={<ArrowUUpLeftIcon className="size-4 xl:size-5" size={20} weight="bold" />}
               size="sm"
             />
           </Link>
         </div>
         <div className="flex items-center gap-1 xl:gap-2">
           {formData.id && formData.id !== "" && (
-            <Link
-              params={{ quotation: formData.quotationId }}
-              to="/quotation/preview"
-            >
+            <Link params={{ quotation: formData.quotationId }} to="/quotation/preview">
               <Button
-                icon={
-                  <EyeIcon
-                    className="size-4 xl:size-5"
-                    size={20}
-                    weight="bold"
-                  />
-                }
+                icon={<EyeIcon className="size-4 xl:size-5" size={20} weight="bold" />}
                 size="sm"
               />
             </Link>
           )}
 
           <Button
-            icon={
-              <UploadIcon
-                className="size-4 xl:size-5"
-                size={20}
-                weight="bold"
-              />
-            }
+            icon={<UploadIcon className="size-4 xl:size-5" size={20} weight="bold" />}
             onClick={() => fileInputRef.current?.click()}
             size="sm"
           />
@@ -148,13 +112,7 @@ function RouteComponent() {
             type="file"
           />
           <Button
-            icon={
-              <DownloadIcon
-                className="size-4 xl:size-5"
-                size={20}
-                weight="bold"
-              />
-            }
+            icon={<DownloadIcon className="size-4 xl:size-5" size={20} weight="bold" />}
             onClick={handleExportJSON}
             size="sm"
           />

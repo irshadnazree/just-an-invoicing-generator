@@ -21,17 +21,17 @@ function RouteComponent() {
   const depositsByCurrency = getDepositByCurrency(
     formData.paymentType,
     formData.depositPercent,
-    totalsByCurrency
+    totalsByCurrency,
   );
   const secondPaymentsByCurrency = getSecondPaymentByCurrency(
     formData.hasSecondPayment,
     formData.secondPaymentPercent,
-    totalsByCurrency
+    totalsByCurrency,
   );
   const finalPaymentsByCurrency = getFinalPaymentByCurrency(
     totalsByCurrency,
     depositsByCurrency,
-    secondPaymentsByCurrency
+    secondPaymentsByCurrency,
   );
   const currencies = Object.keys(totalsByCurrency);
   const backUrl = `/quotation/${formData.id}`;
@@ -43,7 +43,7 @@ function RouteComponent() {
     const printTitle = generatePrintFilename(
       formData.quotationFrom.company || "",
       formData.quotationFor.company || "",
-      formData.quotationId || ""
+      formData.quotationId || "",
     );
     // Set title for print filename
     document.title = printTitle;
@@ -57,9 +57,7 @@ function RouteComponent() {
 
   function calculateFinalPaymentPercent() {
     if (formData.paymentType === "Recurring payment") {
-      return formData.hasSecondPayment
-        ? 100 - formData.secondPaymentPercent
-        : 100;
+      return formData.hasSecondPayment ? 100 - formData.secondPaymentPercent : 100;
     }
     if (formData.hasSecondPayment) {
       return 100 - formData.depositPercent - formData.secondPaymentPercent;
@@ -86,9 +84,7 @@ function RouteComponent() {
           {params.label}
           {params.percent !== undefined && <span> ({params.percent}%)</span>}
         </td>
-        <td
-          className={`whitespace-nowrap p-3 text-left ${params.isBold ? "font-bold" : ""}`}
-        >
+        <td className={`whitespace-nowrap p-3 text-left ${params.isBold ? "font-bold" : ""}`}>
           {params.currency} {formatDecimal(params.value, 2)}
         </td>
       </tr>
@@ -115,7 +111,7 @@ function RouteComponent() {
           currency,
           percent: formData.depositPercent,
           key: `deposit-${currency}`,
-        })
+        }),
       );
     }
 
@@ -127,7 +123,7 @@ function RouteComponent() {
           currency,
           percent: formData.secondPaymentPercent,
           key: `second-${currency}`,
-        })
+        }),
       );
     }
 
@@ -138,7 +134,7 @@ function RouteComponent() {
         currency,
         percent: finalPaymentPercent,
         key: `final-${currency}`,
-      })
+      }),
     );
 
     return rows;
@@ -151,24 +147,12 @@ function RouteComponent() {
         <div className="flex items-center gap-2">
           <Link to={backUrl}>
             <Button
-              icon={
-                <ArrowUUpLeftIcon
-                  className="size-4 xl:size-5"
-                  size={20}
-                  weight="bold"
-                />
-              }
+              icon={<ArrowUUpLeftIcon className="size-4 xl:size-5" size={20} weight="bold" />}
               size="sm"
             />
           </Link>
           <Button
-            icon={
-              <PrinterIcon
-                className="size-4 xl:size-5"
-                size={20}
-                weight="bold"
-              />
-            }
+            icon={<PrinterIcon className="size-4 xl:size-5" size={20} weight="bold" />}
             onClick={printQuotation}
             size="sm"
           />
@@ -176,18 +160,13 @@ function RouteComponent() {
       </div>
 
       <div className="w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
-        <div
-          className="min-w-[600px] bg-card"
-          style={{ border: "2px solid #000" }}
-        >
+        <div className="min-w-[600px] bg-card" style={{ border: "2px solid #000" }}>
           {/* Header */}
           <div className="border-black border-b-2 p-4">
             <div className="flex items-center justify-between">
               <h1 className="font-bold text-2xl">{formData.projectTitle}</h1>
               <div className="flex gap-2">
-                <span className="self-center text-muted-foreground">
-                  {formData.paymentType}
-                </span>
+                <span className="self-center text-muted-foreground">{formData.paymentType}</span>
               </div>
             </div>
           </div>
@@ -246,36 +225,25 @@ function RouteComponent() {
                   Quantity <br />
                   (Work Day)
                 </th>
-                <th className="w-32 border-black border-r p-3 text-left">
-                  Rate
-                </th>
+                <th className="w-32 border-black border-r p-3 text-left">Rate</th>
                 <th className="w-32 p-3 text-left">Amount</th>
               </tr>
             </thead>
             <tbody>
               {formData.items.map((item, index) => (
-                <tr
-                  className="border-black border-b"
-                  key={`item-${index}-${item.name}`}
-                >
-                  <td className="border-black border-r p-3 text-center">
-                    {index + 1}
-                  </td>
+                <tr className="border-black border-b" key={`item-${index}-${item.name}`}>
+                  <td className="border-black border-r p-3 text-center">{index + 1}</td>
                   <td className="border-black border-r p-3">
                     <span className="mb-2 font-semibold">{item.name}</span>
                     {item.details.length > 0 && (
                       <ul className="list-inside list-disc space-y-1 text-sm">
                         {item.details.map((detail, idx) => (
-                          <li key={`detail-${index}-${idx}-${detail}`}>
-                            {detail}
-                          </li>
+                          <li key={`detail-${index}-${idx}-${detail}`}>{detail}</li>
                         ))}
                       </ul>
                     )}
                   </td>
-                  <td className="border-black border-r p-3 text-center">
-                    {item.quantity}
-                  </td>
+                  <td className="border-black border-r p-3 text-center">{item.quantity}</td>
                   <td className="border-black border-r p-3 text-left">
                     {item.currency || formData.currency} {item.rate}
                   </td>
@@ -286,9 +254,7 @@ function RouteComponent() {
                 </tr>
               ))}
             </tbody>
-            <tfoot>
-              {currencies.flatMap((currency) => renderCurrencyFooter(currency))}
-            </tfoot>
+            <tfoot>{currencies.flatMap((currency) => renderCurrencyFooter(currency))}</tfoot>
           </table>
 
           {/* Terms and Conditions */}

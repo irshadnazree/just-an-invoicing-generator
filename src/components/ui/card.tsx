@@ -28,15 +28,6 @@ const cardVariants = cva("border border-text", {
   },
 });
 
-export function Card({
-  children,
-  className = "",
-  size = "lg",
-  variant = "default",
-}: CardProps) {
-  return (
-    <div className={cn(cardVariants({ size, variant, className }))}>
-      {children}
-    </div>
-  );
+export function Card({ children, className = "", size = "lg", variant = "default" }: CardProps) {
+  return <div className={cn(cardVariants({ size, variant, className }))}>{children}</div>;
 }

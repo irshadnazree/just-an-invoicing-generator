@@ -11,13 +11,8 @@ function App() {
       <div className="flex w-full flex-col items-start gap-4">
         <h1 className="text-2xl/12">Quotations</h1>
         <div className="flex h-scrollbar w-full gap-12 overflow-x-auto pb-2">
-          <Link
-            params={{ quotation: generateRandomString(10) }}
-            to="/quotation/$quotation"
-          >
-            <Button icon={<PlusIcon size={22} weight="bold" />}>
-              New Quotation
-            </Button>
+          <Link params={{ quotation: generateRandomString(10) }} to="/quotation/$quotation">
+            <Button icon={<PlusIcon size={22} weight="bold" />}>New Quotation</Button>
           </Link>
         </div>
       </div>

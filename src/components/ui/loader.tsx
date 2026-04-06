@@ -23,21 +23,16 @@ export function Loader({ size = "default", className, text }: LoaderProps) {
     <output
       aria-label={text || "Loading"}
       aria-live="polite"
-      className={cn(
-        "flex flex-col items-center justify-center gap-4",
-        className
-      )}
+      className={cn("flex flex-col items-center justify-center gap-4", className)}
     >
       <div
         aria-hidden="true"
         className={cn(
           "animate-spin rounded-full border-2 border-primary/20 border-t-primary",
-          sizeClasses[size]
+          sizeClasses[size],
         )}
       />
-      {text && (
-        <span className={cn("text-text/80", textSizes[size])}>{text}</span>
-      )}
+      {text && <span className={cn("text-text/80", textSizes[size])}>{text}</span>}
       <span className="sr-only">{text || "Loading content, please wait"}</span>
     </output>
   );

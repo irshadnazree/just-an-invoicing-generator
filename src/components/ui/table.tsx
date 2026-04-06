@@ -15,11 +15,7 @@ export type TableHeaderProps = {
 };
 
 export function TableHeader({ children, className = "" }: TableHeaderProps) {
-  return (
-    <thead className={`border-border border-b-2 bg-muted ${className}`}>
-      {children}
-    </thead>
-  );
+  return <thead className={`border-border border-b-2 bg-muted ${className}`}>{children}</thead>;
 }
 
 export type TableRowProps = {

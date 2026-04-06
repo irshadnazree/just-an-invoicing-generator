@@ -13,11 +13,7 @@ export function sanitizeFilename(str: string) {
     .toUpperCase();
 }
 
-export function formatCurrency(
-  amount: number,
-  currencySymbol: string,
-  decimals = 2
-) {
+export function formatCurrency(amount: number, currencySymbol: string, decimals = 2) {
   return `${currencySymbol} ${amount.toFixed(decimals)}`;
 }
 
@@ -25,13 +21,8 @@ export function formatDecimal(amount: number, decimals = 2) {
   return amount.toFixed(decimals);
 }
 
-export function downloadFile(
-  content: string | Blob,
-  filename: string,
-  type = "application/json"
-) {
-  const blob =
-    content instanceof Blob ? content : new Blob([content], { type });
+export function downloadFile(content: string | Blob, filename: string, type = "application/json") {
+  const blob = content instanceof Blob ? content : new Blob([content], { type });
   const url = URL.createObjectURL(blob);
   const link = document.createElement("a");
   link.href = url;
@@ -53,9 +44,7 @@ export function readJsonFile(file: File): Promise<unknown> {
         const jsonData = JSON.parse(e.target?.result as string);
         resolve(jsonData);
       } catch {
-        reject(
-          new Error("Failed to parse JSON file. Please check the file format.")
-        );
+        reject(new Error("Failed to parse JSON file. Please check the file format."));
       }
     };
     reader.onerror = () => reject(new Error("Failed to read file"));
@@ -66,19 +55,16 @@ export function readJsonFile(file: File): Promise<unknown> {
 export function generatePrintFilename(
   quotationFromCompany: string,
   quotationForCompany: string,
-  quotationId: string
+  quotationId: string,
 ) {
-  const fromCompany = sanitizeFilename(
-    quotationFromCompany.split(" ")[0] || ""
-  );
+  const fromCompany = sanitizeFilename(quotationFromCompany.split(" ")[0] || "");
   const toCompany = sanitizeFilename(quotationForCompany.split(" ")[0] || "");
   const quotationNo = sanitizeFilename(quotationId);
   return `${quotationNo}-${fromCompany}-${toCompany}`;
 }
 
 export function generateRandomString(length: number): string {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
   let result = "";
   for (let i = 0; i < length; i++) {
     result += chars.charAt(Math.floor(Math.random() * chars.length));
@@ -94,9 +80,6 @@ export function incrementCodeFlexible(code: string) {
     throw new Error("Code must end with digits");
   }
   const [, prefix, digits] = match;
-  const next = String(Number.parseInt(digits, 10) + 1).padStart(
-    digits.length,
-    "0"
-  );
+  const next = String(Number.parseInt(digits, 10) + 1).padStart(digits.length, "0");
   return prefix + next;
 }
