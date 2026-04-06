@@ -4,7 +4,8 @@ function getTotalByCurrency(lineItems: QuotationLineItem[]) {
   const totals: Record<string, number> = {};
   for (const item of lineItems) {
     const itemCurrency = item.currency;
-    totals[itemCurrency] = (totals[itemCurrency] || 0) + item.quantity * item.rate;
+    totals[itemCurrency] =
+      (totals[itemCurrency] || 0) + item.quantity * item.rate;
   }
   return totals;
 }
@@ -12,7 +13,7 @@ function getTotalByCurrency(lineItems: QuotationLineItem[]) {
 function getDepositByCurrency(
   paymentType: string,
   depositPercent: number,
-  currencyTotals: Record<string, number>,
+  currencyTotals: Record<string, number>
 ) {
   if (paymentType === "Recurring payment") {
     return {};
@@ -28,7 +29,7 @@ function getDepositByCurrency(
 function getSecondPaymentByCurrency(
   hasSecondPayment: boolean,
   secondPaymentPercent: number,
-  currencyTotals: Record<string, number>,
+  currencyTotals: Record<string, number>
 ) {
   if (!hasSecondPayment) {
     return {};
@@ -43,7 +44,7 @@ function getSecondPaymentByCurrency(
 function getFinalPaymentByCurrency(
   currencyTotals: Record<string, number>,
   currencyDeposits: Record<string, number>,
-  currencySecondPayments: Record<string, number>,
+  currencySecondPayments: Record<string, number>
 ) {
   const finalPayments: Record<string, number> = {};
   for (const [currency, total] of Object.entries(currencyTotals)) {

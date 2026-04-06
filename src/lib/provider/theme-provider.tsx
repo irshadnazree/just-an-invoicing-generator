@@ -1,4 +1,5 @@
 import { createContext, type PropsWithChildren, use, useState } from "react";
+
 import { setThemeServerFn, type Theme } from "@/lib/theme";
 
 type ThemeContextVal = { theme: Theme; setTheme: (val: Theme) => void };
@@ -18,7 +19,11 @@ export function ThemeProvider({ children, theme: initialTheme }: Props) {
     setThemeServerFn({ data: val });
   }
 
-  return <ThemeContext.Provider value={{ theme, setTheme }}>{children}</ThemeContext.Provider>;
+  return (
+    <ThemeContext.Provider value={{ theme, setTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
 }
 
 export function useTheme() {

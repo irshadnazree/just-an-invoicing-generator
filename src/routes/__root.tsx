@@ -1,4 +1,5 @@
 import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
+
 import Footer from "@/components/shared/footer";
 import Navbar from "@/components/shared/navbar";
 import { ThemeProvider } from "@/lib/provider/theme-provider";
@@ -6,7 +7,6 @@ import { getThemeServerFn } from "@/lib/theme";
 
 import "@fontsource-variable/public-sans";
 import "@fontsource-variable/jetbrains-mono";
-
 import appCss from "../styles.css?url";
 
 export const Route = createRootRoute({

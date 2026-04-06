@@ -1,4 +1,5 @@
 import { memo } from "react";
+
 import { FormField, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
@@ -27,13 +28,17 @@ function ProjectDetailsSectionComponent({
   return (
     <>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">Project Details</h3>
+        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+          Project Details
+        </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
           <FormField className="col-span-1 xl:col-span-2">
             <FormLabel id="project-title" label="Project Title" />
             <Input
               id="project-title"
-              onChange={(value) => onUpdateField("projectTitle", value as string)}
+              onChange={(value) =>
+                onUpdateField("projectTitle", value as string)
+              }
               value={projectTitle}
             />
           </FormField>
@@ -41,7 +46,9 @@ function ProjectDetailsSectionComponent({
             <FormLabel id="quotation-id" label="Quotation id" />
             <Input
               id="quotation-id"
-              onChange={(value) => onUpdateField("quotationId", value as string)}
+              onChange={(value) =>
+                onUpdateField("quotationId", value as string)
+              }
               type="text"
               value={quotationId}
             />
@@ -50,7 +57,9 @@ function ProjectDetailsSectionComponent({
             <FormLabel id="quotation-date" label="Quotation Date" />
             <Input
               id="quotation-date"
-              onChange={(value) => onUpdateField("quotationDate", value as string)}
+              onChange={(value) =>
+                onUpdateField("quotationDate", value as string)
+              }
               type="date"
               value={quotationDate}
             />
@@ -59,7 +68,9 @@ function ProjectDetailsSectionComponent({
             <FormLabel id="payment-type" label="Payment Type" />
             <Select
               id="payment-type"
-              onChange={(value) => onUpdateField("paymentType", value as string)}
+              onChange={(value) =>
+                onUpdateField("paymentType", value as string)
+              }
               options={[
                 { value: "One-time payment", label: "One-time payment" },
                 { value: "Recurring payment", label: "Recurring payment" },
@@ -71,7 +82,9 @@ function ProjectDetailsSectionComponent({
             <FormLabel id="bank-account" label="Bank Account Number" />
             <Input
               id="bank-account"
-              onChange={(value) => onUpdateField("bankAccount", value as string)}
+              onChange={(value) =>
+                onUpdateField("bankAccount", value as string)
+              }
               type="text"
               value={bankAccount}
             />
@@ -79,13 +92,17 @@ function ProjectDetailsSectionComponent({
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">Client Information</h3>
+        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+          Client Information
+        </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
           <FormField>
             <FormLabel id="quotation-from-company" label="Quotation From" />
             <Input
               id="quotation-from-company"
-              onChange={(value) => onUpdateNestedField("quotationFrom", "company", value as string)}
+              onChange={(value) =>
+                onUpdateNestedField("quotationFrom", "company", value as string)
+              }
               type="text"
               value={quotationFrom.company}
             />
@@ -94,7 +111,9 @@ function ProjectDetailsSectionComponent({
             <FormLabel id="quotation-for-company" label="Quotation For" />
             <Input
               id="quotation-for-company"
-              onChange={(value) => onUpdateNestedField("quotationFor", "company", value as string)}
+              onChange={(value) =>
+                onUpdateNestedField("quotationFor", "company", value as string)
+              }
               type="text"
               value={quotationFor.company}
             />

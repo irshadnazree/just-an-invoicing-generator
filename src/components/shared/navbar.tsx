@@ -1,4 +1,5 @@
 import { Link, useLocation } from "@tanstack/react-router";
+
 import ThemeToggle from "@/components/shared/theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,9 @@ export default function Navbar() {
     <nav className="sticky top-0 z-10 mx-auto w-full max-w-400 bg-background/25 px-4 pt-4 backdrop-blur-sm xl:px-25 xl:pt-6 print:hidden">
       <div className="item-start flex justify-between xl:items-center">
         <Link to="/">
-          <span className="text-xl xl:text-2xl">Just an Accounting Generator</span>
+          <span className="text-xl xl:text-2xl">
+            Just an Accounting Generator
+          </span>
         </Link>
         <ThemeToggle />
       </div>
@@ -44,7 +47,7 @@ function NavbarLink({
     <Link
       className={cn(
         "text-lg/9 underline-offset-11 transition-all duration-150 ease-in-out hover:text-primary hover:underline",
-        isActive && "text-primary underline",
+        isActive && "text-primary underline"
       )}
       to={to}
     >

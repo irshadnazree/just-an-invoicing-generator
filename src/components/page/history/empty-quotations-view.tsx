@@ -1,5 +1,6 @@
 import { FileTextIcon, PlusIcon } from "@phosphor-icons/react";
 import { useRouter } from "@tanstack/react-router";
+
 import { Button } from "@/components/ui/button";
 
 export default function EmptyQuotationsView() {
@@ -10,7 +11,9 @@ export default function EmptyQuotationsView() {
       <div className="flex flex-col items-center justify-center">
         <FileTextIcon className="mx-auto mb-2 text-text" size={32} />
         <h3 className="font-medium">No quotations found</h3>
-        <p className="mb-2 text-sm text-text/80">Create your first quotation to get started</p>
+        <p className="mb-2 text-sm text-text/80">
+          Create your first quotation to get started
+        </p>
       </div>
 
       <Button

@@ -7,7 +7,11 @@ export type FormFieldProps = {
 
 function FormField({ children, className }: FormFieldProps) {
   return (
-    <div className={cn("flex w-full flex-1 flex-col items-start gap-1", className)}>{children}</div>
+    <div
+      className={cn("flex w-full flex-1 flex-col items-start gap-1", className)}
+    >
+      {children}
+    </div>
   );
 }
 

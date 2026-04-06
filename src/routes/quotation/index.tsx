@@ -1,6 +1,7 @@
 import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+
 import EmptyQuotationsView from "@/components/page/history/empty-quotations-view";
 import NoResultSection from "@/components/page/history/no-result-view";
 import TableView from "@/components/page/history/table-view";
@@ -16,18 +17,24 @@ export const Route = createFileRoute("/quotation/")({
 });
 
 function RouteComponent() {
-  const { getAllQuotations, getAllQuotationsAsync, deleteQuotation } = useQuotationStore();
+  const { getAllQuotations, getAllQuotationsAsync, deleteQuotation } =
+    useQuotationStore();
   const router = useRouter();
 
   const [quotations, setQuotations] = useState<QuotationFormData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [selectedQuotations, setSelectedQuotations] = useState<Set<string>>(new Set());
+  const [selectedQuotations, setSelectedQuotations] = useState<Set<string>>(
+    new Set()
+  );
   const [pendingBulkDelete, setPendingBulkDelete] = useState(false);
 
   const formattedQuotations = quotations.map((q) => {
-    const total = q.items.reduce((sum, item) => sum + item.quantity * item.rate, 0);
+    const total = q.items.reduce(
+      (sum, item) => sum + item.quantity * item.rate,
+      0
+    );
     return {
       id: q.id,
       quotationId: q.quotationId,
@@ -49,13 +56,13 @@ function RouteComponent() {
           (q) =>
             q.projectTitle.toLowerCase().includes(lowerSearchTerm) ||
             q.quotationFor.toLowerCase().includes(lowerSearchTerm) ||
-            q.quotationId.toLowerCase().includes(lowerSearchTerm),
+            q.quotationId.toLowerCase().includes(lowerSearchTerm)
         );
       })()
     : formattedQuotations;
 
   const sortedQuotations = [...filteredQuotations].sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime(),
+    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
   );
 
   function handleCreateQuotation() {
@@ -130,7 +137,9 @@ function RouteComponent() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50">
           <div className="rounded-lg bg-foreground p-6 shadow-lg">
             <h3 className="mb-4 font-semibold text-lg">Confirm Delete</h3>
-            <p className="mb-6 text-text">Are you sure you want to delete this quotation?</p>
+            <p className="mb-6 text-text">
+              Are you sure you want to delete this quotation?
+            </p>
             <div className="flex justify-end gap-3">
               <Button onClick={cancelDelete} variant="ghost">
                 Cancel
@@ -146,13 +155,16 @@ function RouteComponent() {
           <div className="rounded-lg bg-foreground p-6 shadow-lg">
             <h3 className="mb-4 font-semibold text-lg">Confirm Bulk Delete</h3>
             <p className="mb-6 text-text">
-              Are you sure you want to delete {selectedQuotations.size} quotation(s)?
+              Are you sure you want to delete {selectedQuotations.size}{" "}
+              quotation(s)?
             </p>
             <div className="flex justify-end gap-3">
               <Button onClick={cancelBulkDelete} variant="ghost">
                 Cancel
               </Button>
-              <Button onClick={confirmBulkDelete}>Delete {selectedQuotations.size} Item(s)</Button>
+              <Button onClick={confirmBulkDelete}>
+                Delete {selectedQuotations.size} Item(s)
+              </Button>
             </div>
           </div>
         </div>
@@ -162,7 +174,9 @@ function RouteComponent() {
         <div className="flex items-center gap-4">
           <h2 className="text-2xl">Quotations</h2>
           <Button
-            icon={<PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />}
+            icon={
+              <PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />
+            }
             onClick={handleCreateQuotation}
             size="sm"
           />
@@ -188,7 +202,10 @@ function RouteComponent() {
       </div>
 
       {sortedQuotations.length === 0 && searchTerm !== "" && (
-        <NoResultSection searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+        <NoResultSection
+          searchTerm={searchTerm}
+          setSearchTerm={setSearchTerm}
+        />
       )}
       {quotations.length === 0 && searchTerm === "" && <EmptyQuotationsView />}
 
@@ -204,7 +221,8 @@ function RouteComponent() {
 
       {sortedQuotations.length > 0 && (
         <div className="mt-4 text-sm text-text">
-          Showing {sortedQuotations.length} of {formattedQuotations.length} quotations
+          Showing {sortedQuotations.length} of {formattedQuotations.length}{" "}
+          quotations
         </div>
       )}
     </section>

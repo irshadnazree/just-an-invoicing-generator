@@ -1,4 +1,5 @@
 import { CopyIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { FormField, FormLabel } from "@/components/ui/form";
@@ -49,7 +50,11 @@ export default function LineItemSection() {
     addItemDetail(itemIndex);
   }
 
-  function handleUpdateItemDetail(itemIndex: number, detailIndex: number, value: unknown) {
+  function handleUpdateItemDetail(
+    itemIndex: number,
+    detailIndex: number,
+    value: unknown
+  ) {
     updateItemDetail(itemIndex, detailIndex, value as string);
   }
 
@@ -72,8 +77,16 @@ export default function LineItemSection() {
       </div>
       <div className="flex flex-col gap-6">
         {items.length === 0 && (
-          <Card className="flex flex-col items-center justify-center gap-2" variant="placeholder">
-            <Button icon={<PlusIcon size={18} />} onClick={handleAddItem} size="sm" variant="ghost">
+          <Card
+            className="flex flex-col items-center justify-center gap-2"
+            variant="placeholder"
+          >
+            <Button
+              icon={<PlusIcon size={18} />}
+              onClick={handleAddItem}
+              size="sm"
+              variant="ghost"
+            >
               Add New Line Item
             </Button>
           </Card>
@@ -104,7 +117,9 @@ export default function LineItemSection() {
                 <FormLabel id="item-name" label="Item Name" />
                 <Input
                   id={`item-name-${itemIndex}`}
-                  onChange={(value) => handleUpdateItem(itemIndex, "name", value as string)}
+                  onChange={(value) =>
+                    handleUpdateItem(itemIndex, "name", value as string)
+                  }
                   value={item.name}
                 />
               </FormField>
@@ -112,7 +127,9 @@ export default function LineItemSection() {
                 <FormLabel id="item-quantity" label="Quantity" />
                 <Input
                   id={`item-quantity-${itemIndex}`}
-                  onChange={(value) => handleUpdateItem(itemIndex, "quantity", value as number)}
+                  onChange={(value) =>
+                    handleUpdateItem(itemIndex, "quantity", value as number)
+                  }
                   type="number"
                   value={item.quantity || 0}
                 />
@@ -121,7 +138,9 @@ export default function LineItemSection() {
                 <FormLabel id="item-rate" label="Rate" />
                 <Input
                   id={`item-rate-${itemIndex}`}
-                  onChange={(value) => handleUpdateItem(itemIndex, "rate", value as number)}
+                  onChange={(value) =>
+                    handleUpdateItem(itemIndex, "rate", value as number)
+                  }
                   type="number"
                   value={item.rate || 0}
                 />
@@ -130,7 +149,9 @@ export default function LineItemSection() {
                 <FormLabel id="item-currency" label="Currency" />
                 <Select
                   id={`item-currency-${itemIndex}`}
-                  onChange={(value) => handleUpdateItem(itemIndex, "currency", value)}
+                  onChange={(value) =>
+                    handleUpdateItem(itemIndex, "currency", value)
+                  }
                   options={[
                     { value: "RM", label: "MYR" },
                     { value: "USD", label: "USD" },
@@ -146,7 +167,7 @@ export default function LineItemSection() {
                   type="text"
                   value={formatCurrency(
                     item.quantity * item.rate || 2,
-                    item.currency || currency || "RM",
+                    item.currency || currency || "RM"
                   )}
                 />
               </FormField>
@@ -174,14 +195,20 @@ export default function LineItemSection() {
                     <Input
                       id={`item-detail-${itemIndex}-${detailIndex}`}
                       onChange={(value) =>
-                        handleUpdateItemDetail(itemIndex, detailIndex, value as string)
+                        handleUpdateItemDetail(
+                          itemIndex,
+                          detailIndex,
+                          value as string
+                        )
                       }
                       placeholder="Enter detail"
                       value={detail}
                     />
                     <Button
                       icon={<TrashIcon size={18} />}
-                      onClick={() => handleRemoveItemDetail(itemIndex, detailIndex)}
+                      onClick={() =>
+                        handleRemoveItemDetail(itemIndex, detailIndex)
+                      }
                       size="sm"
                       variant="ghost"
                     />

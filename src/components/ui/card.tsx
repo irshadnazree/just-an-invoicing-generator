@@ -1,5 +1,6 @@
 import { cva } from "class-variance-authority";
 import type { ReactNode } from "react";
+
 import { cn } from "@/lib/utils";
 
 export type CardProps = {
@@ -28,6 +29,15 @@ const cardVariants = cva("border border-text", {
   },
 });
 
-export function Card({ children, className = "", size = "lg", variant = "default" }: CardProps) {
-  return <div className={cn(cardVariants({ size, variant, className }))}>{children}</div>;
+export function Card({
+  children,
+  className = "",
+  size = "lg",
+  variant = "default",
+}: CardProps) {
+  return (
+    <div className={cn(cardVariants({ size, variant, className }))}>
+      {children}
+    </div>
+  );
 }

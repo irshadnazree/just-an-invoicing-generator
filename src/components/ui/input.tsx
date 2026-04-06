@@ -1,4 +1,5 @@
 import { cva } from "class-variance-authority";
+
 import { cn } from "@/lib/utils";
 
 export type InputType = "text" | "number" | "date" | "email";
@@ -20,7 +21,7 @@ const inputVariants = cva(
   "max-h-9.5 w-full flex-1 border border-input bg-foreground px-3 py-2 leading-tight focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50",
   {
     variants: {},
-  },
+  }
 );
 
 export function Input({
@@ -37,7 +38,8 @@ export function Input({
 }: InputProps) {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (type === "number") {
-      const newValue = e.target.value === "" ? 0 : Number.parseInt(e.target.value, 10) || 0;
+      const newValue =
+        e.target.value === "" ? 0 : Number.parseInt(e.target.value, 10) || 0;
       onChange?.(newValue);
     } else {
       onChange?.(e.target.value);

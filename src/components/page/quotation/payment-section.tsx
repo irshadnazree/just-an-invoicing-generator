@@ -12,8 +12,13 @@ type PaymentSectionProps = {
 };
 
 export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
-  const { currency, paymentType, depositPercent, hasSecondPayment, secondPaymentPercent } =
-    useQuotationPaymentConfig();
+  const {
+    currency,
+    paymentType,
+    depositPercent,
+    hasSecondPayment,
+    secondPaymentPercent,
+  } = useQuotationPaymentConfig();
 
   const {
     totalsByCurrency,
@@ -25,7 +30,9 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="border-text border-b-2 pb-2 font-bold text-xl">Payment Details</h3>
+      <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+        Payment Details
+      </h3>
       <div className="grid grid-cols-2 gap-2 xl:grid-cols-4 xl:gap-4">
         <FormField className="col-span-2">
           <FormLabel id="currency" label="Currency" />
@@ -39,7 +46,9 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
             value={currency}
           />
         </FormField>
-        <FormField className={cn(hasSecondPayment ? "col-span-1" : "col-span-2")}>
+        <FormField
+          className={cn(hasSecondPayment ? "col-span-1" : "col-span-2")}
+        >
           <FormLabel id="deposit-percent" label="Deposit Percentage (%)" />
           <Input
             id="deposit-percent"
@@ -50,10 +59,15 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
         </FormField>
         {hasSecondPayment && (
           <FormField>
-            <FormLabel id="second-payment-percent" label="Second Payment Percentage (%)" />
+            <FormLabel
+              id="second-payment-percent"
+              label="Second Payment Percentage (%)"
+            />
             <Input
               id="second-payment-percent"
-              onChange={(value) => onUpdateField("secondPaymentPercent", value as number)}
+              onChange={(value) =>
+                onUpdateField("secondPaymentPercent", value as number)
+              }
               type="number"
               value={secondPaymentPercent || 0}
             />
@@ -80,28 +94,38 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
                   paymentType !== "Recurring payment" && hasSecondPayment
                     ? "grid-cols-2 xl:grid-cols-4"
                     : "grid-cols-2 xl:grid-cols-3",
-                  paymentType === "Recurring payment" && "grid-cols-2",
+                  paymentType === "Recurring payment" && "grid-cols-2"
                 )}
               >
                 <div>
                   <div className="mb-1 text-sm">Total</div>
                   <div className="font-bold text-xl">
-                    {currencyKey} {formatDecimal(totalsByCurrency[currencyKey], 2)}
+                    {currencyKey}{" "}
+                    {formatDecimal(totalsByCurrency[currencyKey], 2)}
                   </div>
                 </div>
                 {paymentType !== "Recurring payment" && (
                   <div>
-                    <div className="mb-1 text-sm">Deposit ({depositPercent}%)</div>
+                    <div className="mb-1 text-sm">
+                      Deposit ({depositPercent}%)
+                    </div>
                     <div className="font-bold text-teal-600 text-xl">
-                      {currencyKey} {formatDecimal(depositsByCurrency[currencyKey] ?? 0, 2)}
+                      {currencyKey}{" "}
+                      {formatDecimal(depositsByCurrency[currencyKey] ?? 0, 2)}
                     </div>
                   </div>
                 )}
                 {hasSecondPayment && (
                   <div>
-                    <div className="mb-1 text-sm">Second Payment ({secondPaymentPercent}%)</div>
+                    <div className="mb-1 text-sm">
+                      Second Payment ({secondPaymentPercent}%)
+                    </div>
                     <div className="font-bold text-teal-600 text-xl">
-                      {currencyKey} {formatDecimal(secondPaymentsByCurrency[currencyKey] ?? 0, 2)}
+                      {currencyKey}{" "}
+                      {formatDecimal(
+                        secondPaymentsByCurrency[currencyKey] ?? 0,
+                        2
+                      )}
                     </div>
                   </div>
                 )}
@@ -110,7 +134,9 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
                     Final Payment
                     {(() => {
                       if (paymentType === "Recurring payment") {
-                        return hasSecondPayment ? ` (${100 - secondPaymentPercent}%)` : "";
+                        return hasSecondPayment
+                          ? ` (${100 - secondPaymentPercent}%)`
+                          : "";
                       }
                       if (hasSecondPayment) {
                         return ` (${100 - depositPercent - secondPaymentPercent}%)`;
@@ -119,7 +145,11 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
                     })()}
                   </div>
                   <div className="font-bold text-teal-600 text-xl">
-                    {currencyKey} {formatDecimal(finalPaymentsByCurrency[currencyKey] ?? 0, 2)}
+                    {currencyKey}{" "}
+                    {formatDecimal(
+                      finalPaymentsByCurrency[currencyKey] ?? 0,
+                      2
+                    )}
                   </div>
                 </div>
               </Card>

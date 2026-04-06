@@ -1,4 +1,5 @@
 import { cva } from "class-variance-authority";
+
 import { cn } from "@/lib/utils";
 
 export type ButtonProps = {
@@ -34,7 +35,7 @@ const buttonVariants = cva(
       size: "default",
       iconSize: "none",
     },
-  },
+  }
 );
 
 export function Button({
@@ -58,7 +59,7 @@ export function Button({
     <button
       className={cn(
         buttonVariants({ size, iconSize, variant }),
-        disabled && "cursor-not-allowed opacity-50",
+        disabled && "cursor-not-allowed opacity-50"
       )}
       disabled={disabled}
       onClick={onClick}

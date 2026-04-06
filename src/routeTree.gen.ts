@@ -10,10 +10,10 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as IndexRouteImport } from "./routes/index";
-import { Route as QuotationIndexRouteImport } from "./routes/quotation/index";
 import { Route as InvoiceIndexRouteImport } from "./routes/invoice/index";
-import { Route as QuotationPreviewRouteImport } from "./routes/quotation/preview";
 import { Route as QuotationQuotationRouteImport } from "./routes/quotation/$quotation";
+import { Route as QuotationIndexRouteImport } from "./routes/quotation/index";
+import { Route as QuotationPreviewRouteImport } from "./routes/quotation/preview";
 
 const IndexRoute = IndexRouteImport.update({
   id: "/",
@@ -45,8 +45,8 @@ export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
   "/quotation/$quotation": typeof QuotationQuotationRoute;
   "/quotation/preview": typeof QuotationPreviewRoute;
-  "/invoice": typeof InvoiceIndexRoute;
-  "/quotation": typeof QuotationIndexRoute;
+  "/invoice/": typeof InvoiceIndexRoute;
+  "/quotation/": typeof QuotationIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
@@ -65,9 +65,19 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/" | "/quotation/$quotation" | "/quotation/preview" | "/invoice" | "/quotation";
+  fullPaths:
+    | "/"
+    | "/quotation/$quotation"
+    | "/quotation/preview"
+    | "/invoice/"
+    | "/quotation/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/quotation/$quotation" | "/quotation/preview" | "/invoice" | "/quotation";
+  to:
+    | "/"
+    | "/quotation/$quotation"
+    | "/quotation/preview"
+    | "/invoice"
+    | "/quotation";
   id:
     | "__root__"
     | "/"
@@ -97,14 +107,14 @@ declare module "@tanstack/react-router" {
     "/quotation/": {
       id: "/quotation/";
       path: "/quotation";
-      fullPath: "/quotation";
+      fullPath: "/quotation/";
       preLoaderRoute: typeof QuotationIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
     "/invoice/": {
       id: "/invoice/";
       path: "/invoice";
-      fullPath: "/invoice";
+      fullPath: "/invoice/";
       preLoaderRoute: typeof InvoiceIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
@@ -136,8 +146,9 @@ export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from "./router.tsx";
 import type { createStart } from "@tanstack/react-start";
+
+import type { getRouter } from "./router.tsx";
 declare module "@tanstack/react-start" {
   interface Register {
     ssr: true;

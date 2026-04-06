@@ -1,4 +1,5 @@
 import { CopyIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
@@ -36,7 +37,9 @@ export default function TermsSection() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between border-b-2 pb-1">
-        <h3 className="border-text font-bold text-xl">Terms and Conditions Details</h3>
+        <h3 className="border-text font-bold text-xl">
+          Terms and Conditions Details
+        </h3>
         <Button
           icon={<PlusIcon size={22} weight="bold" />}
           onClick={handleAddTerm}
@@ -48,8 +51,16 @@ export default function TermsSection() {
       </div>
       <div className="flex flex-col gap-2">
         {terms.length === 0 && (
-          <Card className="flex flex-col items-center justify-center gap-2" variant="placeholder">
-            <Button icon={<PlusIcon size={18} />} onClick={handleAddTerm} size="sm" variant="ghost">
+          <Card
+            className="flex flex-col items-center justify-center gap-2"
+            variant="placeholder"
+          >
+            <Button
+              icon={<PlusIcon size={18} />}
+              onClick={handleAddTerm}
+              size="sm"
+              variant="ghost"
+            >
               Add New Term
             </Button>
           </Card>

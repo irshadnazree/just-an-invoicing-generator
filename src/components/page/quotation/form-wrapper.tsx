@@ -13,11 +13,15 @@ export default function FormWrapper() {
     updateField(field as keyof QuotationFormData, value as never);
   }
 
-  function handleUpdateNestedField(parent: string, field: string, value: unknown) {
+  function handleUpdateNestedField(
+    parent: string,
+    field: string,
+    value: unknown
+  ) {
     updateNestedField(
       parent as "quotationFrom" | "quotationFor",
       field as keyof QuotationFormData["quotationFrom"],
-      value as string,
+      value as string
     );
   }
 
