@@ -1,5 +1,3 @@
-import { cva } from "class-variance-authority";
-
 import { cn } from "@/lib/utils";
 
 export type SelectOption = {
@@ -19,12 +17,8 @@ export type SelectProps = {
   placeholder?: string;
 };
 
-const selectVariants = cva(
-  "max-h-9.5 w-full border border-input bg-foreground/50 px-3 py-2 leading-tight focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50",
-  {
-    variants: {},
-  }
-);
+const baseSelectClasses =
+  "max-h-9.5 w-full border border-input bg-foreground/50 px-3 py-2 leading-tight focus:outline-none focus:ring-1 focus:ring-text/80 disabled:cursor-not-allowed disabled:opacity-50";
 
 export function Select({
   id,
@@ -38,7 +32,7 @@ export function Select({
 }: SelectProps) {
   return (
     <select
-      className={cn(selectVariants({ className }))}
+      className={cn(baseSelectClasses, className)}
       disabled={disabled}
       id={id}
       onChange={(e) => onChange(e.target.value)}

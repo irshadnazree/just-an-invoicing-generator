@@ -17,7 +17,7 @@ import {
   useUpdateItem,
   useUpdateItemDetail,
 } from "@/stores/quotation-store";
-import type { QuotationLineItem } from "@/types/quotation";
+import type { QuotationStore } from "@/types/quotation";
 
 export default function LineItemSection() {
   const { currency } = useQuotationPaymentConfig();
@@ -34,9 +34,11 @@ export default function LineItemSection() {
     addItem();
   }
 
-  function handleUpdateItem(index: number, field: string, value: unknown) {
-    updateItem(index, field as keyof QuotationLineItem, value as never);
-  }
+  const handleUpdateItem: QuotationStore["updateItem"] = (
+    index,
+    field,
+    value
+  ) => updateItem(index, field, value);
 
   function handleDuplicateItem(index: number) {
     duplicateItem(index);
@@ -53,9 +55,9 @@ export default function LineItemSection() {
   function handleUpdateItemDetail(
     itemIndex: number,
     detailIndex: number,
-    value: unknown
+    value: string
   ) {
-    updateItemDetail(itemIndex, detailIndex, value as string);
+    updateItemDetail(itemIndex, detailIndex, value);
   }
 
   function handleRemoveItemDetail(itemIndex: number, detailIndex: number) {

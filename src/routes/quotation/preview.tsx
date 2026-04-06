@@ -1,22 +1,22 @@
 import { ArrowUUpLeftIcon, PrinterIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { Button } from "@/components/ui/button";
+import { formatDecimal, generatePrintFilename } from "@/lib/utils";
+import { useQuotationData } from "@/stores/quotation-store";
 import {
   getDepositByCurrency,
   getFinalPaymentByCurrency,
   getSecondPaymentByCurrency,
   getTotalByCurrency,
-} from "@/components/hooks/use-calculate";
-import { Button } from "@/components/ui/button";
-import { formatDecimal, generatePrintFilename } from "@/lib/utils";
-import { useQuotationStore } from "@/stores/quotation-store";
+} from "@/utils/calculations";
 
 export const Route = createFileRoute("/quotation/preview")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { formData } = useQuotationStore();
+  const formData = useQuotationData();
 
   const totalsByCurrency = getTotalByCurrency(formData.items);
   const depositsByCurrency = getDepositByCurrency(
@@ -297,7 +297,7 @@ function RouteComponent() {
             <h3 className="mb-2 font-bold">Terms and Conditions</h3>
             <ol className="space-y-1">
               {formData.terms.map((term, index) => (
-                <li className="text-sm" key={`term-${term}`}>
+                <li className="text-sm" key={`term-${index}`}>
                   {index + 1}. {term}
                 </li>
               ))}
@@ -305,157 +305,6 @@ function RouteComponent() {
           </div>
         </div>
       </div>
-      <style>{`
-      @media print {
-        @page {
-          size: A4;
-          margin-top: 1cm;
-          margin-bottom: 1cm;
-          margin-left: 1cm;
-          margin-right: 1cm;
-          /* Remove browser print headers and footers */
-          @top-left { content: ""; }
-          @top-center { content: ""; }
-          @top-right { content: ""; }
-          @bottom-left { content: ""; }
-          @bottom-center { content: ""; }
-          @bottom-right { content: ""; }
-        }
-        
-        * {
-          -webkit-print-color-adjust: exact !important;
-          print-color-adjust: exact !important;
-          color-adjust: exact !important;
-        }
-        
-        body {
-          color: black !important;
-          font-size: 0.75em;
-          margin: 0;
-          padding: 0;
-          background: white !important;
-        }
-
-        main {
-          margin: 0;
-          padding: 0;
-          background: white !important;
-        }
-        
-        /* Hide title element if visible */
-        title {
-          display: none !important;
-        }
-        
-        head {
-          display: none !important;
-        }
-        
-        .min-h-screen {
-          min-height: auto !important;
-          background: white !important;
-          padding: 0 !important;
-        }
-        
-        .max-w-8xl {
-          max-width: 95% !important;
-          margin: 0 auto !important;
-        }
-        
-        .print\\:hidden {
-          display: none !important;
-        }
-
-        /* Ensure print uses white backgrounds */
-        .bg-muted,
-        .bg-card,
-        .bg-gray-50,
-        .bg-white {
-          background: white !important;
-        }
-
-        .bg-yellow-400 {
-          background-color: #facc15 !important;
-          -webkit-print-color-adjust: exact;
-          print-color-adjust: exact;
-        }
-        
-        /* Reduce padding in print */
-        .p-6 {
-          padding: 0.75rem !important;
-        }
-        
-        .p-3 {
-          padding: 0.5rem !important;
-        }
-        
-        /* Reduce column widths in print */
-        .w-10 {
-          width: 2rem !important;
-        }
-        
-        .w-32 {
-          width: 5rem !important;
-        }
-        
-        table {
-          page-break-inside: auto;
-        }
-        
-        tr {
-          page-break-inside: avoid;
-          page-break-after: auto;
-        }
-        
-        thead {
-          display: table-header-group;
-        }
-        
-        tfoot {
-          display: table-footer-group;
-        }
-        
-        .border-black {
-          border-color: #000 !important;
-        }
-        
-        .border-b-2 {
-          border-bottom-width: 2px !important;
-          border-bottom-style: solid !important;
-        }
-        
-        .border-t-2 {
-          border-top-width: 2px !important;
-          border-top-style: solid !important;
-        }
-        
-        .border-r {
-          border-right-width: 1px !important;
-          border-right-style: solid !important;
-        }
-        
-        .border-b {
-          border-bottom-width: 1px !important;
-          border-bottom-style: solid !important;
-        }
-        
-        .border-x {
-          border-left-width: 1px !important;
-          border-left-style: solid !important;
-          border-right-width: 1px !important;
-          border-right-style: solid !important;
-        }
-        
-        /* Match font size scale for li elements - use em to maintain relative scale */
-        li {
-          font-size: 0.875em !important;
-        }
-        
-        .text-sm {
-          font-size: 0.875em !important;
-        }
-      }
-    `}</style>
     </section>
   );
 }

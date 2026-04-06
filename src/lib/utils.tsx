@@ -45,22 +45,13 @@ export function exportJSON(data: unknown, filename: string) {
   downloadFile(dataStr, filename, "application/json");
 }
 
-export function readJsonFile(file: File): Promise<unknown> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const jsonData = JSON.parse(e.target?.result as string);
-        resolve(jsonData);
-      } catch {
-        reject(
-          new Error("Failed to parse JSON file. Please check the file format.")
-        );
-      }
-    };
-    reader.onerror = () => reject(new Error("Failed to read file"));
-    reader.readAsText(file);
-  });
+export async function readJsonFile(file: File): Promise<unknown> {
+  try {
+    const jsonData = JSON.parse(await file.text()) as unknown;
+    return jsonData;
+  } catch {
+    throw new Error("Failed to parse JSON file. Please check the file format.");
+  }
 }
 
 export function generatePrintFilename(
@@ -77,13 +68,7 @@ export function generatePrintFilename(
 }
 
 export function generateRandomString(length: number): string {
-  const chars =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  let result = "";
-  for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return result;
+  return crypto.randomUUID().replaceAll("-", "").slice(0, length);
 }
 
 const CODE_REGEX = /^(\D*)(\d+)$/;

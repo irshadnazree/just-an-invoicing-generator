@@ -84,6 +84,7 @@ type QuotationStore = {
   getAllQuotations: () => QuotationFormData[];
   getAllQuotationsAsync: () => Promise<QuotationFormData[]>;
   deleteQuotation: (id: string) => void;
+  bulkDeleteQuotations: (ids: string[]) => void;
   duplicateQuotation: (id: string) => string | null;
   initializeQuotation: () => void;
   isValidQuotation: () => boolean;

@@ -28,7 +28,12 @@ export default function TableView({
   setPendingDeleteId,
 }: TableViewProps) {
   const router = useRouter();
-  const { getAllQuotationsAsync, duplicateQuotation } = useQuotationStore();
+  const getAllQuotationsAsync = useQuotationStore(
+    (state) => state.getAllQuotationsAsync
+  );
+  const duplicateQuotation = useQuotationStore(
+    (state) => state.duplicateQuotation
+  );
 
   const tableHeaders = [
     { label: "Id", key: "id", width: "w-[6%]" },

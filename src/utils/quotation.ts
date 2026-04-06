@@ -34,6 +34,13 @@ export function findQuotationById(id: string): QuotationFormData | null {
   return quotations.find((q) => q.id === id) || null;
 }
 
+export function deleteQuotationsFromStorage(ids: string[]): void {
+  const idsToDelete = new Set(ids);
+  const quotations = loadQuotationsFromStorage();
+  const filteredQuotations = quotations.filter((q) => !idsToDelete.has(q.id));
+  saveQuotationsToStorage(filteredQuotations);
+}
+
 // Validate that quotation has required fields filled
 export function isQuotationValid(quotationData: QuotationFormData): boolean {
   // Check required fields are not empty

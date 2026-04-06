@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 
 import {
+  useQuotationItems,
+  useQuotationPaymentConfig,
+} from "@/stores/quotation-store";
+import {
   getDepositByCurrency,
   getFinalPaymentByCurrency,
   getSecondPaymentByCurrency,
   getTotalByCurrency,
-} from "@/components/hooks/use-calculate";
-import {
-  useQuotationItems,
-  useQuotationPaymentConfig,
-} from "@/stores/quotation-store";
+} from "@/utils/calculations";
 
 export function useQuotationCalculations() {
   const items = useQuotationItems();

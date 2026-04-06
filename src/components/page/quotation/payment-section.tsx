@@ -6,9 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { cn, formatDecimal } from "@/lib/utils";
 import { useQuotationPaymentConfig } from "@/stores/quotation-store";
+import type { QuotationStore } from "@/types/quotation";
 
 type PaymentSectionProps = {
-  onUpdateField: (field: string, value: unknown) => void;
+  onUpdateField: QuotationStore["updateField"];
 };
 
 export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {

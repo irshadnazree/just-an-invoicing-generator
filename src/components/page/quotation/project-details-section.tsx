@@ -4,10 +4,11 @@ import { FormField, FormLabel } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { useQuotationData } from "@/stores/quotation-store";
+import type { QuotationStore } from "@/types/quotation";
 
 type ProjectDetailsSectionProps = {
-  onUpdateField: (field: string, value: unknown) => void;
-  onUpdateNestedField: (parent: string, field: string, value: unknown) => void;
+  onUpdateField: QuotationStore["updateField"];
+  onUpdateNestedField: QuotationStore["updateNestedField"];
 };
 
 function ProjectDetailsSectionComponent({

@@ -1,6 +1,6 @@
 import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import EmptyQuotationsView from "@/components/page/history/empty-quotations-view";
 import NoResultSection from "@/components/page/history/no-result-view";
@@ -8,17 +8,22 @@ import TableView from "@/components/page/history/table-view";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Loader } from "@/components/ui/loader";
-import { initialFormData, useQuotationStore } from "@/stores/quotation-store";
+import { useQuotationStore } from "@/stores/quotation-store";
 import type { QuotationFormData, QuotationListItem } from "@/types/quotation";
-import { generateId } from "@/utils/quotation";
 
 export const Route = createFileRoute("/quotation/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const { getAllQuotations, getAllQuotationsAsync, deleteQuotation } =
-    useQuotationStore();
+  const getAllQuotations = useQuotationStore((state) => state.getAllQuotations);
+  const getAllQuotationsAsync = useQuotationStore(
+    (state) => state.getAllQuotationsAsync
+  );
+  const deleteQuotation = useQuotationStore((state) => state.deleteQuotation);
+  const bulkDeleteQuotations = useQuotationStore(
+    (state) => state.bulkDeleteQuotations
+  );
   const router = useRouter();
 
   const [quotations, setQuotations] = useState<QuotationFormData[]>([]);
@@ -30,47 +35,56 @@ function RouteComponent() {
   );
   const [pendingBulkDelete, setPendingBulkDelete] = useState(false);
 
-  const formattedQuotations = quotations.map((q) => {
-    const total = q.items.reduce(
-      (sum, item) => sum + item.quantity * item.rate,
-      0
-    );
-    return {
-      id: q.id,
-      quotationId: q.quotationId,
-      projectTitle: q.projectTitle || "Untitled Project",
-      paymentType: q.paymentType.replace(" payment", ""),
-      quotationFor: q.quotationFor?.company || "Unknown Company",
-      quotationDate: q.quotationDate,
-      total,
-      currency: q.currency || "RM",
-      createdAt: q.createdAt,
-      updatedAt: q.updatedAt,
-    } as QuotationListItem;
-  });
-
-  const filteredQuotations = searchTerm
-    ? (() => {
-        const lowerSearchTerm = searchTerm.toLowerCase();
-        return formattedQuotations.filter(
-          (q) =>
-            q.projectTitle.toLowerCase().includes(lowerSearchTerm) ||
-            q.quotationFor.toLowerCase().includes(lowerSearchTerm) ||
-            q.quotationId.toLowerCase().includes(lowerSearchTerm)
+  const formattedQuotations = useMemo(
+    () =>
+      quotations.map((q) => {
+        const total = q.items.reduce(
+          (sum, item) => sum + item.quantity * item.rate,
+          0
         );
-      })()
-    : formattedQuotations;
+        return {
+          id: q.id,
+          quotationId: q.quotationId,
+          projectTitle: q.projectTitle || "Untitled Project",
+          paymentType: q.paymentType.replace(" payment", ""),
+          quotationFor: q.quotationFor?.company || "Unknown Company",
+          quotationDate: q.quotationDate,
+          total,
+          currency: q.currency || "RM",
+          createdAt: q.createdAt,
+          updatedAt: q.updatedAt,
+        } satisfies QuotationListItem;
+      }),
+    [quotations]
+  );
 
-  const sortedQuotations = [...filteredQuotations].sort(
-    (a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+  const filteredQuotations = useMemo(() => {
+    if (!searchTerm) {
+      return formattedQuotations;
+    }
+
+    const lowerSearchTerm = searchTerm.toLowerCase();
+    return formattedQuotations.filter(
+      (q) =>
+        q.projectTitle.toLowerCase().includes(lowerSearchTerm) ||
+        q.quotationFor.toLowerCase().includes(lowerSearchTerm) ||
+        q.quotationId.toLowerCase().includes(lowerSearchTerm)
+    );
+  }, [formattedQuotations, searchTerm]);
+
+  const sortedQuotations = useMemo(
+    () =>
+      [...filteredQuotations].sort(
+        (a, b) =>
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+      ),
+    [filteredQuotations]
   );
 
   function handleCreateQuotation() {
-    const newQuotation = generateId(initialFormData as QuotationFormData);
-
     router.navigate({
       to: "/quotation/$quotation",
-      params: { quotation: newQuotation.id },
+      params: { quotation: "new" },
     });
   }
 
@@ -97,9 +111,7 @@ function RouteComponent() {
   }
 
   function confirmBulkDelete() {
-    for (const id of selectedQuotations) {
-      deleteQuotation(id);
-    }
+    bulkDeleteQuotations([...selectedQuotations]);
     setQuotations(getAllQuotations());
     setSelectedQuotations(new Set());
     setPendingBulkDelete(false);

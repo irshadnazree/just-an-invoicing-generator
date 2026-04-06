@@ -6,6 +6,7 @@ import {
 } from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
+import { useShallow } from "zustand/react/shallow";
 
 import FormWrapper from "@/components/page/quotation/form-wrapper";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,15 @@ function RouteComponent() {
     loadQuotation,
     initializeQuotation,
     saveQuotation,
-  } = useQuotationStore();
+  } = useQuotationStore(
+    useShallow((state) => ({
+      formData: state.formData,
+      importJSON: state.importJSON,
+      loadQuotation: state.loadQuotation,
+      initializeQuotation: state.initializeQuotation,
+      saveQuotation: state.saveQuotation,
+    }))
+  );
 
   // Load quotation on component mount
   useEffect(() => {
@@ -114,10 +123,7 @@ function RouteComponent() {
         </div>
         <div className="flex items-center gap-1 xl:gap-2">
           {formData.id && formData.id !== "" && (
-            <Link
-              params={{ quotation: formData.quotationId }}
-              to="/quotation/preview"
-            >
+            <Link to="/quotation/preview">
               <Button
                 icon={
                   <EyeIcon

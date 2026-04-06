@@ -10,6 +10,7 @@ import {
   useRemoveTerm,
   useUpdateTerm,
 } from "@/stores/quotation-store";
+import type { QuotationStore } from "@/types/quotation";
 
 export default function TermsSection() {
   const terms = useQuotationTerms();
@@ -30,9 +31,8 @@ export default function TermsSection() {
     removeTerm(index);
   }
 
-  function handleUpdateTerm(index: number, value: unknown) {
-    updateTerm(index, value as string);
-  }
+  const handleUpdateTerm: QuotationStore["updateTerm"] = (index, value) =>
+    updateTerm(index, value);
 
   return (
     <div className="flex flex-col gap-3">

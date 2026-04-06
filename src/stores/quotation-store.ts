@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { useShallow } from "zustand/react/shallow";
 
 import { generateRandomString, incrementCodeFlexible } from "@/lib/utils";
 import type {
@@ -7,6 +8,7 @@ import type {
   QuotationStore,
 } from "@/types/quotation";
 import {
+  deleteQuotationsFromStorage,
   findQuotationById,
   generateId,
   isQuotationValid,
@@ -143,8 +145,9 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
 
   addItemDetail: (itemIndex) =>
     set((state) => {
-      const newItems = [...state.formData.items];
-      newItems[itemIndex].details.push("");
+      const newItems = state.formData.items.map((item, index) =>
+        index === itemIndex ? { ...item, details: [...item.details, ""] } : item
+      );
       const updatedFormData = { ...state.formData, items: newItems };
 
       return {
@@ -154,9 +157,13 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
 
   removeItemDetail: (itemIndex, detailIndex) =>
     set((state) => {
-      const newItems = [...state.formData.items];
-      newItems[itemIndex].details = newItems[itemIndex].details.filter(
-        (_, i) => i !== detailIndex
+      const newItems = state.formData.items.map((item, index) =>
+        index === itemIndex
+          ? {
+              ...item,
+              details: item.details.filter((_, i) => i !== detailIndex),
+            }
+          : item
       );
       const updatedFormData = { ...state.formData, items: newItems };
 
@@ -167,8 +174,16 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
 
   updateItemDetail: (itemIndex, detailIndex, value) =>
     set((state) => {
-      const newItems = [...state.formData.items];
-      newItems[itemIndex].details[detailIndex] = value;
+      const newItems = state.formData.items.map((item, index) =>
+        index === itemIndex
+          ? {
+              ...item,
+              details: item.details.map((detail, i) =>
+                i === detailIndex ? value : detail
+              ),
+            }
+          : item
+      );
       const updatedFormData = { ...state.formData, items: newItems };
 
       return {
@@ -250,8 +265,6 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
 
   getAllQuotationsAsync: async () => {
     try {
-      // Simulate a small delay to ensure consistent loading state
-      // await new Promise((resolve) => setTimeout(resolve, 50));
       return await loadQuotationsFromStorage();
     } catch (error) {
       console.warn("Failed to load quotations from storage:", error);
@@ -281,9 +294,11 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
   },
 
   deleteQuotation: (id: string) => {
-    const quotations = loadQuotationsFromStorage();
-    const filteredQuotations = quotations.filter((q) => q.id !== id);
-    saveQuotationsToStorage(filteredQuotations);
+    deleteQuotationsFromStorage([id]);
+  },
+
+  bulkDeleteQuotations: (ids: string[]) => {
+    deleteQuotationsFromStorage(ids);
   },
 
   duplicateQuotation: (id: string) => {
@@ -342,25 +357,15 @@ export const useQuotationFor = () =>
   useQuotationStore((state) => state.formData.quotationFor);
 
 export const useQuotationPaymentConfig = () => {
-  const paymentType = useQuotationStore((state) => state.formData.paymentType);
-  const depositPercent = useQuotationStore(
-    (state) => state.formData.depositPercent
+  return useQuotationStore(
+    useShallow((state) => ({
+      paymentType: state.formData.paymentType,
+      depositPercent: state.formData.depositPercent,
+      hasSecondPayment: state.formData.hasSecondPayment,
+      secondPaymentPercent: state.formData.secondPaymentPercent,
+      currency: state.formData.currency,
+    }))
   );
-  const hasSecondPayment = useQuotationStore(
-    (state) => state.formData.hasSecondPayment
-  );
-  const secondPaymentPercent = useQuotationStore(
-    (state) => state.formData.secondPaymentPercent
-  );
-  const currency = useQuotationStore((state) => state.formData.currency);
-
-  return {
-    paymentType,
-    depositPercent,
-    hasSecondPayment,
-    secondPaymentPercent,
-    currency,
-  };
 };
 
 export const useUpdateField = () =>

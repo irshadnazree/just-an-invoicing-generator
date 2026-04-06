@@ -1,6 +1,6 @@
 import type { QuotationLineItem } from "@/types/quotation";
 
-function getTotalByCurrency(lineItems: QuotationLineItem[]) {
+export function getTotalByCurrency(lineItems: QuotationLineItem[]) {
   const totals: Record<string, number> = {};
   for (const item of lineItems) {
     const itemCurrency = item.currency;
@@ -10,7 +10,7 @@ function getTotalByCurrency(lineItems: QuotationLineItem[]) {
   return totals;
 }
 
-function getDepositByCurrency(
+export function getDepositByCurrency(
   paymentType: string,
   depositPercent: number,
   currencyTotals: Record<string, number>
@@ -26,7 +26,7 @@ function getDepositByCurrency(
   return deposits;
 }
 
-function getSecondPaymentByCurrency(
+export function getSecondPaymentByCurrency(
   hasSecondPayment: boolean,
   secondPaymentPercent: number,
   currencyTotals: Record<string, number>
@@ -41,7 +41,7 @@ function getSecondPaymentByCurrency(
   return secondPayments;
 }
 
-function getFinalPaymentByCurrency(
+export function getFinalPaymentByCurrency(
   currencyTotals: Record<string, number>,
   currencyDeposits: Record<string, number>,
   currencySecondPayments: Record<string, number>
@@ -54,10 +54,3 @@ function getFinalPaymentByCurrency(
   }
   return finalPayments;
 }
-
-export {
-  getTotalByCurrency,
-  getDepositByCurrency,
-  getSecondPaymentByCurrency,
-  getFinalPaymentByCurrency,
-};
