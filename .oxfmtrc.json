@@ -14,5 +14,12 @@
   "arrowParens": "always",
   "endOfLine": "lf",
   "experimentalSortImports": true,
-  "tailwindFunctions": ["clsx", "cn", "tw", "twMerge", "cva"]
+  "tailwindFunctions": ["clsx", "cn", "tw", "twMerge", "cva"],
+  "ignorePatterns": [
+    "**/node_modules",
+    "**/dist",
+    "**/build",
+    "worker-configuration.d.ts",
+    "routeTree.gen.ts"
+  ]
 }

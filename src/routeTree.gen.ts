@@ -8,130 +8,130 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as IndexRouteImport } from "./routes/index";
-import { Route as InvoiceIndexRouteImport } from "./routes/invoice/index";
-import { Route as QuotationQuotationRouteImport } from "./routes/quotation/$quotation";
-import { Route as QuotationIndexRouteImport } from "./routes/quotation/index";
-import { Route as QuotationPreviewRouteImport } from "./routes/quotation/preview";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
+import { Route as QuotationIndexRouteImport } from './routes/quotation/index'
+import { Route as InvoiceIndexRouteImport } from './routes/invoice/index'
+import { Route as QuotationPreviewRouteImport } from './routes/quotation/preview'
+import { Route as QuotationQuotationRouteImport } from './routes/quotation/$quotation'
 
 const IndexRoute = IndexRouteImport.update({
-  id: "/",
-  path: "/",
+  id: '/',
+  path: '/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const QuotationIndexRoute = QuotationIndexRouteImport.update({
-  id: "/quotation/",
-  path: "/quotation/",
+  id: '/quotation/',
+  path: '/quotation/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const InvoiceIndexRoute = InvoiceIndexRouteImport.update({
-  id: "/invoice/",
-  path: "/invoice/",
+  id: '/invoice/',
+  path: '/invoice/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const QuotationPreviewRoute = QuotationPreviewRouteImport.update({
-  id: "/quotation/preview",
-  path: "/quotation/preview",
+  id: '/quotation/preview',
+  path: '/quotation/preview',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const QuotationQuotationRoute = QuotationQuotationRouteImport.update({
-  id: "/quotation/$quotation",
-  path: "/quotation/$quotation",
+  id: '/quotation/$quotation',
+  path: '/quotation/$quotation',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/": typeof IndexRoute;
-  "/quotation/$quotation": typeof QuotationQuotationRoute;
-  "/quotation/preview": typeof QuotationPreviewRoute;
-  "/invoice/": typeof InvoiceIndexRoute;
-  "/quotation/": typeof QuotationIndexRoute;
+  '/': typeof IndexRoute
+  '/quotation/$quotation': typeof QuotationQuotationRoute
+  '/quotation/preview': typeof QuotationPreviewRoute
+  '/invoice/': typeof InvoiceIndexRoute
+  '/quotation/': typeof QuotationIndexRoute
 }
 export interface FileRoutesByTo {
-  "/": typeof IndexRoute;
-  "/quotation/$quotation": typeof QuotationQuotationRoute;
-  "/quotation/preview": typeof QuotationPreviewRoute;
-  "/invoice": typeof InvoiceIndexRoute;
-  "/quotation": typeof QuotationIndexRoute;
+  '/': typeof IndexRoute
+  '/quotation/$quotation': typeof QuotationQuotationRoute
+  '/quotation/preview': typeof QuotationPreviewRoute
+  '/invoice': typeof InvoiceIndexRoute
+  '/quotation': typeof QuotationIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/": typeof IndexRoute;
-  "/quotation/$quotation": typeof QuotationQuotationRoute;
-  "/quotation/preview": typeof QuotationPreviewRoute;
-  "/invoice/": typeof InvoiceIndexRoute;
-  "/quotation/": typeof QuotationIndexRoute;
+  __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/quotation/$quotation': typeof QuotationQuotationRoute
+  '/quotation/preview': typeof QuotationPreviewRoute
+  '/invoice/': typeof InvoiceIndexRoute
+  '/quotation/': typeof QuotationIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
+  fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | "/"
-    | "/quotation/$quotation"
-    | "/quotation/preview"
-    | "/invoice/"
-    | "/quotation/";
-  fileRoutesByTo: FileRoutesByTo;
+    | '/'
+    | '/quotation/$quotation'
+    | '/quotation/preview'
+    | '/invoice/'
+    | '/quotation/'
+  fileRoutesByTo: FileRoutesByTo
   to:
-    | "/"
-    | "/quotation/$quotation"
-    | "/quotation/preview"
-    | "/invoice"
-    | "/quotation";
+    | '/'
+    | '/quotation/$quotation'
+    | '/quotation/preview'
+    | '/invoice'
+    | '/quotation'
   id:
-    | "__root__"
-    | "/"
-    | "/quotation/$quotation"
-    | "/quotation/preview"
-    | "/invoice/"
-    | "/quotation/";
-  fileRoutesById: FileRoutesById;
+    | '__root__'
+    | '/'
+    | '/quotation/$quotation'
+    | '/quotation/preview'
+    | '/invoice/'
+    | '/quotation/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute;
-  QuotationQuotationRoute: typeof QuotationQuotationRoute;
-  QuotationPreviewRoute: typeof QuotationPreviewRoute;
-  InvoiceIndexRoute: typeof InvoiceIndexRoute;
-  QuotationIndexRoute: typeof QuotationIndexRoute;
+  IndexRoute: typeof IndexRoute
+  QuotationQuotationRoute: typeof QuotationQuotationRoute
+  QuotationPreviewRoute: typeof QuotationPreviewRoute
+  InvoiceIndexRoute: typeof InvoiceIndexRoute
+  QuotationIndexRoute: typeof QuotationIndexRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/": {
-      id: "/";
-      path: "/";
-      fullPath: "/";
-      preLoaderRoute: typeof IndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/quotation/": {
-      id: "/quotation/";
-      path: "/quotation";
-      fullPath: "/quotation/";
-      preLoaderRoute: typeof QuotationIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/invoice/": {
-      id: "/invoice/";
-      path: "/invoice";
-      fullPath: "/invoice/";
-      preLoaderRoute: typeof InvoiceIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/quotation/preview": {
-      id: "/quotation/preview";
-      path: "/quotation/preview";
-      fullPath: "/quotation/preview";
-      preLoaderRoute: typeof QuotationPreviewRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/quotation/$quotation": {
-      id: "/quotation/$quotation";
-      path: "/quotation/$quotation";
-      fullPath: "/quotation/$quotation";
-      preLoaderRoute: typeof QuotationQuotationRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quotation/': {
+      id: '/quotation/'
+      path: '/quotation'
+      fullPath: '/quotation/'
+      preLoaderRoute: typeof QuotationIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/invoice/': {
+      id: '/invoice/'
+      path: '/invoice'
+      fullPath: '/invoice/'
+      preLoaderRoute: typeof InvoiceIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quotation/preview': {
+      id: '/quotation/preview'
+      path: '/quotation/preview'
+      fullPath: '/quotation/preview'
+      preLoaderRoute: typeof QuotationPreviewRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/quotation/$quotation': {
+      id: '/quotation/$quotation'
+      path: '/quotation/$quotation'
+      fullPath: '/quotation/$quotation'
+      preLoaderRoute: typeof QuotationQuotationRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -141,17 +141,16 @@ const rootRouteChildren: RootRouteChildren = {
   QuotationPreviewRoute: QuotationPreviewRoute,
   InvoiceIndexRoute: InvoiceIndexRoute,
   QuotationIndexRoute: QuotationIndexRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()
 
-import type { createStart } from "@tanstack/react-start";
-
-import type { getRouter } from "./router.tsx";
-declare module "@tanstack/react-start" {
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
   interface Register {
-    ssr: true;
-    router: Awaited<ReturnType<typeof getRouter>>;
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
   }
 }
