@@ -1,10 +1,10 @@
 import { CopyIcon, PlusIcon, TrashIcon } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/Button";
-import { Card } from "@/components/ui/card";
-import { FormField, FormLabel } from "@/components/ui/form";
+import { Card } from "@/components/ui/Card";
+import { FormField, FormLabel } from "@/components/ui/Form";
 import { Input } from "@/components/ui/Input";
-import { Select } from "@/components/ui/select";
+import { Select } from "@/components/ui/Select";
 import { formatCurrency } from "@/lib/utils";
 import {
   useInvoiceAddItem,
