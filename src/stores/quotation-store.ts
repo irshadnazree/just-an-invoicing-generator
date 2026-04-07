@@ -280,8 +280,9 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
   saveQuotation: () => {
     const formData = get().formData;
     if (formData.id) {
-      saveQuotationToArray(formData);
+      return saveQuotationToArray(formData);
     }
+    return false;
   },
 
   loadQuotation: (id: string) => {

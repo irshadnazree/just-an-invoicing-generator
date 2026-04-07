@@ -76,7 +76,7 @@ type QuotationStore = {
     }
   ) => void;
   // localStorage array operations
-  saveQuotation: () => void;
+  saveQuotation: () => boolean;
   loadQuotation: (id: string) => boolean;
   getAllQuotations: () => QuotationFormData[];
   getAllQuotationsAsync: () => Promise<QuotationFormData[]>;

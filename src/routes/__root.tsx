@@ -3,6 +3,7 @@ import { createRootRoute, HeadContent, Scripts } from "@tanstack/react-router";
 import Footer from "@/components/shared/footer";
 import Navbar from "@/components/shared/navbar";
 import { ThemeProvider } from "@/lib/provider/theme-provider";
+import { AppToastProvider } from "@/lib/provider/toast-provider";
 import { getThemeServerFn } from "@/lib/theme";
 
 import "@fontsource-variable/public-sans";
@@ -49,13 +50,15 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body className="flex min-h-screen flex-col items-center">
-        <ThemeProvider theme={theme}>
-          <Navbar />
-          <main className="mx-auto my-2 w-full max-w-400 grow px-4 xl:my-4 xl:px-25">
-            {children}
-          </main>
-          <Footer />
-        </ThemeProvider>
+        <AppToastProvider>
+          <ThemeProvider theme={theme}>
+            <Navbar />
+            <main className="mx-auto my-2 w-full max-w-400 grow px-4 xl:my-4 xl:px-25">
+              {children}
+            </main>
+            <Footer />
+          </ThemeProvider>
+        </AppToastProvider>
         <Scripts />
       </body>
     </html>

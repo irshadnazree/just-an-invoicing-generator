@@ -215,8 +215,9 @@ export const useInvoiceStore = create<InvoiceStore>((set, get) => ({
   saveInvoice: () => {
     const formData = get().formData;
     if (formData.id) {
-      saveInvoiceToArray(formData);
+      return saveInvoiceToArray(formData);
     }
+    return false;
   },
 
   loadInvoice: (id: string) => {

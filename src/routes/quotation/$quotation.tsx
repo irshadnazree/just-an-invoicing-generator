@@ -5,11 +5,13 @@ import {
   UploadIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
 import FormWrapper from "@/components/page/quotation/form-wrapper";
 import { Button } from "@/components/ui/Button";
+import { SaveIndicator } from "@/components/ui/SaveIndicator";
+import { useToastManager } from "@/lib/provider/toast-provider";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 
@@ -21,8 +23,10 @@ export const Route = createFileRoute("/quotation/$quotation")({
 function RouteComponent() {
   const { quotationId } = Route.useLoaderData();
   const router = useRouter();
-
+  const { add } = useToastManager();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
   const {
     formData,
     importJSON,
@@ -58,16 +62,31 @@ function RouteComponent() {
     }
   }, [quotationId, loadQuotation, initializeQuotation, router]);
 
-  // Auto-save when form data changes
+  // Auto-save when form data changes with debounce
   useEffect(() => {
     if (formData.id && formData.id !== "") {
+      setIsSaving(true);
+
       const timeoutId = setTimeout(() => {
-        saveQuotation();
+        const success = saveQuotation();
+        setIsSaving(false);
+
+        if (success) {
+          add({
+            title: "Quotation saved",
+            type: "success",
+          });
+        } else {
+          add({
+            title: "Failed to save quotation",
+            type: "error",
+          });
+        }
       }, 1000); // Debounce save by 1 second
 
       return () => clearTimeout(timeoutId);
     }
-  }, [formData, saveQuotation]);
+  }, [formData, saveQuotation, add]);
 
   const handleExportJSON = () => {
     const exportData = {
@@ -104,10 +123,11 @@ function RouteComponent() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h2 className="text-2xl">
             {quotationId === "new" ? "Create Quotation" : "Edit Quotation"}
           </h2>
+          <SaveIndicator show={isSaving} />
           <Link to="/quotation">
             <Button
               icon={

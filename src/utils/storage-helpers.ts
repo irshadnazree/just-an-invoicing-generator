@@ -28,31 +28,36 @@ export function saveItemToArray<
 >(
   key: string,
   item: T,
-  isValid: (item: T) => boolean = () => true,
+  isValid: (itm: T) => boolean = () => true,
   limit = 100
-): void {
+): boolean {
   if (!isValid(item)) {
-    return;
+    return false;
   }
 
-  const items = loadFromStorage<T>(key);
-  const existingIndex = items.findIndex((i) => i.id === item.id);
+  try {
+    const items = loadFromStorage<T>(key);
+    const existingIndex = items.findIndex((i) => i.id === item.id);
 
-  const itemWithTimestamps = {
-    ...item,
-    createdAt: item.createdAt || new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-  };
+    const itemWithTimestamps = {
+      ...item,
+      createdAt: item.createdAt || new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
 
-  if (existingIndex >= 0) {
-    items[existingIndex] = itemWithTimestamps;
-  } else {
-    items.unshift(itemWithTimestamps);
+    if (existingIndex >= 0) {
+      items[existingIndex] = itemWithTimestamps;
+    } else {
+      items.unshift(itemWithTimestamps);
+    }
+
+    if (items.length > limit) {
+      items.splice(limit);
+    }
+
+    saveToStorage(key, items);
+    return true;
+  } catch {
+    return false;
   }
-
-  if (items.length > limit) {
-    items.splice(limit);
-  }
-
-  saveToStorage(key, items);
 }

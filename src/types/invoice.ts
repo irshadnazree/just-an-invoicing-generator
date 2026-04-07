@@ -66,7 +66,7 @@ export type InvoiceStore = {
     }
   ) => void;
   // localStorage array operations
-  saveInvoice: () => void;
+  saveInvoice: () => boolean;
   loadInvoice: (id: string) => boolean;
   getAllInvoices: () => InvoiceFormData[];
   getAllInvoicesAsync: () => Promise<InvoiceFormData[]>;

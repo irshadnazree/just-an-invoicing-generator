@@ -55,6 +55,8 @@ export function isQuotationValid(quotationData: QuotationFormData): boolean {
   return hasQuotationId && hasProjectTitle;
 }
 
-export function saveQuotationToArray(quotationData: QuotationFormData): void {
-  saveItemToArray(STORAGE_KEY, quotationData, isQuotationValid);
+export function saveQuotationToArray(
+  quotationData: QuotationFormData
+): boolean {
+  return saveItemToArray(STORAGE_KEY, quotationData, isQuotationValid);
 }

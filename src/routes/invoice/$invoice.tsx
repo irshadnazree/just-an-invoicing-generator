@@ -5,10 +5,12 @@ import {
   UploadIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import FormWrapper from "@/components/page/invoice/form-wrapper";
 import { Button } from "@/components/ui/Button";
+import { SaveIndicator } from "@/components/ui/SaveIndicator";
+import { useToastManager } from "@/lib/provider/toast-provider";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useInvoiceStore } from "@/stores/invoice-store";
 
@@ -20,8 +22,10 @@ export const Route = createFileRoute("/invoice/$invoice")({
 function RouteComponent() {
   const { invoiceId } = Route.useLoaderData();
   const router = useRouter();
-
+  const { add } = useToastManager();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isSaving, setIsSaving] = useState(false);
+
   const { formData, importJSON, loadInvoice, initializeInvoice, saveInvoice } =
     useInvoiceStore();
 
@@ -44,16 +48,31 @@ function RouteComponent() {
     }
   }, [invoiceId, loadInvoice, initializeInvoice, router]);
 
-  // Auto-save when form data changes
+  // Auto-save when form data changes with debounce
   useEffect(() => {
     if (formData.id && formData.id !== "") {
+      setIsSaving(true);
+
       const timeoutId = setTimeout(() => {
-        saveInvoice();
+        const success = saveInvoice();
+        setIsSaving(false);
+
+        if (success) {
+          add({
+            title: "Invoice saved",
+            type: "success",
+          });
+        } else {
+          add({
+            title: "Failed to save invoice",
+            type: "error",
+          });
+        }
       }, 1000); // Debounce save by 1 second
 
       return () => clearTimeout(timeoutId);
     }
-  }, [formData, saveInvoice]);
+  }, [formData, saveInvoice, add]);
 
   const handleExportJSON = () => {
     const exportData = {
@@ -90,10 +109,11 @@ function RouteComponent() {
   return (
     <section className="flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           <h2 className="text-2xl">
             {invoiceId === "new" ? "Create Invoice" : "Edit Invoice"}
           </h2>
+          <SaveIndicator show={isSaving} />
           <Link to="/invoice">
             <Button
               icon={

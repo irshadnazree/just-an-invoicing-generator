@@ -56,6 +56,6 @@ export function isInvoiceValid(invoiceData: InvoiceFormData): boolean {
   return hasInvoiceId;
 }
 
-export function saveInvoiceToArray(invoiceData: InvoiceFormData): void {
-  saveItemToArray(STORAGE_KEY, invoiceData, isInvoiceValid);
+export function saveInvoiceToArray(invoiceData: InvoiceFormData): boolean {
+  return saveItemToArray(STORAGE_KEY, invoiceData, isInvoiceValid);
 }
