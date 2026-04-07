@@ -55,33 +55,15 @@ export async function readJsonFile(file: File): Promise<unknown> {
 }
 
 export function generatePrintFilename(
-  quotationFromCompany: string,
-  quotationForCompany: string,
-  quotationId: string
+  fromCompany: string,
+  toCompany: string,
+  documentId: string
 ) {
-  const fromCompany = sanitizeFilename(
-    quotationFromCompany.split(" ")[0] || ""
+  const sanitizedFromCompany = sanitizeFilename(
+    fromCompany.split(" ")[0] || ""
   );
-  const toCompany = sanitizeFilename(quotationForCompany.split(" ")[0] || "");
-  const quotationNo = sanitizeFilename(quotationId);
-  return `${quotationNo}-${fromCompany}-${toCompany}`;
-}
+  const sanitizedToCompany = sanitizeFilename(toCompany.split(" ")[0] || "");
+  const sanitizedDocumentId = sanitizeFilename(documentId);
 
-export function generateRandomString(length: number): string {
-  return crypto.randomUUID().replaceAll("-", "").slice(0, length);
-}
-
-const CODE_REGEX = /^(\D*)(\d+)$/;
-
-export function incrementCodeFlexible(code: string) {
-  const match = code.match(CODE_REGEX);
-  if (!match) {
-    throw new Error("Code must end with digits");
-  }
-  const [, prefix, digits] = match;
-  const next = String(Number.parseInt(digits, 10) + 1).padStart(
-    digits.length,
-    "0"
-  );
-  return prefix + next;
+  return `${sanitizedDocumentId}-${sanitizedFromCompany}-${sanitizedToCompany}`;
 }

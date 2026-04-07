@@ -1,14 +1,11 @@
+import type { CompanyInfo } from "@/types/shared";
+
 type QuotationLineItem = {
   name: string;
   details: string[];
   quantity: number;
   rate: number;
   currency: string;
-};
-
-type CompanyInfo = {
-  company: string;
-  country: string;
 };
 
 type QuotationListItem = {

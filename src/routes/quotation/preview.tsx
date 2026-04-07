@@ -1,6 +1,7 @@
 import { ArrowUUpLeftIcon, PrinterIcon } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 
+import { DocumentPrintStyles } from "@/components/shared/document-print-styles";
 import { Button } from "@/components/ui/Button";
 import { formatDecimal, generatePrintFilename } from "@/lib/utils";
 import { useQuotationData } from "@/stores/quotation-store";
@@ -178,7 +179,7 @@ function RouteComponent() {
 
       <div className="w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
         <div
-          className="min-w-[600px] bg-card"
+          className="min-w-[600px] bg-card text-text print:bg-white print:text-black"
           style={{ border: "2px solid #000" }}
         >
           {/* Header */}
@@ -305,6 +306,7 @@ function RouteComponent() {
           </div>
         </div>
       </div>
+      <DocumentPrintStyles />
     </section>
   );
 }

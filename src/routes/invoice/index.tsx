@@ -11,140 +11,127 @@ import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
 import { Loader } from "@/components/ui/loader";
 import { formatCurrency } from "@/lib/utils";
-import { useQuotationStore } from "@/stores/quotation-store";
-import type { QuotationFormData, QuotationListItem } from "@/types/quotation";
+import { initialFormData, useInvoiceStore } from "@/stores/invoice-store";
+import type { InvoiceFormData, InvoiceListItem } from "@/types/invoice";
+import { generateId } from "@/utils/invoice";
 
-export const Route = createFileRoute("/quotation/")({
+export const Route = createFileRoute("/invoice/")({
   component: RouteComponent,
 });
 
 function RouteComponent() {
-  const getAllQuotations = useQuotationStore((state) => state.getAllQuotations);
-  const getAllQuotationsAsync = useQuotationStore(
-    (state) => state.getAllQuotationsAsync
-  );
-  const deleteQuotation = useQuotationStore((state) => state.deleteQuotation);
-  const duplicateQuotation = useQuotationStore(
-    (state) => state.duplicateQuotation
-  );
-  const bulkDeleteQuotations = useQuotationStore(
-    (state) => state.bulkDeleteQuotations
-  );
+  const {
+    bulkDeleteInvoices,
+    deleteInvoice,
+    duplicateInvoice,
+    getAllInvoices,
+    getAllInvoicesAsync,
+  } = useInvoiceStore();
   const router = useRouter();
 
-  const [quotations, setQuotations] = useState<QuotationFormData[]>([]);
+  const [invoices, setInvoices] = useState<InvoiceFormData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
-  const [selectedQuotations, setSelectedQuotations] = useState<Set<string>>(
+  const [selectedInvoices, setSelectedInvoices] = useState<Set<string>>(
     new Set()
   );
   const [pendingBulkDelete, setPendingBulkDelete] = useState(false);
 
-  const formattedQuotations = useMemo(
+  const formattedInvoices = useMemo(
     () =>
-      quotations.map((q) => {
-        const total = q.items.reduce(
-          (sum, item) => sum + item.quantity * item.rate,
-          0
-        );
+      invoices.map((invoice) => {
+        const total =
+          invoice.items.reduce(
+            (sum, item) => sum + item.quantity * item.rate,
+            0
+          ) - (invoice.reductionAmount || 0);
+
         return {
-          id: q.id,
-          quotationId: q.quotationId,
-          projectTitle: q.projectTitle || "Untitled Project",
-          paymentType: q.paymentType.replace(" payment", ""),
-          quotationFor: q.quotationFor?.company || "Unknown Company",
-          quotationDate: q.quotationDate,
+          id: invoice.id,
+          invoiceId: invoice.invoiceId,
+          invoiceFor: invoice.invoiceTo?.company || "Unknown Company",
+          invoiceDate: invoice.invoiceDate,
           total,
-          currency: q.currency || "RM",
-          createdAt: q.createdAt,
-          updatedAt: q.updatedAt,
-        } satisfies QuotationListItem;
+          currency: invoice.currency || "RM",
+          createdAt: invoice.createdAt,
+          updatedAt: invoice.updatedAt,
+        } satisfies InvoiceListItem;
       }),
-    [quotations]
+    [invoices]
   );
 
-  const filteredQuotations = useMemo(() => {
+  const filteredInvoices = useMemo(() => {
     if (!searchTerm) {
-      return formattedQuotations;
+      return formattedInvoices;
     }
 
     const lowerSearchTerm = searchTerm.toLowerCase();
-    return formattedQuotations.filter(
-      (q) =>
-        q.projectTitle.toLowerCase().includes(lowerSearchTerm) ||
-        q.quotationFor.toLowerCase().includes(lowerSearchTerm) ||
-        q.quotationId.toLowerCase().includes(lowerSearchTerm)
+    return formattedInvoices.filter(
+      (invoice) =>
+        invoice.invoiceFor.toLowerCase().includes(lowerSearchTerm) ||
+        invoice.invoiceId.toLowerCase().includes(lowerSearchTerm)
     );
-  }, [formattedQuotations, searchTerm]);
+  }, [formattedInvoices, searchTerm]);
 
-  const sortedQuotations = useMemo(
+  const sortedInvoices = useMemo(
     () =>
-      [...filteredQuotations].sort(
+      [...filteredInvoices].sort(
         (a, b) =>
           new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
       ),
-    [filteredQuotations]
+    [filteredInvoices]
   );
 
-  function handleCreateQuotation() {
+  function handleCreateInvoice() {
+    const newInvoice = generateId(initialFormData as InvoiceFormData);
+
+    handleOpenInvoice(newInvoice.id);
+  }
+
+  function handleOpenInvoice(id: string) {
     router.navigate({
-      to: "/quotation/$quotation",
-      params: { quotation: "new" },
+      to: "/invoice/$invoice",
+      params: { invoice: id },
     });
   }
 
-  function handleOpenQuotation(id: string) {
-    router.navigate({
-      to: "/quotation/$quotation",
-      params: { quotation: id },
-    });
-  }
-
-  const columns: TableColumn<QuotationListItem>[] = [
+  const columns: TableColumn<InvoiceListItem>[] = [
     {
-      key: "quotationId",
+      key: "invoiceId",
       label: "Id",
-      width: "w-[6%]",
+      width: "w-[15%]",
       cellClassName: "whitespace-nowrap font-medium",
-      renderCell: (quotation) => (
+      renderCell: (invoice) => (
         <button
           className="text-primary"
-          onClick={() => handleOpenQuotation(quotation.id)}
+          onClick={() => handleOpenInvoice(invoice.id)}
           type="button"
         >
-          {quotation.quotationId || "No ID"}
+          {invoice.invoiceId || "No ID"}
         </button>
       ),
     },
     {
-      key: "projectTitle",
-      label: "Project",
-      width: "w-[38%]",
-      cellClassName: "min-w-0 truncate",
-      renderCell: (quotation) => quotation.projectTitle,
-    },
-    {
-      key: "paymentType",
-      label: "Payment Type",
-      width: "w-[12%]",
+      key: "invoiceDate",
+      label: "Date",
+      width: "w-[15%]",
       cellClassName: "whitespace-nowrap",
-      renderCell: (quotation) => quotation.paymentType,
+      renderCell: (invoice) => invoice.invoiceDate,
     },
     {
-      key: "quotationFor",
+      key: "invoiceFor",
       label: "Client",
-      width: "w-[18%]",
+      width: "w-[40%]",
       cellClassName: "min-w-0 truncate",
-      renderCell: (quotation) => quotation.quotationFor,
+      renderCell: (invoice) => invoice.invoiceFor,
     },
     {
       key: "total",
       label: "Total",
-      width: "w-[10%]",
+      width: "w-[15%]",
       cellClassName: "whitespace-nowrap",
-      renderCell: (quotation) =>
-        formatCurrency(quotation.total, quotation.currency),
+      renderCell: (invoice) => formatCurrency(invoice.total, invoice.currency),
     },
   ];
 
@@ -154,14 +141,14 @@ function RouteComponent() {
 
   function confirmDelete() {
     if (pendingDeleteId) {
-      deleteQuotation(pendingDeleteId);
-      setQuotations(getAllQuotations());
+      deleteInvoice(pendingDeleteId);
+      setInvoices(getAllInvoices());
       setPendingDeleteId(null);
     }
   }
 
   function handleBulkDelete() {
-    if (selectedQuotations.size > 0) {
+    if (selectedInvoices.size > 0) {
       setPendingBulkDelete(true);
     }
   }
@@ -171,33 +158,33 @@ function RouteComponent() {
   }
 
   function confirmBulkDelete() {
-    bulkDeleteQuotations([...selectedQuotations]);
-    setQuotations(getAllQuotations());
-    setSelectedQuotations(new Set());
+    bulkDeleteInvoices([...selectedInvoices]);
+    setInvoices(getAllInvoices());
+    setSelectedInvoices(new Set());
     setPendingBulkDelete(false);
   }
 
   useEffect(() => {
-    const loadQuotations = async () => {
+    const loadInvoices = async () => {
       try {
-        const loadedQuotations = await getAllQuotationsAsync();
-        setQuotations(loadedQuotations);
+        const loadedInvoices = await getAllInvoicesAsync();
+        setInvoices(loadedInvoices);
       } catch (error) {
-        console.error("Failed to load quotations:", error);
-        setQuotations([]);
+        console.error("Failed to load invoices:", error);
+        setInvoices([]);
       } finally {
         setIsLoading(false);
       }
     };
 
-    loadQuotations();
-  }, [getAllQuotationsAsync]);
+    loadInvoices();
+  }, [getAllInvoicesAsync]);
 
   if (isLoading) {
     return (
       <section className="flex flex-col gap-6">
         <div className="flex min-h-96 items-center justify-center">
-          <Loader text="Loading quotations..." />
+          <Loader text="Loading invoices..." />
         </div>
       </section>
     );
@@ -210,7 +197,7 @@ function RouteComponent() {
           <div className="rounded-lg bg-foreground p-6 shadow-lg">
             <h3 className="mb-4 font-semibold text-lg">Confirm Delete</h3>
             <p className="mb-6 text-text">
-              Are you sure you want to delete this quotation?
+              Are you sure you want to delete this invoice?
             </p>
             <div className="flex justify-end gap-3">
               <Button onClick={cancelDelete} variant="ghost">
@@ -227,15 +214,15 @@ function RouteComponent() {
           <div className="rounded-lg bg-foreground p-6 shadow-lg">
             <h3 className="mb-4 font-semibold text-lg">Confirm Bulk Delete</h3>
             <p className="mb-6 text-text">
-              Are you sure you want to delete {selectedQuotations.size}{" "}
-              quotation(s)?
+              Are you sure you want to delete {selectedInvoices.size}{" "}
+              invoice(s)?
             </p>
             <div className="flex justify-end gap-3">
               <Button onClick={cancelBulkDelete} variant="ghost">
                 Cancel
               </Button>
               <Button onClick={confirmBulkDelete}>
-                Delete {selectedQuotations.size} Item(s)
+                Delete {selectedInvoices.size} Item(s)
               </Button>
             </div>
           </div>
@@ -244,17 +231,17 @@ function RouteComponent() {
 
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl">Quotations</h2>
+          <h2 className="text-2xl">Invoices</h2>
           <Button
             icon={
               <PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />
             }
-            onClick={handleCreateQuotation}
+            onClick={handleCreateInvoice}
             size="sm"
           />
         </div>
         <div className="flex items-center gap-4">
-          {selectedQuotations.size > 0 && (
+          {selectedInvoices.size > 0 && (
             <Button
               icon={<TrashIcon className="size-4 xl:size-5" size={20} />}
               onClick={handleBulkDelete}
@@ -266,41 +253,38 @@ function RouteComponent() {
           <Input
             id="search"
             onChange={(value) => setSearchTerm(value as string)}
-            placeholder="Search quotations..."
+            placeholder="Search invoices..."
             type="text"
             value={searchTerm}
           />
         </div>
       </div>
 
-      {sortedQuotations.length === 0 && searchTerm !== "" && (
-        <NoResultSection setSearchTerm={setSearchTerm} title="quotations" />
+      {sortedInvoices.length === 0 && searchTerm !== "" && (
+        <NoResultSection setSearchTerm={setSearchTerm} title="invoices" />
       )}
-      {quotations.length === 0 && searchTerm === "" && (
-        <EmptyListView
-          handleCreate={handleCreateQuotation}
-          title="quotations"
-        />
+      {invoices.length === 0 && searchTerm === "" && (
+        <EmptyListView handleCreate={handleCreateInvoice} title="invoices" />
       )}
 
-      {sortedQuotations.length > 0 && (
+      {sortedInvoices.length > 0 && (
         <TableView
+          actionColumnWidth="w-[15%]"
           columns={columns}
-          duplicateItem={duplicateQuotation}
-          items={sortedQuotations}
-          loadItems={getAllQuotationsAsync}
-          openItem={handleOpenQuotation}
+          duplicateItem={duplicateInvoice}
+          items={sortedInvoices}
+          loadItems={getAllInvoicesAsync}
+          openItem={handleOpenInvoice}
+          setItems={setInvoices}
           setPendingDeleteId={setPendingDeleteId}
-          setItems={setQuotations}
-          setSelectedItems={setSelectedQuotations}
-          selectedItems={selectedQuotations}
+          setSelectedItems={setSelectedInvoices}
+          selectedItems={selectedInvoices}
         />
       )}
 
-      {sortedQuotations.length > 0 && (
+      {sortedInvoices.length > 0 && (
         <div className="mt-4 text-sm text-text">
-          Showing {sortedQuotations.length} of {formattedQuotations.length}{" "}
-          quotations
+          Showing {sortedInvoices.length} of {formattedInvoices.length} invoices
         </div>
       )}
     </section>

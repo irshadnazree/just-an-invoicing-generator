@@ -1,12 +1,15 @@
 import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 
-import { generateRandomString, incrementCodeFlexible } from "@/lib/utils";
 import type {
   QuotationFormData,
   QuotationLineItem,
   QuotationStore,
 } from "@/types/quotation";
+import {
+  generateRandomString,
+  incrementCodeFlexible,
+} from "@/utils/id-helpers";
 import {
   deleteQuotationsFromStorage,
   findQuotationById,
@@ -25,11 +28,9 @@ export const initialFormData: QuotationFormData = {
   bankAccount: "",
   quotationFrom: {
     company: "",
-    country: "",
   },
   quotationFor: {
     company: "",
-    country: "",
   },
   projectTitle: "",
   paymentType: "",
@@ -264,7 +265,7 @@ export const useQuotationStore = create<QuotationStore>((set, get) => ({
 
   getAllQuotationsAsync: async () => {
     try {
-      return await loadQuotationsFromStorage();
+      return loadQuotationsFromStorage();
     } catch (error) {
       console.warn("Failed to load quotations from storage:", error);
       return [];

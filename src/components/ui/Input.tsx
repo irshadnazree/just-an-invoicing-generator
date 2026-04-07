@@ -45,6 +45,18 @@ export function Input({
     }
   };
 
+  const handleDateClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    if (type !== "date" || disabled) return;
+    const el = e.currentTarget;
+    if (typeof el.showPicker === "function") {
+      try {
+        el.showPicker();
+      } catch {
+        /* unsupported, not user-activated, or insecure context */
+      }
+    }
+  };
+
   return (
     <input
       aria-describedby={error ? `${id}-error` : undefined}
@@ -55,6 +67,7 @@ export function Input({
       max={max}
       min={min}
       onChange={handleChange}
+      onClick={type === "date" ? handleDateClick : undefined}
       placeholder={placeholder}
       required={required}
       type={type}
