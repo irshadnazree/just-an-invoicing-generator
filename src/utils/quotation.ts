@@ -8,7 +8,8 @@ import {
 } from "@/utils/storage-helpers";
 
 const STORAGE_KEY = "quotations";
-const DEFAULT_QUOTATION_ID = "RQ001";
+const currentYear = new Date().getFullYear();
+const DEFAULT_QUOTATION_ID = `QUO-${currentYear}-001`;
 
 export function generateId(formData: QuotationFormData): QuotationFormData {
   const today = new Date().toISOString().split("T")[0];

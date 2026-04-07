@@ -8,7 +8,8 @@ import {
 } from "@/utils/storage-helpers";
 
 const STORAGE_KEY = "invoices";
-const DEFAULT_INVOICE_ID = "RI001";
+const currentYear = new Date().getFullYear();
+const DEFAULT_INVOICE_ID = `INV-${currentYear}-001`;
 
 export function generateId(formData: InvoiceFormData): InvoiceFormData {
   const today = new Date().toISOString().split("T")[0];

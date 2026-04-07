@@ -23,12 +23,12 @@ export function incrementCodeFlexible(code: string) {
   return prefix + next;
 }
 
-// Regex for display IDs like "RDQ001" or "RDI001" (3-letter prefix + 3 digits)
-const DISPLAY_ID_REGEX = /^([A-Z]{2})(\d{3})$/;
+// Regex for display IDs like "QUO-2026-001" or "INV-2026-001" (Type-Year-Number)
+const DISPLAY_ID_REGEX = /^([A-Z]{3})-(\d{4})-(\d{3})$/;
 
 /**
- * Increment a display ID with 3-letter prefix and 3-digit number
- * Returns default if the ID doesn't match pattern or overflows
+ * Increment a display ID with format TYPE-YEAR-NUMBER
+ * Returns default if the ID doesn't match pattern, year doesn't match, or overflows
  */
 export function incrementDisplayId(
   currentId: string,
@@ -39,7 +39,14 @@ export function incrementDisplayId(
     return defaultId;
   }
 
-  const [, prefix, digits] = match;
+  const [, prefix, year, digits] = match;
+  const currentYear = new Date().getFullYear().toString();
+
+  // If year doesn't match current year, start from 001
+  if (year !== currentYear) {
+    return `${prefix}-${currentYear}-001`;
+  }
+
   const num = Number.parseInt(digits, 10);
 
   // Check if incrementing would exceed 3 digits
@@ -48,7 +55,7 @@ export function incrementDisplayId(
   }
 
   const next = String(num + 1).padStart(3, "0");
-  return prefix + next;
+  return `${prefix}-${year}-${next}`;
 }
 
 type ItemWithDisplayId = {
