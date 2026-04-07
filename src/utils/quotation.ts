@@ -1,5 +1,5 @@
 import type { QuotationFormData } from "@/types/quotation";
-import { generateRandomString } from "@/utils/id-helpers";
+import { generateRandomString, getNextDisplayId } from "@/utils/id-helpers";
 import {
   findItemById,
   loadFromStorage,
@@ -8,13 +8,21 @@ import {
 } from "@/utils/storage-helpers";
 
 const STORAGE_KEY = "quotations";
+const DEFAULT_QUOTATION_ID = "RQ001";
 
 export function generateId(formData: QuotationFormData): QuotationFormData {
   const today = new Date().toISOString().split("T")[0];
+
+  // Load existing quotations to generate next ID
+  const existingQuotations = loadQuotationsFromStorage();
+  const nextQuotationId =
+    formData.quotationId ||
+    getNextDisplayId(existingQuotations, "quotationId", DEFAULT_QUOTATION_ID);
+
   return {
     ...formData,
     id: formData.id || generateRandomString(10),
-    quotationId: formData.quotationId,
+    quotationId: nextQuotationId,
     quotationDate: formData.quotationDate || today,
   };
 }

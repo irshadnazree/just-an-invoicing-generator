@@ -1,5 +1,5 @@
 import type { InvoiceFormData } from "@/types/invoice";
-import { generateRandomString } from "@/utils/id-helpers";
+import { generateRandomString, getNextDisplayId } from "@/utils/id-helpers";
 import {
   findItemById,
   loadFromStorage,
@@ -8,13 +8,21 @@ import {
 } from "@/utils/storage-helpers";
 
 const STORAGE_KEY = "invoices";
+const DEFAULT_INVOICE_ID = "RI001";
 
 export function generateId(formData: InvoiceFormData): InvoiceFormData {
   const today = new Date().toISOString().split("T")[0];
+
+  // Load existing invoices to generate next ID
+  const existingInvoices = loadInvoicesFromStorage();
+  const nextInvoiceId =
+    formData.invoiceId ||
+    getNextDisplayId(existingInvoices, "invoiceId", DEFAULT_INVOICE_ID);
+
   return {
     ...formData,
     id: formData.id || generateRandomString(10),
-    invoiceId: formData.invoiceId,
+    invoiceId: nextInvoiceId,
     invoiceDate: formData.invoiceDate || today,
   };
 }
