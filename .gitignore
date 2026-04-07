@@ -18,3 +18,10 @@ todos.json
 
 # Oxc
 .oxlint-cache
+
+.pnpm-store
+
+# AI Agents
+.claude
+.cursor
+.opencode
