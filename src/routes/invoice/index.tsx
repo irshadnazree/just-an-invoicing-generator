@@ -9,7 +9,7 @@ import TableView, {
 } from "@/components/shared/history/table-view";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Loader } from "@/components/ui/loader";
+import { Loader } from "@/components/ui/Loader";
 import { formatCurrency } from "@/lib/utils";
 import { initialFormData, useInvoiceStore } from "@/stores/invoice-store";
 import type { InvoiceFormData, InvoiceListItem } from "@/types/invoice";

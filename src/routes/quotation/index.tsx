@@ -9,7 +9,7 @@ import TableView, {
 } from "@/components/shared/history/table-view";
 import { Button } from "@/components/ui/Button";
 import { Input } from "@/components/ui/Input";
-import { Loader } from "@/components/ui/loader";
+import { Loader } from "@/components/ui/Loader";
 import { formatCurrency } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 import type { QuotationFormData, QuotationListItem } from "@/types/quotation";
