@@ -7,12 +7,15 @@ import {
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 
+import { useNavigationWarning } from "@/components/hooks/use-navigation-warning";
 import FormWrapper from "@/components/page/invoice/form-wrapper";
 import { Button } from "@/components/ui/Button";
+import { ConfirmationDialog } from "@/components/ui/Dialog";
 import { SaveIndicator } from "@/components/ui/SaveIndicator";
 import { useToastManager } from "@/lib/provider/toast-provider";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useInvoiceStore } from "@/stores/invoice-store";
+import { isInvoiceValid } from "@/utils/invoice";
 
 export const Route = createFileRoute("/invoice/$invoice")({
   loader: ({ params: { invoice } }) => ({ invoiceId: invoice }),
@@ -28,6 +31,32 @@ function RouteComponent() {
 
   const { formData, importJSON, loadInvoice, initializeInvoice, saveInvoice } =
     useInvoiceStore();
+
+  // Check if form has unsaved changes (has some data but not valid/saved)
+  const hasUnsavedChanges = Boolean(
+    formData.id &&
+    formData.id !== "" &&
+    !isInvoiceValid(formData) &&
+    (formData.invoiceId.trim() !== "" || formData.items.length > 0)
+  );
+
+  // Setup navigation warning
+  const {
+    isDialogOpen,
+    confirmNavigation,
+    cancelNavigation,
+    title,
+    description,
+    confirmLabel,
+    cancelLabel,
+  } = useNavigationWarning({
+    enabled: hasUnsavedChanges,
+    title: "Unsaved Changes",
+    description:
+      "You have started filling out this invoice but haven't saved it yet. If you leave now, your progress will be lost.",
+    confirmLabel: "Leave",
+    cancelLabel: "Stay",
+  });
 
   // Load invoice on component mount
   useEffect(() => {
@@ -113,7 +142,7 @@ function RouteComponent() {
           <h2 className="text-2xl">
             {invoiceId === "new" ? "Create Invoice" : "Edit Invoice"}
           </h2>
-          <SaveIndicator show={isSaving} />
+
           <Link to="/invoice">
             <Button
               icon={
@@ -126,6 +155,7 @@ function RouteComponent() {
               size="sm"
             />
           </Link>
+          <SaveIndicator show={isSaving} />
         </div>
         <div className="flex items-center gap-1 xl:gap-2">
           {formData.id && formData.id !== "" && (
@@ -174,6 +204,22 @@ function RouteComponent() {
         </div>
       </div>
       <FormWrapper />
+
+      <ConfirmationDialog
+        cancelLabel={cancelLabel}
+        confirmLabel={confirmLabel}
+        description={description}
+        onCancel={cancelNavigation}
+        onConfirm={confirmNavigation}
+        open={isDialogOpen}
+        title={title}
+        variant="warning"
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelNavigation();
+          }
+        }}
+      />
     </section>
   );
 }

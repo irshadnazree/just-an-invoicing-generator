@@ -104,8 +104,9 @@ function RouteComponent() {
       cellClassName: "whitespace-nowrap font-medium",
       renderCell: (invoice) => (
         <button
-          className="text-primary"
+          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80"
           onClick={() => handleOpenInvoice(invoice.id)}
+          title={invoice.invoiceId || "No ID"}
           type="button"
         >
           {invoice.invoiceId || "No ID"}
@@ -123,8 +124,12 @@ function RouteComponent() {
       key: "invoiceFor",
       label: "Client",
       width: "w-[40%]",
-      cellClassName: "min-w-0 truncate",
-      renderCell: (invoice) => invoice.invoiceFor,
+      cellClassName: "min-w-0",
+      renderCell: (invoice) => (
+        <span className="block truncate" title={invoice.invoiceFor}>
+          {invoice.invoiceFor}
+        </span>
+      ),
     },
     {
       key: "total",

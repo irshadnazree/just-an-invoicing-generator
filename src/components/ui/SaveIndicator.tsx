@@ -1,4 +1,4 @@
-import { Spinner } from "@phosphor-icons/react";
+import { SpinnerIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
 
 import { cn } from "@/lib/utils";
@@ -23,7 +23,7 @@ export function SaveIndicator({
         className
       )}
     >
-      <Spinner className="size-4 animate-spin" />
+      <SpinnerIcon icon="spinner" className="size-4 animate-spin" />
       <span>Saving...</span>
     </div>
   );

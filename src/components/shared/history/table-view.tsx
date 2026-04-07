@@ -95,7 +95,7 @@ export default function TableView<TItem extends { id: string }, TStoredItem>({
           {columns.map((column) => (
             <th
               className={cn(
-                "px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider",
+                "overflow-hidden px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider",
                 column.width
               )}
               key={column.key}
@@ -106,7 +106,7 @@ export default function TableView<TItem extends { id: string }, TStoredItem>({
 
           <th
             className={cn(
-              "px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider",
+              "overflow-hidden px-4 py-2 text-left font-medium text-text text-xs uppercase tracking-wider",
               actionColumnWidth
             )}
           >
@@ -135,7 +135,7 @@ export default function TableView<TItem extends { id: string }, TStoredItem>({
             {columns.map((column) => (
               <td
                 className={cn(
-                  "px-4 py-2 text-sm",
+                  "overflow-hidden px-4 py-2 text-sm align-middle",
                   column.width,
                   column.cellClassName
                 )}

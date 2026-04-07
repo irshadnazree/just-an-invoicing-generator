@@ -105,12 +105,13 @@ function RouteComponent() {
     {
       key: "quotationId",
       label: "Id",
-      width: "w-[6%]",
+      width: "w-[12%]",
       cellClassName: "whitespace-nowrap font-medium",
       renderCell: (quotation) => (
         <button
-          className="text-primary"
+          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80"
           onClick={() => handleOpenQuotation(quotation.id)}
+          title={quotation.quotationId || "No ID"}
           type="button"
         >
           {quotation.quotationId || "No ID"}
@@ -120,9 +121,13 @@ function RouteComponent() {
     {
       key: "projectTitle",
       label: "Project",
-      width: "w-[38%]",
-      cellClassName: "min-w-0 truncate",
-      renderCell: (quotation) => quotation.projectTitle,
+      width: "w-[32%]",
+      cellClassName: "min-w-0",
+      renderCell: (quotation) => (
+        <span className="block truncate" title={quotation.projectTitle}>
+          {quotation.projectTitle}
+        </span>
+      ),
     },
     {
       key: "paymentType",
@@ -135,8 +140,12 @@ function RouteComponent() {
       key: "quotationFor",
       label: "Client",
       width: "w-[18%]",
-      cellClassName: "min-w-0 truncate",
-      renderCell: (quotation) => quotation.quotationFor,
+      cellClassName: "min-w-0",
+      renderCell: (quotation) => (
+        <span className="block truncate" title={quotation.quotationFor}>
+          {quotation.quotationFor}
+        </span>
+      ),
     },
     {
       key: "total",

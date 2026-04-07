@@ -8,12 +8,15 @@ import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useShallow } from "zustand/react/shallow";
 
+import { useNavigationWarning } from "@/components/hooks/use-navigation-warning";
 import FormWrapper from "@/components/page/quotation/form-wrapper";
 import { Button } from "@/components/ui/Button";
+import { ConfirmationDialog } from "@/components/ui/Dialog";
 import { SaveIndicator } from "@/components/ui/SaveIndicator";
 import { useToastManager } from "@/lib/provider/toast-provider";
 import { exportJSON, readJsonFile } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
+import { isQuotationValid } from "@/utils/quotation";
 
 export const Route = createFileRoute("/quotation/$quotation")({
   loader: ({ params: { quotation } }) => ({ quotationId: quotation }),
@@ -42,6 +45,34 @@ function RouteComponent() {
       saveQuotation: state.saveQuotation,
     }))
   );
+
+  // Check if form has unsaved changes (has some data but not valid/saved)
+  const hasUnsavedChanges = Boolean(
+    formData.id &&
+    formData.id !== "" &&
+    !isQuotationValid(formData) &&
+    (formData.quotationId.trim() !== "" ||
+      formData.projectTitle.trim() !== "" ||
+      formData.items.length > 0)
+  );
+
+  // Setup navigation warning
+  const {
+    isDialogOpen,
+    confirmNavigation,
+    cancelNavigation,
+    title,
+    description,
+    confirmLabel,
+    cancelLabel,
+  } = useNavigationWarning({
+    enabled: hasUnsavedChanges,
+    title: "Unsaved Changes",
+    description:
+      "You have started filling out this quotation but haven't saved it yet. If you leave now, your progress will be lost.",
+    confirmLabel: "Leave",
+    cancelLabel: "Stay",
+  });
 
   // Load quotation on component mount
   useEffect(() => {
@@ -127,7 +158,6 @@ function RouteComponent() {
           <h2 className="text-2xl">
             {quotationId === "new" ? "Create Quotation" : "Edit Quotation"}
           </h2>
-          <SaveIndicator show={isSaving} />
           <Link to="/quotation">
             <Button
               icon={
@@ -140,6 +170,7 @@ function RouteComponent() {
               size="sm"
             />
           </Link>
+          <SaveIndicator show={isSaving} />
         </div>
         <div className="flex items-center gap-1 xl:gap-2">
           {formData.id && formData.id !== "" && (
@@ -188,6 +219,22 @@ function RouteComponent() {
         </div>
       </div>
       <FormWrapper />
+
+      <ConfirmationDialog
+        cancelLabel={cancelLabel}
+        confirmLabel={confirmLabel}
+        description={description}
+        onCancel={cancelNavigation}
+        onConfirm={confirmNavigation}
+        open={isDialogOpen}
+        title={title}
+        variant="warning"
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelNavigation();
+          }
+        }}
+      />
     </section>
   );
 }
