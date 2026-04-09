@@ -8,6 +8,7 @@ import TableView, {
   type TableColumn,
 } from "@/components/shared/history/table-view";
 import { Button } from "@/components/ui/Button";
+import { ConfirmationDialog } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Loader } from "@/components/ui/Loader";
 import { formatCurrency } from "@/lib/utils";
@@ -101,10 +102,10 @@ function RouteComponent() {
       key: "invoiceId",
       label: "Id",
       width: "w-[15%]",
-      cellClassName: "whitespace-nowrap font-medium",
+      cellClassName: "whitespace-nowrap font-medium font-mono",
       renderCell: (invoice) => (
         <button
-          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80"
+          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80 font-mono"
           onClick={() => handleOpenInvoice(invoice.id)}
           title={invoice.invoiceId || "No ID"}
           type="button"
@@ -135,7 +136,7 @@ function RouteComponent() {
       key: "total",
       label: "Total",
       width: "w-[15%]",
-      cellClassName: "whitespace-nowrap",
+      cellClassName: "whitespace-nowrap font-mono",
       renderCell: (invoice) => formatCurrency(invoice.total, invoice.currency),
     },
   ];
@@ -197,57 +198,54 @@ function RouteComponent() {
 
   return (
     <section className="flex flex-col gap-6">
-      {pendingDeleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50">
-          <div className="rounded-lg bg-foreground p-6 shadow-lg">
-            <h3 className="mb-4 font-semibold text-lg">Confirm Delete</h3>
-            <p className="mb-6 text-text">
-              Are you sure you want to delete this invoice?
-            </p>
-            <div className="flex justify-end gap-3">
-              <Button onClick={cancelDelete} variant="ghost">
-                Cancel
-              </Button>
-              <Button onClick={confirmDelete}>Delete</Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationDialog
+        confirmLabel="Delete"
+        description="Are you sure you want to delete this invoice?"
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+        open={pendingDeleteId !== null}
+        title="Confirm Delete"
+        variant="warning"
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelDelete();
+          }
+        }}
+      />
 
-      {pendingBulkDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50">
-          <div className="rounded-lg bg-foreground p-6 shadow-lg">
-            <h3 className="mb-4 font-semibold text-lg">Confirm Bulk Delete</h3>
-            <p className="mb-6 text-text">
-              Are you sure you want to delete {selectedInvoices.size}{" "}
-              invoice(s)?
-            </p>
-            <div className="flex justify-end gap-3">
-              <Button onClick={cancelBulkDelete} variant="ghost">
-                Cancel
-              </Button>
-              <Button onClick={confirmBulkDelete}>
-                Delete {selectedInvoices.size} Item(s)
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationDialog
+        confirmLabel={`Delete ${selectedInvoices.size} Item(s)`}
+        description={`Are you sure you want to delete ${selectedInvoices.size} invoice(s)?`}
+        onCancel={cancelBulkDelete}
+        onConfirm={confirmBulkDelete}
+        open={pendingBulkDelete}
+        title="Confirm Bulk Delete"
+        variant="warning"
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelBulkDelete();
+          }
+        }}
+      />
 
-      <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
+      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center md:gap-0">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl">Invoices</h2>
+          <h1 className="text-3xl font-bold">Invoices</h1>
           <Button
+            aria-label="Create invoice"
             icon={
               <PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />
             }
             onClick={handleCreateInvoice}
             size="sm"
-          />
+          >
+            {sortedInvoices.length > 0 && "New Invoice"}
+          </Button>
         </div>
         <div className="flex items-center gap-4">
           {selectedInvoices.size > 0 && (
             <Button
+              aria-label="Delete selected"
               icon={<TrashIcon className="size-4 xl:size-5" size={20} />}
               onClick={handleBulkDelete}
               size="sm"
@@ -255,6 +253,9 @@ function RouteComponent() {
             />
           )}
 
+          <label className="sr-only" htmlFor="search">
+            Search invoices
+          </label>
           <Input
             id="search"
             onChange={(value) => setSearchTerm(value as string)}
@@ -277,6 +278,7 @@ function RouteComponent() {
           actionColumnWidth="w-[15%]"
           columns={columns}
           duplicateItem={duplicateInvoice}
+          getItemLabel={(item) => item.invoiceId || item.id}
           items={sortedInvoices}
           loadItems={getAllInvoicesAsync}
           openItem={handleOpenInvoice}

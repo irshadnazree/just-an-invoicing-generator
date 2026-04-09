@@ -27,7 +27,9 @@ export default function SummarySection({ onUpdateField }: SummarySectionProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="border-text border-b-2 pb-2 font-bold text-xl">Summary</h3>
+      <h3 className="border-text border-b-2 pb-2 font-semibold text-lg">
+        Summary
+      </h3>
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <FormField>
           <FormLabel id="currency" label="Currency" />
@@ -57,15 +59,21 @@ export default function SummarySection({ onUpdateField }: SummarySectionProps) {
           <Card className="flex flex-col gap-1">
             <div className="flex justify-between">
               <span>Subtotal</span>
-              <span>{formatCurrency(subtotal, currency)}</span>
+              <span className="font-mono">
+                {formatCurrency(subtotal, currency)}
+              </span>
             </div>
             <div className="flex justify-between text-primary">
               <span>Reductions</span>
-              <span>({formatCurrency(reductionAmount, currency)})</span>
+              <span className="font-mono">
+                ({formatCurrency(reductionAmount, currency)})
+              </span>
             </div>
             <div className="flex justify-between border-t pt-2 font-bold text-xl">
               <span>Total ({currency})</span>
-              <span>{formatCurrency(total, currency)}</span>
+              <span className="font-mono">
+                {formatCurrency(total, currency)}
+              </span>
             </div>
             <div className="flex justify-between text-xl">
               <div className="mb-1 font-semibold">Total (in words):</div>

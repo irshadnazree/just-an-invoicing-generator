@@ -37,7 +37,7 @@ export default function TermsSection() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between border-b-2 pb-1">
-        <h3 className="border-text font-bold text-xl">
+        <h3 className="border-text font-semibold text-lg">
           Terms and Conditions Details
         </h3>
         <Button

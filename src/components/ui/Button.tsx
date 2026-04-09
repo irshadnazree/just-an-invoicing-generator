@@ -7,20 +7,22 @@ import { cn } from "@/lib/utils";
 export type ButtonProps = {
   children?: React.ReactNode;
   onClick?: () => void;
-  variant?: "primary" | "ghost";
+  variant?: "primary" | "ghost" | "danger";
   size?: "sm" | "default";
   icon?: React.ReactNode;
   disabled?: boolean;
+  "aria-label"?: string;
 };
 
 const buttonVariants = cva(
-  "flex cursor-pointer items-center rounded-md transition-all duration-300 ease-out-cubic hover:duration-100 focus:outline-none focus:ring-0",
+  "flex cursor-pointer items-center rounded-md transition-all duration-300 ease-out-cubic hover:duration-100 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:outline-none",
   {
     variants: {
       variant: {
         primary:
           "bg-primary text-foreground hover:ring-1 hover:ring-primary/50 dark:bg-foreground dark:text-primary",
         ghost: "bg-transparent text-primary hover:bg-foreground/50",
+        danger: "bg-error text-white hover:bg-error/90",
       },
       size: {
         sm: "gap-2 px-3 py-1 font-semibold text-sm",
@@ -47,6 +49,7 @@ export function Button({
   size = "default",
   icon,
   disabled = false,
+  "aria-label": ariaLabelProp,
 }: ButtonProps) {
   let iconSize: "none" | "sm" | "default" = "default";
   if (children) {
@@ -59,6 +62,7 @@ export function Button({
 
   return (
     <BaseButton
+      aria-label={ariaLabelProp}
       className={cn(
         buttonVariants({ size, iconSize, variant }),
         disabled && "cursor-not-allowed opacity-50"

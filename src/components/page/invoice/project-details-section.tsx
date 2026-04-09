@@ -20,7 +20,7 @@ function ProjectDetailsSectionComponent({
   return (
     <>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+        <h3 className="border-text border-b-2 pb-2 font-semibold text-lg">
           Invoice Details
         </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
@@ -58,7 +58,7 @@ function ProjectDetailsSectionComponent({
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+        <h3 className="border-text border-b-2 pb-2 font-semibold text-lg">
           Billed Information
         </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">

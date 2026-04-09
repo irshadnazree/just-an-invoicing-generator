@@ -54,9 +54,8 @@ export function useNavigationWarning({
     }
 
     const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+      // Request the browser's generic unload confirmation dialog.
       event.preventDefault();
-      // Modern browsers show a generic message, custom messages are ignored
-      event.returnValue = "";
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);

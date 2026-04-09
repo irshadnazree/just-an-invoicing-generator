@@ -9,6 +9,11 @@
     --foreground: oklch(0.9702 0 0);
     --text: oklch(0.235 0 0);
     --primary: oklch(0.75 0.1 190);
+    --error: oklch(0.65 0.15 20);
+    --success: oklch(0.72 0.17 155);
+    --warning: oklch(0.8 0.15 85);
+    --muted: oklch(0.55 0 0);
+    --muted-foreground: oklch(0.45 0 0);
   }
 
   [data-theme="dark"] {
@@ -18,6 +23,11 @@
     --foreground: oklch(0.235 0 0);
     --text: oklch(0.9702 0 0 / 0.8);
     --primary: oklch(0.75 0.1 190);
+    --error: oklch(0.65 0.15 20);
+    --success: oklch(0.68 0.15 155);
+    --warning: oklch(0.75 0.13 85);
+    --muted: oklch(0.6 0 0);
+    --muted-foreground: oklch(0.5 0 0);
   }
 
   /* Tailwind Theme Mappings */
@@ -26,15 +36,20 @@
     --color-foreground: var(--foreground);
     --color-text: var(--text);
     --color-primary: var(--primary);
-    --font-sans: "Public Sans Variable", sans-serif;
-    --font-mono: "JetBrains Mono Variable", monospace;
+    --color-error: var(--error);
+    --color-success: var(--success);
+    --color-warning: var(--warning);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --font-sans: "Geist Variable", sans-serif;
+    --font-mono: "Geist Mono Variable", monospace;
   }
 }
 
 /* Base element styles */
 body {
   @apply m-0 tracking-tight;
-  font-family: var(--font-mono);
+  font-family: var(--font-sans);
   color: var(--text);
   background-color: var(--background);
 
@@ -68,6 +83,13 @@ input[type="number"] {
 }
 
 @media print {
+  html,
+  :root,
+  [data-theme="dark"] {
+    color-scheme: light !important;
+    background: white !important;
+  }
+
   @page {
     size: A4;
     margin-top: 1cm;
@@ -111,6 +133,11 @@ input[type="number"] {
   main {
     margin: 0;
     padding: 0;
+    background: white !important;
+  }
+
+  .document-preview-page,
+  .document-preview-shell {
     background: white !important;
   }
 

@@ -31,7 +31,7 @@ export default function PaymentSection({ onUpdateField }: PaymentSectionProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+      <h3 className="border-text border-b-2 pb-2 font-semibold text-lg">
         Payment Details
       </h3>
       <div className="grid grid-cols-2 gap-2 xl:grid-cols-4 xl:gap-4">

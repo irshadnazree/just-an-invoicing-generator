@@ -8,6 +8,7 @@ import TableView, {
   type TableColumn,
 } from "@/components/shared/history/table-view";
 import { Button } from "@/components/ui/Button";
+import { ConfirmationDialog } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Loader } from "@/components/ui/Loader";
 import { formatCurrency } from "@/lib/utils";
@@ -106,10 +107,10 @@ function RouteComponent() {
       key: "quotationId",
       label: "Id",
       width: "w-[12%]",
-      cellClassName: "whitespace-nowrap font-medium",
+      cellClassName: "whitespace-nowrap font-medium font-mono",
       renderCell: (quotation) => (
         <button
-          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80"
+          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80 font-mono"
           onClick={() => handleOpenQuotation(quotation.id)}
           title={quotation.quotationId || "No ID"}
           type="button"
@@ -151,7 +152,7 @@ function RouteComponent() {
       key: "total",
       label: "Total",
       width: "w-[10%]",
-      cellClassName: "whitespace-nowrap",
+      cellClassName: "whitespace-nowrap font-mono",
       renderCell: (quotation) =>
         formatCurrency(quotation.total, quotation.currency),
     },
@@ -214,57 +215,54 @@ function RouteComponent() {
 
   return (
     <section className="flex flex-col gap-6">
-      {pendingDeleteId && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50">
-          <div className="rounded-lg bg-foreground p-6 shadow-lg">
-            <h3 className="mb-4 font-semibold text-lg">Confirm Delete</h3>
-            <p className="mb-6 text-text">
-              Are you sure you want to delete this quotation?
-            </p>
-            <div className="flex justify-end gap-3">
-              <Button onClick={cancelDelete} variant="ghost">
-                Cancel
-              </Button>
-              <Button onClick={confirmDelete}>Delete</Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationDialog
+        confirmLabel="Delete"
+        description="Are you sure you want to delete this quotation?"
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+        open={pendingDeleteId !== null}
+        title="Confirm Delete"
+        variant="warning"
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelDelete();
+          }
+        }}
+      />
 
-      {pendingBulkDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-foreground/50">
-          <div className="rounded-lg bg-foreground p-6 shadow-lg">
-            <h3 className="mb-4 font-semibold text-lg">Confirm Bulk Delete</h3>
-            <p className="mb-6 text-text">
-              Are you sure you want to delete {selectedQuotations.size}{" "}
-              quotation(s)?
-            </p>
-            <div className="flex justify-end gap-3">
-              <Button onClick={cancelBulkDelete} variant="ghost">
-                Cancel
-              </Button>
-              <Button onClick={confirmBulkDelete}>
-                Delete {selectedQuotations.size} Item(s)
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
+      <ConfirmationDialog
+        confirmLabel={`Delete ${selectedQuotations.size} Item(s)`}
+        description={`Are you sure you want to delete ${selectedQuotations.size} quotation(s)?`}
+        onCancel={cancelBulkDelete}
+        onConfirm={confirmBulkDelete}
+        open={pendingBulkDelete}
+        title="Confirm Bulk Delete"
+        variant="warning"
+        onOpenChange={(open) => {
+          if (!open) {
+            cancelBulkDelete();
+          }
+        }}
+      />
 
-      <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
+      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center md:gap-0">
         <div className="flex items-center gap-4">
-          <h2 className="text-2xl">Quotations</h2>
+          <h1 className="text-3xl font-bold">Quotations</h1>
           <Button
+            aria-label="Create quotation"
             icon={
               <PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />
             }
             onClick={handleCreateQuotation}
             size="sm"
-          />
+          >
+            {sortedQuotations.length > 0 && "New Quotation"}
+          </Button>
         </div>
         <div className="flex items-center gap-4">
           {selectedQuotations.size > 0 && (
             <Button
+              aria-label="Delete selected"
               icon={<TrashIcon className="size-4 xl:size-5" size={20} />}
               onClick={handleBulkDelete}
               size="sm"
@@ -272,6 +270,9 @@ function RouteComponent() {
             />
           )}
 
+          <label className="sr-only" htmlFor="search">
+            Search quotations
+          </label>
           <Input
             id="search"
             onChange={(value) => setSearchTerm(value as string)}
@@ -296,6 +297,7 @@ function RouteComponent() {
         <TableView
           columns={columns}
           duplicateItem={duplicateQuotation}
+          getItemLabel={(item) => item.quotationId || item.id}
           items={sortedQuotations}
           loadItems={getAllQuotationsAsync}
           openItem={handleOpenQuotation}

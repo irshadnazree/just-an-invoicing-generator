@@ -86,12 +86,8 @@ function RouteComponent() {
         const success = saveInvoice();
         setIsSaving(false);
 
-        if (success) {
-          add({
-            title: "Invoice saved",
-            type: "success",
-          });
-        } else {
+        // Only show toast on error, success is shown via SaveIndicator
+        if (!success) {
           add({
             title: "Failed to save invoice",
             type: "error",
@@ -139,12 +135,13 @@ function RouteComponent() {
     <section className="flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0">
         <div className="flex items-center gap-3">
-          <h2 className="text-2xl">
+          <h1 className="text-3xl font-bold">
             {invoiceId === "new" ? "Create Invoice" : "Edit Invoice"}
-          </h2>
+          </h1>
 
           <Link to="/invoice">
             <Button
+              aria-label="Go back"
               icon={
                 <ArrowUUpLeftIcon
                   className="size-4 xl:size-5"
@@ -161,6 +158,7 @@ function RouteComponent() {
           {formData.id && formData.id !== "" && (
             <Link to="/invoice/preview">
               <Button
+                aria-label="Preview"
                 icon={
                   <EyeIcon
                     className="size-4 xl:size-5"
@@ -174,6 +172,7 @@ function RouteComponent() {
           )}
 
           <Button
+            aria-label="Import JSON"
             icon={
               <UploadIcon
                 className="size-4 xl:size-5"
@@ -191,6 +190,7 @@ function RouteComponent() {
             type="file"
           />
           <Button
+            aria-label="Export JSON"
             icon={
               <DownloadIcon
                 className="size-4 xl:size-5"

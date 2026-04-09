@@ -29,7 +29,7 @@ function ProjectDetailsSectionComponent({
   return (
     <>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+        <h3 className="border-text border-b-2 pb-2 font-semibold text-lg">
           Project Details
         </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">
@@ -44,7 +44,7 @@ function ProjectDetailsSectionComponent({
             />
           </FormField>
           <FormField>
-            <FormLabel id="quotation-id" label="Quotation id" />
+            <FormLabel id="quotation-id" label="Quotation No #" />
             <Input
               id="quotation-id"
               onChange={(value) =>
@@ -93,7 +93,7 @@ function ProjectDetailsSectionComponent({
         </div>
       </div>
       <div className="flex flex-col gap-3">
-        <h3 className="border-text border-b-2 pb-2 font-bold text-xl">
+        <h3 className="border-text border-b-2 pb-2 font-semibold text-lg">
           Client Information
         </h3>
         <div className="grid grid-cols-1 gap-2 xl:grid-cols-2">

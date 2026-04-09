@@ -89,7 +89,7 @@ function RouteComponent() {
           {params.percent !== undefined && <span> ({params.percent}%)</span>}
         </td>
         <td
-          className={`whitespace-nowrap p-3 text-left ${params.isBold ? "font-bold" : ""}`}
+          className={`whitespace-nowrap p-3 text-left font-mono ${params.isBold ? "font-bold" : ""}`}
         >
           {params.currency} {formatDecimal(params.value, 2)}
         </td>
@@ -147,12 +147,13 @@ function RouteComponent() {
   }
 
   return (
-    <section className="flex flex-col gap-5">
+    <section className="document-preview-page flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0 print:hidden">
         <h2 className="text-2xl">Quotation Preview</h2>
         <div className="flex items-center gap-2">
           <Link to={backUrl}>
             <Button
+              aria-label="Go back"
               icon={
                 <ArrowUUpLeftIcon
                   className="size-4 xl:size-5"
@@ -164,6 +165,7 @@ function RouteComponent() {
             />
           </Link>
           <Button
+            aria-label="Print"
             icon={
               <PrinterIcon
                 className="size-4 xl:size-5"
@@ -177,7 +179,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
+      <div className="document-preview-shell w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
         <div
           className="min-w-[600px] bg-card text-text print:bg-white print:text-black"
           style={{ border: "2px solid #000" }}
@@ -203,7 +205,7 @@ function RouteComponent() {
                     <div className="text-sm">
                       <strong>Quotation No #</strong>
                     </div>
-                    <div>{formData.quotationId}</div>
+                    <div className="font-mono">{formData.quotationId}</div>
                   </td>
                   <td className="border-black p-3">
                     <div className="text-sm">
@@ -241,7 +243,7 @@ function RouteComponent() {
           {/* Items Table */}
           <table className="w-full">
             <thead>
-              <tr className="border-black border-b-2 bg-muted">
+              <tr className="border-black border-b-2">
                 <th className="w-10 border-black border-r p-3 text-left" />
                 <th className="border-black border-r p-3 text-left">Item</th>
                 <th className="w-32 border-black border-r p-3 text-center">
@@ -278,10 +280,10 @@ function RouteComponent() {
                   <td className="border-black border-r p-3 text-center">
                     {item.quantity}
                   </td>
-                  <td className="border-black border-r p-3 text-left">
+                  <td className="border-black border-r p-3 text-left font-mono">
                     {item.currency || formData.currency} {item.rate}
                   </td>
-                  <td className="whitespace-nowrap p-3 text-left">
+                  <td className="whitespace-nowrap p-3 text-left font-mono">
                     {item.currency || formData.currency}{" "}
                     {formatDecimal(item.quantity * item.rate, 2)}
                   </td>

@@ -13,7 +13,7 @@ export function ToastViewport({ className }: ToastViewportProps) {
     <Toast.Portal>
       <Toast.Viewport
         className={cn(
-          "fixed top-4 right-4 z-[100] flex flex-col gap-2 focus:outline-none",
+          "fixed top-4 right-4 z-100 flex flex-col gap-2 focus:outline-none",
           className
         )}
       />
@@ -37,7 +37,7 @@ export function ToastItem({ toast }: ToastItemProps) {
     <Toast.Root
       className={cn(
         "group pointer-events-auto flex w-full max-w-sm items-center gap-3 rounded-lg px-4 py-3 shadow-lg ring-1 ring-black/5 transition-all duration-300",
-        isSuccess ? "bg-emerald-500 text-white" : "bg-red-500 text-white"
+        isSuccess ? "bg-success text-white" : "bg-error text-white"
       )}
       toast={toast}
     >

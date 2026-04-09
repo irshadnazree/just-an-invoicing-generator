@@ -41,12 +41,13 @@ function RouteComponent() {
   }
 
   return (
-    <section className="flex flex-col gap-5">
+    <section className="document-preview-page flex flex-col gap-5">
       <div className="flex flex-col items-start justify-between gap-4 xl:flex-row xl:items-center xl:gap-0 print:hidden">
         <h2 className="text-2xl">Invoice Preview</h2>
         <div className="flex items-center gap-2">
           <Link to={backUrl}>
             <Button
+              aria-label="Go back"
               icon={
                 <ArrowUUpLeftIcon
                   className="size-4 xl:size-5"
@@ -58,6 +59,7 @@ function RouteComponent() {
             />
           </Link>
           <Button
+            aria-label="Print"
             icon={
               <PrinterIcon
                 className="size-4 xl:size-5"
@@ -71,7 +73,7 @@ function RouteComponent() {
         </div>
       </div>
 
-      <div className="w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
+      <div className="document-preview-shell w-[calc(100%)] overflow-x-auto pr-px font-sans xl:w-full">
         <div
           className="min-w-[600px] bg-card text-text print:bg-white print:text-black"
           style={{ border: "1px solid #000" }}
@@ -92,7 +94,7 @@ function RouteComponent() {
                     <div className="mb-4 font-bold">Invoice Details</div>
                     <div className="mb-2 grid grid-cols-[200px_1fr] gap-2">
                       <div className="font-bold">Invoice No #</div>
-                      <div>{formData.invoiceId}</div>
+                      <div className="font-mono">{formData.invoiceId}</div>
                     </div>
                     <div className="mb-2 grid grid-cols-[200px_1fr] gap-2">
                       <div className="font-bold">Invoice Date</div>
@@ -166,10 +168,10 @@ function RouteComponent() {
                   <td className="border-black border-r p-3 text-center align-top">
                     {item.quantity}
                   </td>
-                  <td className="border-black border-r p-3 text-center align-top">
+                  <td className="border-black border-r p-3 text-center align-top font-mono">
                     {item.currency || formData.currency} {item.rate}
                   </td>
-                  <td className="whitespace-nowrap p-3 text-center align-top">
+                  <td className="whitespace-nowrap p-3 text-center align-top font-mono">
                     {item.currency || formData.currency}{" "}
                     {formatDecimal(item.quantity * item.rate, 2)}
                   </td>
@@ -191,7 +193,7 @@ function RouteComponent() {
                 <td className="border-black border-r border-l p-3 text-center font-bold">
                   Reductions
                 </td>
-                <td className="p-3 text-center">
+                <td className="p-3 text-center font-mono">
                   ({formData.currency}{" "}
                   {formatDecimal(formData.reductionAmount || 0, 2)})
                 </td>
@@ -203,7 +205,7 @@ function RouteComponent() {
                 <td className="border-black border-r border-l p-3 text-center font-bold">
                   Total ({formData.currency})
                 </td>
-                <td className="p-3 text-center font-bold">
+                <td className="p-3 text-center font-bold font-mono">
                   {formData.currency} {formatDecimal(total, 2)}
                 </td>
               </tr>

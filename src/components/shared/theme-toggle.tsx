@@ -12,6 +12,7 @@ export default function ThemeToggle() {
 
   return (
     <Button
+      aria-label="Toggle dark mode"
       icon={
         theme === "dark" ? (
           <MoonIcon className="size-4 xl:size-5" size={20} weight="bold" />

@@ -65,7 +65,7 @@ export default function LineItemSection() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between border-b-2 pb-1">
-        <h3 className="border-text font-bold text-xl">Line Items</h3>
+        <h3 className="border-text font-semibold text-lg">Line Items</h3>
         <Button
           icon={<PlusIcon size={18} weight="bold" />}
           onClick={handleAddItem}
@@ -97,6 +97,7 @@ export default function LineItemSection() {
               <p>Item {itemIndex + 1}</p>
               <div className="flex items-center">
                 <Button
+                  aria-label={`Duplicate item ${itemIndex + 1}`}
                   icon={<CopyIcon size={18} />}
                   onClick={() => handleDuplicateItem(itemIndex)}
                   size="sm"
@@ -104,6 +105,7 @@ export default function LineItemSection() {
                 />
 
                 <Button
+                  aria-label={`Remove item ${itemIndex + 1}`}
                   icon={<TrashIcon size={18} />}
                   onClick={() => handleRemoveItem(itemIndex)}
                   size="sm"
@@ -173,6 +175,7 @@ export default function LineItemSection() {
                 <FormLabel id="item-amount" label="Amount" />
                 <Input
                   disabled
+                  className="font-mono"
                   id={`item-amount-${itemIndex}`}
                   type="text"
                   value={formatCurrency(
@@ -215,6 +218,7 @@ export default function LineItemSection() {
                       value={detail}
                     />
                     <Button
+                      aria-label={`Remove detail ${detailIndex + 1}`}
                       icon={<TrashIcon size={18} />}
                       onClick={() =>
                         handleRemoveItemDetail(itemIndex, detailIndex)
