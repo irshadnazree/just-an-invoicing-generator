@@ -1,4 +1,4 @@
-import { PlusIcon, TrashIcon } from "@phosphor-icons/react";
+import { Receipt, TrashIcon } from "@phosphor-icons/react";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useEffect, useMemo, useState } from "react";
 
@@ -105,7 +105,7 @@ function RouteComponent() {
       cellClassName: "whitespace-nowrap font-medium font-mono",
       renderCell: (invoice) => (
         <button
-          className="block max-w-full truncate text-primary transition-opacity hover:opacity-80 font-mono"
+          className="block max-w-full cursor-pointer truncate text-primary transition-opacity hover:opacity-80 font-mono"
           onClick={() => handleOpenInvoice(invoice.id)}
           title={invoice.invoiceId || "No ID"}
           type="button"
@@ -233,13 +233,11 @@ function RouteComponent() {
           <h1 className="text-3xl font-bold">Invoices</h1>
           <Button
             aria-label="Create invoice"
-            icon={
-              <PlusIcon className="size-4 xl:size-5" size={20} weight="bold" />
-            }
+            icon={<Receipt className="size-4 xl:size-5" weight="duotone" />}
             onClick={handleCreateInvoice}
             size="sm"
           >
-            {sortedInvoices.length > 0 && "New Invoice"}
+            New Invoice
           </Button>
         </div>
         <div className="flex items-center gap-4">

@@ -20,7 +20,10 @@ export default function Navbar() {
         </Link>
         <ThemeToggle />
       </div>
-      <div className="mt-2 flex gap-6 border-text border-b">
+      <div className="mt-2 flex gap-6 border-b border-text">
+        <NavbarLink isActive={isActive("/")} to="/">
+          Dashboard
+        </NavbarLink>
         <NavbarLink isActive={isActive("/quotation")} to="/quotation">
           Quotations
         </NavbarLink>
