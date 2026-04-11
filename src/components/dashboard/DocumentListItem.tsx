@@ -86,11 +86,17 @@ export function DocumentListItem({
   }
 
   const handleClick = () => {
-    const route =
-      type === "invoice" ? "/invoice/$invoice" : "/quotation/$quotation";
+    if (type === "invoice") {
+      navigate({
+        to: "/invoice/$invoice",
+        params: { invoice: id },
+      });
+      return;
+    }
+
     navigate({
-      to: route,
-      params: { [type]: id },
+      to: "/quotation/$quotation",
+      params: { quotation: id },
     });
   };
 
@@ -102,8 +108,8 @@ export function DocumentListItem({
   };
 
   const Icon = type === "invoice" ? Receipt : FileText;
-  const iconColor = type === "invoice" ? "text-primary" : "text-secondary";
-  const bgColor = type === "invoice" ? "bg-primary/10" : "bg-secondary/10";
+  const iconColor = "text-primary";
+  const bgColor = "bg-primary/10";
 
   return (
     <button

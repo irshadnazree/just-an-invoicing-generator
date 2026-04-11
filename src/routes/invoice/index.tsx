@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmationDialog } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Loader } from "@/components/ui/Loader";
-import { formatCurrency } from "@/lib/utils";
+import { calculateInvoiceTotal, formatCurrency } from "@/lib/utils";
 import { initialFormData, useInvoiceStore } from "@/stores/invoice-store";
 import type { InvoiceFormData, InvoiceListItem } from "@/types/invoice";
 import { generateId } from "@/utils/invoice";
@@ -42,18 +42,12 @@ function RouteComponent() {
   const formattedInvoices = useMemo(
     () =>
       invoices.map((invoice) => {
-        const total =
-          invoice.items.reduce(
-            (sum, item) => sum + item.quantity * item.rate,
-            0
-          ) - (invoice.reductionAmount || 0);
-
         return {
           id: invoice.id,
           invoiceId: invoice.invoiceId,
           invoiceFor: invoice.invoiceTo?.company || "Unknown Company",
           invoiceDate: invoice.invoiceDate,
-          total,
+          total: calculateInvoiceTotal(invoice),
           currency: invoice.currency || "RM",
           createdAt: invoice.createdAt,
           updatedAt: invoice.updatedAt,

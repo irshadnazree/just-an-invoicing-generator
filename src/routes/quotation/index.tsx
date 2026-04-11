@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/Button";
 import { ConfirmationDialog } from "@/components/ui/Dialog";
 import { Input } from "@/components/ui/Input";
 import { Loader } from "@/components/ui/Loader";
-import { formatCurrency } from "@/lib/utils";
+import { calculateQuotationTotal, formatCurrency } from "@/lib/utils";
 import { useQuotationStore } from "@/stores/quotation-store";
 import type { QuotationFormData, QuotationListItem } from "@/types/quotation";
 
@@ -45,10 +45,6 @@ function RouteComponent() {
   const formattedQuotations = useMemo(
     () =>
       quotations.map((q) => {
-        const total = q.items.reduce(
-          (sum, item) => sum + item.quantity * item.rate,
-          0
-        );
         return {
           id: q.id,
           quotationId: q.quotationId,
@@ -56,7 +52,7 @@ function RouteComponent() {
           paymentType: q.paymentType.replace(" payment", ""),
           quotationFor: q.quotationFor?.company || "Unknown Company",
           quotationDate: q.quotationDate,
-          total,
+          total: calculateQuotationTotal(q),
           currency: q.currency || "RM",
           createdAt: q.createdAt,
           updatedAt: q.updatedAt,

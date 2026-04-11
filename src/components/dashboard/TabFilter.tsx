@@ -31,20 +31,19 @@ const tabVariants = cva(
 export function TabFilter({ activeTab, onTabChange, tabs }: TabFilterProps) {
   return (
     <div
-      aria-label="Filter documents by type"
+      aria-label="Filter documents"
       className="flex items-center gap-1 border border-text/20 bg-foreground/50 p-1"
-      role="tablist"
+      role="group"
     >
       {tabs.map((tab) => (
         <button
-          aria-selected={activeTab === tab.id}
+          aria-pressed={activeTab === tab.id}
           className={cn(
             tabVariants({ isActive: activeTab === tab.id }),
             activeTab === tab.id && "bg-background shadow-sm"
           )}
           key={tab.id}
           onClick={() => onTabChange(tab.id)}
-          role="tab"
           type="button"
         >
           {tab.label}

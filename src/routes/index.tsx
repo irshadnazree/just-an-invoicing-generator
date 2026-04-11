@@ -1,6 +1,6 @@
 import { FileTextIcon, PlusIcon, ReceiptIcon } from "@phosphor-icons/react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
   DocumentListItem,
@@ -9,32 +9,26 @@ import {
 import { StatsCard } from "@/components/dashboard/StatsCard";
 import { TabFilter } from "@/components/dashboard/TabFilter";
 import { Button } from "@/components/ui/Button";
+import {
+  calculateInvoiceTotal,
+  calculateQuotationTotal,
+  cn,
+} from "@/lib/utils";
 import { useInvoiceStore } from "@/stores/invoice-store";
 import { useQuotationStore } from "@/stores/quotation-store";
 import type { InvoiceFormData } from "@/types/invoice";
 import type { QuotationFormData } from "@/types/quotation";
 
-type DocumentItem =
-  | {
-      client: string;
-      currency: string;
-      date: string;
-      documentId: string;
-      id: string;
-      total: number;
-      type: "invoice";
-      updatedAt: string;
-    }
-  | {
-      client: string;
-      currency: string;
-      date: string;
-      documentId: string;
-      id: string;
-      total: number;
-      type: "quotation";
-      updatedAt: string;
-    };
+type DocumentItem = {
+  client: string;
+  currency: string;
+  date: string;
+  documentId: string;
+  id: string;
+  total: number;
+  type: "invoice" | "quotation";
+  updatedAt: string;
+};
 
 const TABS = [
   { id: "all", label: "All" },
@@ -57,65 +51,60 @@ function Dashboard() {
 
   const [invoices, setInvoices] = useState<InvoiceFormData[]>([]);
   const [quotations, setQuotations] = useState<QuotationFormData[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("all");
 
-  // Load data on mount
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const [loadedInvoices, loadedQuotations] = await Promise.all([
-          getAllInvoicesAsync(),
-          getAllQuotationsAsync(),
-        ]);
-        setInvoices(loadedInvoices);
-        setQuotations(loadedQuotations);
-      } catch (error) {
-        console.error("Failed to load dashboard data:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+  const loadData = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
 
-    loadData();
+    try {
+      const [loadedInvoices, loadedQuotations] = await Promise.all([
+        getAllInvoicesAsync(),
+        getAllQuotationsAsync(),
+      ]);
+      setInvoices(loadedInvoices);
+      setQuotations(loadedQuotations);
+    } catch (error) {
+      console.error("Failed to load dashboard data:", error);
+      setInvoices([]);
+      setQuotations([]);
+      setError("Failed to load your documents. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }, [getAllInvoicesAsync, getAllQuotationsAsync]);
+
+  useEffect(() => {
+    void loadData();
+  }, [loadData]);
 
   // Combine and format documents
   const allDocuments: DocumentItem[] = useMemo(() => {
     const formattedInvoices: DocumentItem[] = invoices.map((invoice) => {
-      const total =
-        invoice.items.reduce(
-          (sum, item) => sum + item.quantity * item.rate,
-          0
-        ) - (invoice.reductionAmount || 0);
-
       return {
         id: invoice.id,
         documentId: invoice.invoiceId,
         client: invoice.invoiceTo?.company || "Unknown Company",
         date: invoice.invoiceDate,
-        total,
+        total: calculateInvoiceTotal(invoice),
         currency: invoice.currency || "RM",
         updatedAt: invoice.updatedAt,
-        type: "invoice" as const,
+        type: "invoice",
       };
     });
 
     const formattedQuotations: DocumentItem[] = quotations.map((quotation) => {
-      const total = quotation.items.reduce(
-        (sum, item) => sum + item.quantity * item.rate,
-        0
-      );
-
       return {
         id: quotation.id,
         documentId: quotation.quotationId,
         client: quotation.quotationFor?.company || "Unknown Company",
         date: quotation.quotationDate,
-        total,
+        total: calculateQuotationTotal(quotation),
         currency: quotation.currency || "RM",
         updatedAt: quotation.updatedAt,
-        type: "quotation" as const,
+        type: "quotation",
       };
     });
 
@@ -190,8 +179,30 @@ function Dashboard() {
         </div>
       </section>
 
+      {!isLoading && error && (
+        <section className="flex flex-col items-center justify-center gap-4 border border-dashed border-error/40 bg-error/5 py-16 text-center">
+          <div
+            className={cn(
+              "flex size-16 items-center justify-center rounded-full",
+              "bg-error/10 text-error"
+            )}
+          >
+            <FileTextIcon className="size-8" weight="duotone" />
+          </div>
+          <div className="space-y-2">
+            <h2 className="text-xl font-semibold text-text">
+              Unable to load dashboard
+            </h2>
+            <p className="text-muted">{error}</p>
+          </div>
+          <Button onClick={() => void loadData()} size="sm">
+            Try Again
+          </Button>
+        </section>
+      )}
+
       {/* Empty State */}
-      {!isLoading && !hasDocuments && (
+      {!isLoading && !error && !hasDocuments && (
         <section className="flex flex-col items-center justify-center gap-6 border border-dashed border-text/30 bg-foreground/30 py-16">
           <div className="flex size-16 items-center justify-center bg-foreground/50">
             <PlusIcon className="size-8 text-muted" weight="duotone" />
@@ -222,7 +233,7 @@ function Dashboard() {
       )}
 
       {/* Stats Section */}
-      {(isLoading || hasDocuments) && (
+      {(isLoading || (!error && hasDocuments)) && (
         <section className="flex flex-col gap-4">
           <h2 className="font-semibold text-lg text-text">Quick Overview</h2>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-2">
@@ -245,7 +256,7 @@ function Dashboard() {
       )}
 
       {/* Recent Documents Section */}
-      {(isLoading || hasDocuments) && (
+      {(isLoading || (!error && hasDocuments)) && (
         <section className="flex flex-col gap-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h2 className="font-semibold text-lg text-text">

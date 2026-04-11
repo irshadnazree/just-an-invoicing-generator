@@ -25,6 +25,26 @@ export function formatDecimal(amount: number, decimals = 2) {
   return amount.toFixed(decimals);
 }
 
+type PricedItem = {
+  quantity: number;
+  rate: number;
+};
+
+function calculateItemsTotal(items: PricedItem[]) {
+  return items.reduce((sum, item) => sum + item.quantity * item.rate, 0);
+}
+
+export function calculateInvoiceTotal(invoice: {
+  items: PricedItem[];
+  reductionAmount?: number;
+}) {
+  return calculateItemsTotal(invoice.items) - (invoice.reductionAmount || 0);
+}
+
+export function calculateQuotationTotal(quotation: { items: PricedItem[] }) {
+  return calculateItemsTotal(quotation.items);
+}
+
 export function downloadFile(
   content: string | Blob,
   filename: string,
